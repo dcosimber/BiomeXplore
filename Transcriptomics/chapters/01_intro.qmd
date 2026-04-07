@@ -1,0 +1,185 @@
+# Introduction
+
+Pigmentation disorders represent one of the major biological and economic constraints in flatfish aquaculture. In turbot (*Scophthalmus maximus*), these abnormalities mainly manifest as pseudo-albinism on the ocular side and hypermelanosis on the blind side, leading to a substantial reduction in market value and production efficiency. Such defects originate during early development, particularly around metamorphosis, when asymmetric body patterning and pigmentation are established, and are thought to result from complex interactions between genetic background and environmental factors such as nutrition, light regime, and rearing conditions [@Matsumoto1990; @Hamre2013; @Yufera2018].
+
+Despite decades of research, the molecular mechanisms underlying pigmentation disorders in flatfish remain only partially understood. Previous studies have implicated key biological processes including melanocyte differentiation, neural crest cell migration, retinoid and thyroid hormone signaling, and calcium homeostasis as central drivers of pigment cell development and maintenance [@Seikai1994; @Taguchi2008; @Yao2022]. However, much of the available evidence is based on candidate-gene approaches or interspecific comparisons, and comprehensive transcriptome-wide analyses in turbot are still limited.
+
+High-throughput RNA sequencing (RNA-seq) provides a powerful, unbiased approach to investigate complex phenotypes by enabling genome-wide quantification of gene expression. In pigmentation research, transcriptomic studies have successfully identified differentially expressed genes and regulatory pathways associated with melanogenesis, chromatophore development, and pigment cell survival in several flatfish and teleost species [@Liu2016; @Li2021]. These approaches are particularly well suited to disentangle the polygenic architecture of pigmentation disorders, which are unlikely to be explained by single major-effect loci alone.
+
+Within the HOLOFISHCOLOUR project, transcriptomic characterization constitutes a key component for linking genomic variation to functional biological mechanisms. By comparing gene expression profiles between normally pigmented and malpigmented turbot across biologically relevant tissues, this task aims to identify molecular signatures associated with pigmentation anomalies and to complement ongoing genomic, histological, and microbiome analyses. Together, these integrative results will contribute to a holistic, multi-omics understanding of pigmentation disorders in turbot aquaculture.
+
+# Objectives
+
+El objetivo principal de esta tarea fue realizar un perfil transcriptómico global de la piel de rodaballos (*Scophthalmus maximus*) tanto con fenotipo pigmentario normal como malpigmentado, con el objetivbo de:
+
+-   Caracterizar globalmente los patrones de expresión génica asociados a los fenotipos de pigmentación.
+-   Identificar los genes diferencialmente expresados entre individuos bien pigmentados y mal pigmentados.
+-   Explorar los mecanismos y rutas metabólicas potencialmente involucradas las malformaciones pigmentarias en rodaballo.
+
+1.  RNA isolation and quality
+
+    ![Figure 1. Skin sampling for transcriptomic analysis. A–B: Sampling areas in pseudo-albino and normally pigmented turbot. Areas outlined with yellow dashed lines correspond to non-pigmented skin, whereas areas outlined in red correspond to pigmented skin. C: Skin incision and sample collection.](/figures/01_intro/Figure_1_skin_sampling.png)
+
+2.  RNA library construction and high-throughput sequencing.\
+
+3.  Bioinformatic processing and differential expression analysis.
+
+------------------------------------------------------------------------
+
+# Materials and Methods
+
+## Experimental design and Sampling
+
+## Fishes
+
+Three individuals per phenotype (normal vs malpigmented) were selected from tanks **E6** and **E8**, where pigmentation differences were most pronounced.
+
+-   **Tank E6:** offspring from two different parental pairs.\
+-   **Tank E8:** half-sib family (shared mother, two different fathers).
+
+From each individual, **skin and intestine** samples were collected.
+
+------------------------------------------------------------------------
+
+### Sample Types and Pigmentation Categories
+
+-   **Normally pigmented fish:**
+    -   Pigmented skin (dark) on the ocular side
+    -   Non-pigmented skin (light) on the blind side
+-   **Malpigmented fish:**
+    -   Pigmented and non-pigmented skin on both ocular and blind sides
+
+------------------------------------------------------------------------
+
+### Sample Overview
+
+**Table 1. Samples selected for transcriptomic analysis**
+
+| Sample ID | Tissue | Tank | Individual No. | Pigmentation phenotype | Surface | Pigmentation |
+|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
+| P31 | Skin | E6 | 46 | Normal | Ocular | Dark |
+| P32 | Skin | E6 | 46 | Normal | Blind | Light |
+| P33 | Skin | E8 | 52 | Normal | Ocular | Dark |
+| P34 | Skin | E8 | 52 | Normal | Blind | Light |
+| P35 | Skin | E8 | 70 | Normal | Ocular | Dark |
+| P36 | Skin | E8 | 70 | Normal | Blind | Light |
+| P41 | Skin | E8 | 142 | Malpigmented | Ocular | Dark |
+| P42 | Skin | E8 | 142 | Malpigmented | Ocular | Light |
+| P43 | Skin | E8 | 142 | Malpigmented | Blind | Dark |
+| P44 | Skin | E8 | 131 | Malpigmented | Blind | Light |
+| P45 | Skin | E6 | 130 | Malpigmented | Ocular | Dark |
+| P46 | Skin | E6 | 130 | Malpigmented | Ocular | Light |
+| P47 | Skin | E6 | 130 | Malpigmented | Blind | Dark |
+| P48 | Skin | E6 | 130 | Malpigmented | Blind | Light |
+| P49 | Skin | E6 | 26 | Malpigmented | Ocular | Dark |
+| P50 | Skin | E6 | 26 | Malpigmented | Ocular | Light |
+| P51 | Skin | E6 | 26 | Malpigmented | Blind | Dark |
+| P52 | Skin | E6 | 26 | Malpigmented | Blind | Light |
+| P1G | Skin | — | 56 | Normal | — | — |
+| P2G | Skin | — | 34 | Normal | — | — |
+| PNKD | Skin | — | — | Ambicolor | — | — |
+| PNKV | Skin | — | — | Ambicolor | — | — |
+| IT1G | Intestine | — | — | — | — | — |
+| ITPNK | Intestine | — | — | — | — | — |
+
+------------------------------------------------------------------------
+
+## Sample Collection
+
+### Skin Sampling
+
+Fish were maintained at −80 °C and placed on ice prior to sampling to prevent rapid thawing. While still frozen, approximately **20 mg of skin tissue** were excised using sterile dissection tools.
+
+Muscle tissue was carefully removed by gentle scraping to avoid contamination.
+
+![**Figure 1.** Skin sampling for transcriptomic analysis. A–B: Sampling areas in pseudo-albino and normally pigmented turbot. Areas outlined with yellow dashed lines correspond to non-pigmented skin, whereas areas outlined in red correspond to pigmented skin. C: Skin incision and sample collection.](/figures/01_intro/Figure_1_skin_sampling.png)
+
+------------------------------------------------------------------------
+
+### 3.2 Intestinal Sampling
+
+Intestinal samples were obtained by ventral dissection. The visceral mass was removed, and intestinal contents were gently expelled before collecting the posterior intestine segment.
+
+*Figure 2. Intestinal sampling procedure.*
+
+------------------------------------------------------------------------
+
+## 4. RNA Extraction and Quality Assessment
+
+### 4.1 RNA Isolation
+
+Total RNA was extracted using a **TRIzol™ + Phasemaker™ Tubes** protocol, followed by purification with the **RNeasy Mini Kit (Qiagen)**.
+
+RNA concentration was measured using **NanoDrop™ One**, and integrity was assessed by **1.5% agarose gel electrophoresis**.
+
+| Sample | DNA concentration (ng/µl) | A260/A280 | A260/A230 |
+|:------:|:-------------------------:|:---------:|:---------:|
+|  P31   |          1142.7           |   2.14    |   2.10    |
+|  P32   |           813.4           |   2.14    |   2.18    |
+|  IT11  |           534.3           |   2.13    |   2.00    |
+|  P33   |           338.9           |   2.12    |   2.24    |
+|  P34   |           440.5           |   2.10    |   2.27    |
+|  IT12  |           974.0           |   2.13    |   2.36    |
+|  P35   |           299.3           |   2.12    |   1.08    |
+|  P36   |           308.8           |   2.13    |   2.18    |
+|  IT13  |           367.6           |   2.13    |   1.99    |
+|  P37   |           191.5           |   2.10    |   2.20    |
+|  P38   |           209.5           |   2.14    |   2.05    |
+|  P39   |           827.3           |   2.15    |   2.31    |
+|  P40   |           359.5           |   2.14    |   2.17    |
+|  IT14  |           822.9           |   2.14    |   2.31    |
+|  P41   |           583.6           |   2.10    |   2.29    |
+|  P42   |           506.5           |   2.10    |   2.15    |
+|  P43   |           588.0           |   2.10    |   2.33    |
+|  P44   |          1028.3           |   2.13    |   2.14    |
+|  IT15  |           727.2           |   2.10    |   2.29    |
+
+------------------------------------------------------------------------
+
+![Figure X. Integrity of total RNA assessed by agarose gel electrophoresis (1.5%, 100 mV, 30 min). Each gel corresponds to a batch of samples listed in the table above.](/figures/01_intro/gel_bands.png)
+
+### RNA Extraction Quality Metrics
+
+**Table 2. RNA concentration and purity metrics**
+
+| Sample | Concentration (ng/µl) | A260/A280 | A260/A230 |
+|--------|-----------------------|-----------|-----------|
+| P31    | 1142.7                | 2.14      | 2.10      |
+| P32    | 813.4                 | 2.14      | 2.18      |
+| P33    | 338.9                 | 2.12      | 2.24      |
+| P34    | 440.5                 | 2.10      | 2.27      |
+| P35    | 299.3                 | 2.12      | 1.08      |
+| P36    | 308.8                 | 2.13      | 2.18      |
+
+------------------------------------------------------------------------
+
+## RNA-Seq Library Preparation and Sequencing
+
+Transcriptome sequencing (RNA-Seq) was performed through the *Plant and Animal Whole Genome Sequencing (WOBI)* service (@tbl-rnaseq-specs), outsourced to Novogene (quotation **NVUK2024021911**). Messenger RNA (mRNA) libraries were constructed using a strand-specific protocol, preserving transcript orientation information and enabling accurate downstream expression analyses.
+
+Library preparation was based on poly(A) enrichment to selectively capture mature mRNA transcripts. Sequencing was carried out on an Illumina NovaSeq X Plus platform using a paired-end strategy with a read length of 150 base pairs (2 × 150 bp, PE150).
+
+Sequencing quality criteria were defined to ensure high data reliability, with at least 85% of bases achieving a Phred quality score ≥ Q30. A minimum sequencing output of 6 Gb per sample was guaranteed, providing sufficient depth and coverage for subsequent differential gene expression analyses. In total, 50 RNA-Seq libraries were successfully sequenced.
+
+::: {#tbl-rnaseq-specs}
+| Parameter           | Description                               |
+|:--------------------|:------------------------------------------|
+| Sequencing platform | Illumina NovaSeq X Plus                   |
+| Read configuration  | Paired-end (2 × 150 bp)                   |
+| Library preparation | Strand-specific mRNA (poly(A) enrichment) |
+| Quality threshold   | ≥ 85% of bases with Q score ≥ 30          |
+| Data output         | ≥ 6 Gb per sample                         |
+| Number of libraries | 50                                        |
+
+: RNA-Seq specifications
+:::
+
+------------------------------------------------------------------------
+
+## RNA Quality Control
+
+RNA quality assessment was performed as a mandatory quality control step prior to RNA-Seq library preparation and sequencing. RNA concentration, integrity, and purity metrics were evaluated by Novogene using the **Agilent 5400 Bioanalyzer**, following standard procedures for transcriptomic applications.
+
+
+## Bioinformatic analysis
+

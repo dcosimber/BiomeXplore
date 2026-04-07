@@ -1,0 +1,43 @@
+project:
+  type: book
+  execute-dir: project
+
+book:
+  title: "HOLOFISHCOLOUR — Transcriptomic Analysis"
+  author:
+    - name: Daniel Costas
+      orcid: 0000-0003-4384-8469
+      email: dcostas@iim.csic.es
+      affiliations:
+        - name: Instituto de Investigaciones Marinas (IIM-CSIC)
+          city: Vigo
+          state: Spain
+          url: www.iim.csic.es
+        - name: Aquabiotec Lab
+          city: Vigo
+          state: Spain
+          url: https://acuabiotec.csic.es
+
+  date: last-modified
+  chapters:
+    - index.qmd
+    - chapters/01_intro.qmd
+    - chapters/02_methods_nfcore.qmd
+    - chapters/03_results.qmd
+    - chapters/03_qc_multiqc.qmd
+    - chapters/04_alignment_quant.qmd
+    - chapters/05_differential_expression.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 3
+    number-sections: true
+    css: styles.css
+    theme:
+      light: cosmo
+      dark: darkly
+    theme-toggle: true

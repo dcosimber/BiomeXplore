@@ -1,0 +1,97 @@
+## Bioinformatic Analysis
+
+### Overview
+
+The bioinformatic workflow included:
+
+1.  Raw read quality control
+2.  Alignment to the reference genome
+3.  Gene-level quantification
+4.  Differential expression analysis
+5.  Functional enrichment analysis
+
+![RNA-seq bioinformatic workflow](figures/Flowchart_RNAseq_pipeline.png)
+
+## Reference Genome
+
+RNA-seq analyses were conducted using the **Scophthalmus maximus ASM1334776v1** reference genome assembly and its corresponding gene annotation, both obtained from **Ensembl (release 113)**. This assembly provides comprehensive coverage of the turbot genome, including both assembled chromosomes and unplaced contigs and scaffolds.
+
+The reference genome and annotation files are publicly available from Ensembl:\
+<https://www.ensembl.org/Scophthalmus_maximus/Info/Index>
+
+### Genome statistics
+
+::: {#tbl-ref_gen_summary}
+| Feature           | Value          |
+|-------------------|----------------|
+| Assembly          | ASM1334776v1   |
+| Genome size       | 556,696,898 bp |
+| Coding genes      | 21,263         |
+| Non-coding genes  | 12,989         |
+| Pseudogenes       | 201            |
+| Gene transcripts  | 76,329         |
+| Annotation source | Ensembl (v113) |
+
+: Reference genome summary statistics
+:::
+
+### Genome and annotation files used
+
+For read alignment and transcript quantification, we used the **toplevel genome FASTA file** (`Scophthalmus_maximus.ASM1334776v1.dna.toplevel.fa`) and the **full Ensembl gene annotation in GTF format** (`Scophthalmus_maximus.ASM1334776v1.113.gtf`). These files were downloaded from the Ensembl FTP server (release 113):
+
+-   Genome FASTA: <https://ftp.ensembl.org/pub/release-113/fasta/scophthalmus_maximus/dna/>
+
+-   Gene annotation (GTF): <https://ftp.ensembl.org/pub/release-113/gtf/scophthalmus_maximus/>
+
+This combination ensures that RNA-seq reads mapping to both chromosomal and non-chromosomal regions are retained, preventing the loss of annotated genes located in unassembled genomic regions. The **GTF format** was selected due to its broad compatibility with RNA-seq analysis tools such as **STAR**, **HTSeq**, and **featureCounts**, and its suitability for transcript-level quantification.
+
+::: {.callout-important title="Genome and annotation file types (Ensembl technical note)"}
+Ensembl provides multiple genome sequence and annotation file types, each optimized for different applications. The main file types relevant for RNA-seq analyses are summarized below.
+
+**Genome FASTA files**
+
+-   **`*.dna.toplevel.fa`** ✅ *(used in this study)*\
+    Includes all assembled chromosomes as well as unplaced contigs and scaffolds. This is the most comprehensive genome representation and ensures that RNA-seq reads mapping to non-chromosomal regions are not lost.
+
+-   **`*.dna.primary_assembly.fa`**\
+    Contains only primary assembled chromosomes and selected scaffolds, excluding smaller unplaced contigs.
+
+-   **`*.dna.chromosome.*.fa`**\
+    Individual FASTA files for each chromosome, mainly useful for region-specific or targeted analyses.
+
+-   **`*.dna.nonchromosomal.fa`**\
+    Contains only unplaced contigs and scaffolds and is not suitable for whole-transcriptome RNA-seq analyses.
+
+-   **`*.dna_sm.toplevel.fa`**\
+    Equivalent to the toplevel FASTA file but soft-masked (repetitive regions in lowercase). This is not required for standard RNA-seq workflows.
+
+**Gene annotation files**
+
+-   **GTF (`*.gtf`)** ✅ *(used in this study)*\
+    Compact gene annotation format optimized for RNA-seq analysis pipelines. Fully compatible with tools such as **STAR**, **HTSeq**, and **featureCounts**.
+
+-   **GFF3 (`*.gff3`)**\
+    A more general-purpose annotation format that includes additional genomic features but often requires conversion for RNA-seq applications.
+
+-   **Ab initio GTF (`*.abinitio.gtf`)**\
+    Contains gene predictions generated without experimental evidence and was not used due to lower reliability.
+
+Overall, the combination of the **toplevel genome assembly** and the **full Ensembl GTF annotation** provides a robust and comprehensive reference framework for RNA-seq analyses, minimizing mapping bias and ensuring accurate gene expression quantification across the entire turbot genome.
+:::
+
+------------------------------------------------------------------------
+
+## Notes and Next Steps
+
+This transcriptomic dataset provides a solid foundation for:
+
+-   Integrating GWAS candidate genes
+-   Cross-validating pigmentation pathways
+-   Comparative analyses with other flatfish species
+-   Multi-omics integration within the HOLOFISHCOLOUR framework
+
+Further refinement will include: - Differential expression results - GO / KEGG enrichment - Integration with phenotypic pigmentation metrics
+
+------------------------------------------------------------------------
+
+# References

@@ -1,0 +1,11 @@
+# Quarto cache and temp files
+/.quarto/
+
+# Quarto notebooks (generated artifacts)
+**/*.quarto_ipynb
+
+# Optional: OS / editor junk
+.DS_Store
+*.swp
+*.tmp
+

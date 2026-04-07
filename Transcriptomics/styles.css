@@ -1,0 +1,191 @@
+/* =====================================================
+   HOLOFISHCOLOUR — Quarto HTML report styling
+   ===================================================== */
+
+/* -----------------------------------------------------
+   1. Global typography & readability
+   ----------------------------------------------------- */
+
+/* Justify body text (paragraphs only) */
+p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  line-height: 1.65;
+  margin-bottom: 0.8em;
+}
+
+/* Lists readability */
+li {
+  line-height: 1.55;
+  margin-bottom: 0.3em;
+}
+
+/* Avoid justification in code blocks */
+pre, code {
+  text-align: left;
+  hyphens: none;
+}
+
+/* -----------------------------------------------------
+   2. Headings
+   ----------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 650;
+}
+
+h3 {
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------
+   3. Table styling
+   ----------------------------------------------------- */
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+/* Header cells */
+th {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 600;
+  padding: 0.6em 0.8em;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Data cells */
+td {
+  vertical-align: middle;
+  padding: 0.6em 0.8em;
+}
+
+/* Zebra striping (very subtle) */
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+/* Hover effect */
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+
+/* -----------------------------------------------------
+   4. Custom centered cell content
+   ----------------------------------------------------- */
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+/* -----------------------------------------------------
+   5. Figures & images
+   ----------------------------------------------------- */
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Figure captions */
+figcaption {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.4em;
+}
+
+/* -----------------------------------------------------
+   6. Table of contents (TOC)
+   ----------------------------------------------------- */
+
+/* TOC title */
+#TOC > h2 {
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
+}
+
+/* Level 1 entries */
+#TOC > ul > li > a {
+  font-weight: 600;
+  color: #0d6efd;
+}
+
+/* Level 2+ entries */
+#TOC ul ul li a {
+  font-weight: 400;
+  color: #444;
+}
+
+/* Hover effect */
+#TOC a:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------------------------------------
+   7. Section spacing & layout
+   ----------------------------------------------------- */
+
+section {
+  margin-bottom: 2.2rem;
+}
+
+/* -----------------------------------------------------
+   8. Dark mode refinements
+   ----------------------------------------------------- */
+
+.quarto-dark figcaption {
+  color: #ccc;
+}
+
+.quarto-dark th {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.quarto-dark tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.quarto-dark tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.quarto-dark #TOC > ul > li > a {
+  color: #66b2ff;
+}
+
+.quarto-dark #TOC ul ul li a {
+  color: #ccc;
+}
+
+/* Bibliography spacing + justification (Quarto/Pandoc) */
+
+#refs .csl-entry{
+  margin-bottom: 1em !important;
+  text-align: justify;
+  text-justify: inter-word;
+}

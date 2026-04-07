@@ -1,0 +1,62 @@
+
+# Overview
+
+This document presents the transcriptomic analysis conducted within the **HOLOFISHCOLOUR** project, aimed at characterising the molecular mechanisms associated with pigmentation disorders in turbot (*Scophthalmus maximus*).  
+
+RNA-seq data were processed using the **nf-core/rnaseq** pipeline, ensuring a reproducible and standardised workflow for quality control, alignment, quantification and downstream analyses.
+
+The report has been structured as a unified, navigable document generated with **Quarto**, integrating results, figures and quality-control summaries into a single HTML output.
+
+---
+
+## Objectives
+
+The main objectives of this analysis are:
+
+- To assess the quality of RNA-seq data using comprehensive QC metrics.
+- To obtain reliable gene-level expression estimates.
+- To explore transcriptional differences associated with pigmentation phenotypes.
+- To generate publication-ready outputs suitable for downstream statistical and functional analyses.
+
+---
+
+## Experimental design (brief)
+
+- **Species:** *Scophthalmus maximus* (turbot)  
+- **Tissue:** (e.g. skin / intestine / specify when ready)  
+- **Library type:** Stranded mRNA-seq  
+- **Sequencing platform:** Illumina  
+- **Analysis pipeline:** nf-core/rnaseq  
+
+Detailed methodological information is provided in the corresponding Methods section.
+
+---
+
+## Structure of the report
+
+The analysis is organised into the following sections:
+
+1. **Introduction**  
+   Biological background and motivation of the transcriptomic study.
+
+2. **Methods (nf-core / RNA-seq pipeline)**  
+   Description of the computational workflow, software versions and key parameters.
+
+3. **Quality control (MultiQC)**  
+   Assessment of sequencing quality, mapping performance and quantification metrics.
+
+4. **Alignment and quantification**  
+   Summary of alignment results and expression estimates.
+
+5. **Differential expression analysis**  
+   Identification of differentially expressed genes and downstream interpretation.
+
+---
+
+## Reproducibility and data provenance
+
+All analyses were performed on the CESGA HPC infrastructure.  
+Pipeline outputs were generated using nf-core standards and selectively integrated into this report to ensure clarity, traceability and reproducibility.
+
+
+<!-- trigger pages -->
