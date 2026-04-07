@@ -33,13 +33,13 @@ jobs:
 
       - name: Render Quarto book
         run: |
-          cd Transcriptomics
+          cd BiomeXplore
           quarto render
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: Transcriptomics/_book
+          path: BiomeXplore/_book
 
       - name: Deploy to GitHub Pages
         id: deployment
