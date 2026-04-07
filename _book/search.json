@@ -1,0 +1,252 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "BiomeXplore project",
+    "section": "",
+    "text": "1 Overview\nThis document presents the transcriptomic analysis conducted within the HOLOFISHCOLOUR project, aimed at characterising the molecular mechanisms associated with pigmentation disorders in turbot (Scophthalmus maximus).\nRNA-seq data were processed using the nf-core/rnaseq pipeline, ensuring a reproducible and standardised workflow for quality control, alignment, quantification and downstream analyses.\nThe report has been structured as a unified, navigable document generated with Quarto, integrating results, figures and quality-control summaries into a single HTML output.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#objectives",
+    "href": "index.html#objectives",
+    "title": "BiomeXplore project",
+    "section": "1.1 Objectives",
+    "text": "1.1 Objectives\nThe main objectives of this analysis are:\n\nTo assess the quality of RNA-seq data using comprehensive QC metrics.\nTo obtain reliable gene-level expression estimates.\nTo explore transcriptional differences associated with pigmentation phenotypes.\nTo generate publication-ready outputs suitable for downstream statistical and functional analyses.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#experimental-design-brief",
+    "href": "index.html#experimental-design-brief",
+    "title": "BiomeXplore project",
+    "section": "1.2 Experimental design (brief)",
+    "text": "1.2 Experimental design (brief)\n\nSpecies: Scophthalmus maximus (turbot)\n\nTissue: (e.g. skin / intestine / specify when ready)\n\nLibrary type: Stranded mRNA-seq\n\nSequencing platform: Illumina\n\nAnalysis pipeline: nf-core/rnaseq\n\nDetailed methodological information is provided in the corresponding Methods section.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#structure-of-the-report",
+    "href": "index.html#structure-of-the-report",
+    "title": "BiomeXplore project",
+    "section": "1.3 Structure of the report",
+    "text": "1.3 Structure of the report\nThe analysis is organised into the following sections:\n\nIntroduction\nBiological background and motivation of the transcriptomic study.\nMethods (nf-core / RNA-seq pipeline)\nDescription of the computational workflow, software versions and key parameters.\nQuality control (MultiQC)\nAssessment of sequencing quality, mapping performance and quantification metrics.\nAlignment and quantification\nSummary of alignment results and expression estimates.\nDifferential expression analysis\nIdentification of differentially expressed genes and downstream interpretation.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#reproducibility-and-data-provenance",
+    "href": "index.html#reproducibility-and-data-provenance",
+    "title": "BiomeXplore project",
+    "section": "1.4 Reproducibility and data provenance",
+    "text": "1.4 Reproducibility and data provenance\nAll analyses were performed on the CESGA HPC infrastructure.\nPipeline outputs were generated using nf-core standards and selectively integrated into this report to ensure clarity, traceability and reproducibility.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Overview</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html",
+    "href": "chapters/01_meteor2.html",
+    "title": "2  Meteor2 documentation",
+    "section": "",
+    "text": "2.1 Background\nA comprehensive understanding of microbial communities requires the integration of taxonomic, functional, and strain-level profiling (TFSP). In shotgun metagenomics, these three layers are tightly connected: taxonomy identifies who is there, functional profiling estimates what they can do, and strain-level analysis provides insight into within-species variation and population structure.\nMost reference-based metagenomic profilers rely on one of three broad strategies:\nThese approaches are often highly effective for taxonomic assignment, but they usually provide only indirect or partial access to functional interpretation. In practice, this means that taxonomic and functional profiling are frequently performed with separate tools and databases, which can increase workflow complexity and create inconsistencies between the two outputs.\nThis limitation is particularly evident in approaches designed for broad applicability across many ecosystems. Because these methods often depend on conserved marker genes, they gain generalizability at the cost of reduced sensitivity to ecosystem-specific functional variation. As a result, functional characterization often requires additional annotation workflows based on pan-genome, orthology, or pathway resources.\nAn alternative strategy is to use ecosystem-specific microbial gene catalogues. These catalogue-based approaches rely on smaller but highly informative reference collections and enable a more coherent integration of taxonomic and functional profiling. This is the conceptual framework on which Meteor2 is based (ghozlane2025meteor2?).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#background",
+    "href": "chapters/01_meteor2.html#background",
+    "title": "2  Meteor2 documentation",
+    "section": "",
+    "text": "whole-genome reference databases,\nspecies-specific marker genes, or\nuniversal single-copy marker genes.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#what-is-meteor2",
+    "href": "chapters/01_meteor2.html#what-is-meteor2",
+    "title": "2  Meteor2 documentation",
+    "section": "2.2 What is Meteor2?",
+    "text": "2.2 What is Meteor2?\nMeteor2 is a tool for quantitative metagenomic profiling of complex ecosystems based on microbial gene catalogues. Rather than relying primarily on universal marker genes, Meteor2 quantifies genes by mapping reads against ecosystem-specific reference catalogues and derives taxonomic, functional, and strain-level profiles from the same reference framework (ghozlane2025meteor2?).\nIts main analytical unit is the Metagenomic Species Pan-genome (MSP), originally introduced with MSPminer (plazaonate2019mspminer?). In this framework, genes are grouped into microbial species-level units based on co-abundance patterns across samples. Within each MSP, a subset of highly connected genes is defined as signature genes, which are used as the most robust indicators for MSP detection and quantification.\nMeteor2 uses microbial gene catalogues to perform:\n\nspecies-level taxonomic profiling (Bacteria, Archaea, and Eukaryotes),\nfunctional profiling,\nstrain-level population structure inference.\n\nIn addition, Meteor2 integrates several functional annotation repertoires into its catalogues, including:\n\nKEGG Orthologs (KO) from KEGG database (kanehisa2016kegg?),\ncarbohydrante-active enzymes (CAZymes) from dbCAN (yuan2023dbcan?),\nantibiotic resistance genes (ARGs) from MUSTARD (roux2019mustard?).\n\nThese annotations can be quantified either at the individual gene level or at the MSP level, thereby linking taxonomic composition to functional potential within a unified framework.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#microbial-gene-catalogues",
+    "href": "chapters/01_meteor2.html#microbial-gene-catalogues",
+    "title": "2  Meteor2 documentation",
+    "section": "2.3 Microbial gene catalogues",
+    "text": "2.3 Microbial gene catalogues\nMeteor2 currently supports 10 curated microbial gene catalogues, each tailored to a specific host-associated ecosystem (ghozlane2025meteor2?). These catalogues cover:\n\nhuman microbiomes: gut, oral, and skin,\ndomestic animals: cat and dog,\nlaboratory models: mouse and rat,\nlivestock: chicken, pig, and rabbit.\n\nEach catalogue includes two main components:\n\nMSPs, in which genes are clustered by co-abundance;\nunclustered genes, which may represent biological content that is not captured by metagenome-assembled genomes (MAGs) or stable MSP structures (coelho2022biogeography?).\n\nMeteor2 also incorporates three types of higher-level functional module systems:\n\nGut Brain Modules (GBMs) (vallescolomer2019neuroactive?),\nGut Metabolic Modules (GMMs) (vieirasilva2016species?),\nKEGG modules (kanehisa2012keggmapper?).\n\nFor rapid analysis, Meteor2 additionally provides a light / fast mode, based on a reduced catalogue containing only 100 signature genes per MSP. These genes correspond to the most connected genes within each MSP and allow accelerated taxonomic and strain-level profiling. Functional profiling is not available in this reduced mode (ghozlane2025meteor2?).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#overview-of-the-workflow",
+    "href": "chapters/01_meteor2.html#overview-of-the-workflow",
+    "title": "2  Meteor2 documentation",
+    "section": "2.4 Overview of the workflow",
+    "text": "2.4 Overview of the workflow\nMeteor2 estimates the abundance of genes, MSPs, and functions within microbial communities, and also reconstructs sample-specific strain variation.\nThe analytical workflow consists of four main steps (ghozlane2025meteor2?):\n\nDownload an ecosystem-specific microbial gene catalogue\nAlign short metagenomic reads to the catalogue\nCompute abundance profiles for genes, MSPs, and functions\nReconstruct sample-specific MSP genotypes and estimate mutation rates\n\nThe pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using Bowtie2 (langmead2012bowtie2?). From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs SNV calling and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.\n\n\n\nOverview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.\n\n\nFigure 1. Overview of the Meteor2 pipeline for TFSP analysis.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#quantification-modes",
+    "href": "chapters/01_meteor2.html#quantification-modes",
+    "title": "2  Meteor2 documentation",
+    "section": "2.5 Quantification modes",
+    "text": "2.5 Quantification modes\nAfter read alignment, Meteor2 re-estimates gene counts using one of three counting modes:\n\nunique: counts only reads with a single valid alignment.\ntotal: assigns all alignments to all matched genes and sums them directly.\nshared: redistributes multi-mapping reads proportionally across the genes they align to, based on the genes’ unique read counts. If all unique counts are zero, the read is distributed evenly across all compatible genes.\n\nThe shared mode is particularly useful when reads map to homologous genes and a proportional assignment strategy is preferred over strict unique counting.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#taxonomic-profiling",
+    "href": "chapters/01_meteor2.html#taxonomic-profiling",
+    "title": "2  Meteor2 documentation",
+    "section": "2.6 Taxonomic profiling",
+    "text": "2.6 Taxonomic profiling\nMeteor2 derives taxonomic profiles from gene count tables through two main operations:\n\nnormalization,\nreduction from genes to MSPs.\n\n\n2.6.1 Normalization\nMeteor2 supports the following normalization strategies:\n\nDepth coverage: read count divided by gene length and multiplied by 100, with gene length corrected for edge effects due to read length (metahit2014catalog?).\nFPKM (Fragments Per Kilobase Million).\n\n\n\n2.6.2 Reduction to MSP abundance\nMSP abundance is estimated by averaging the abundance of signature genes after normalization. By default, Meteor2 considers the 100 most central signature genes per MSP.\nAn MSP is assigned an abundance of 0 if too few signature genes are detected in the sample. In standard catalogues, the default requirement is more stringent; in light catalogues, the detection threshold is reduced, with a default requirement of 20% of signature genes.\nThis approach provides a robust species-level abundance estimate while minimizing noise from poorly supported genes.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#functional-profiling",
+    "href": "chapters/01_meteor2.html#functional-profiling",
+    "title": "2  Meteor2 documentation",
+    "section": "2.7 Functional profiling",
+    "text": "2.7 Functional profiling\nMeteor2 computes the abundance of functional entities in two complementary ways:\n\nby aggregating the abundance of genes annotated with a given function,\nor by aggregating the abundance of MSPs carrying that function.\n\nWhen MSP-based functional inference is used, only genes that are actually detected in the sample (at least one mapped read) are considered.\n\n2.7.1 Functional modules\nMeteor2 supports module-level profiling for systems such as GBMs, GMMs, and KEGG modules. For a given module, an MSP is considered a module carrier when the module completeness exceeds 90% in that sample (ghozlane2025meteor2?).\nBecause some module steps can be satisfied by alternative functions, Meteor2 evaluates all compatible alternative configurations and retains the maximum completeness value. The total abundance of all MSP carriers defines the module potential in that sample, together with the list of contributing taxa.\nThis strategy provides an explicit bridge between community composition and functional potential, making it possible to identify not only which functions are present, but also which species are likely contributing to them.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#strain-level-analysis",
+    "href": "chapters/01_meteor2.html#strain-level-analysis",
+    "title": "2  Meteor2 documentation",
+    "section": "2.8 Strain-level analysis",
+    "text": "2.8 Strain-level analysis\nMeteor2 performs strain-level analysis in three main stages:\n\nSNV calling using FreeBayes (garrison2012freebayes?)\nReconstruction of sample-specific MSP sequences\nPairwise comparison and phylogenetic analysis of reconstructed MSPs\n\n\n2.8.1 1. SNV calling\nMeteor2 identifies single nucleotide variants from mapped reads and uses them to build a sample-specific consensus gene catalogue.\n\n\n2.8.2 2. Reconstruction of sample-specific MSPs\nOnly MSPs with sufficient coverage are retained for downstream strain analysis. By default, at least 80 out of 100 signature genes must have a minimum breadth coverage of 0.5.\n\n\n2.8.3 3. Mutation rate and distance estimation\nMSPs detected in at least two samples are considered for mutation-rate analysis. By default, at least 10 informative sites are required to estimate distances. Pairwise distances between sample-specific MSP sequences are then computed under a General Time Reversible (GTR) evolutionary model, allowing strain similarity and divergence to be quantified (ghozlane2025meteor2?).\nMeteor2 can also generate phylogenetic trees from these reconstructed sequences.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#installation",
+    "href": "chapters/01_meteor2.html#installation",
+    "title": "2  Meteor2 documentation",
+    "section": "2.9 Installation",
+    "text": "2.9 Installation\nMeteor2 can be installed with conda, including its dependencies:\nconda create --name meteor -c conda-forge -c bioconda meteor\nAlternatively, it can be installed with pip using a recent Python version:\npip install meteor\nTo test the installation:\nmeteor test",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#nextflow-wrapper",
+    "href": "chapters/01_meteor2.html#nextflow-wrapper",
+    "title": "2  Meteor2 documentation",
+    "section": "2.10 Nextflow wrapper",
+    "text": "2.10 Nextflow wrapper\nMeteor2 also provides a Nextflow wrapper (nf-meteor.nf) for automated execution of the full workflow (meteorgithub?).\nnf-meteor.nf --in &lt;fastq_dir&gt; --catalogue_name &lt;catalogue_name&gt; --out &lt;output_dir&gt; --cpus &lt;nb_cpus&gt; -w &lt;temp_work_dir&gt;\n\n2.10.1 Main parameters\n\n--in: directory containing paired fastq.gz files\n--out: output directory\n--cpus: number of CPUs to use\n--catalogue_name: name of a prebuilt catalogue\n--catalogue: path to a custom catalogue (overrides --catalogue_name)\n--fast: enable fast mode (no functional analysis)\n--check_catalogue: check whether the catalogue is compatible with the input reads\n\nAllowed --catalogue_name values include:\n\nfc_1_3_gut\ngg_13_6_caecal\nclf_1_0_gut\nhs_10_4_gut\nhs_8_4_oral\nhs_2_9_skin\nmm_5_0_gut\noc_5_7_gut\nrn_5_9_gut\nssc_9_3_gut",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#getting-started",
+    "href": "chapters/01_meteor2.html#getting-started",
+    "title": "2  Meteor2 documentation",
+    "section": "2.11 Getting started",
+    "text": "2.11 Getting started\nA basic Meteor2 workflow typically involves the following steps:\n\nDownload or build a reference catalogue\nImport and index FASTQ files\nMap reads against the reference catalogue\nCompute taxonomic and functional abundance profiles\nPerform strain-level profiling\nMerge outputs across samples when needed",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#download-a-reference-catalogue",
+    "href": "chapters/01_meteor2.html#download-a-reference-catalogue",
+    "title": "2  Meteor2 documentation",
+    "section": "2.12 1. Download a reference catalogue",
+    "text": "2.12 1. Download a reference catalogue\nMeteor2 requires a locally available microbial gene catalogue, either in full or light format.\n\nThe full catalogue contains all genes and supports taxonomic, functional, and strain-level profiling.\nThe light catalogue contains only marker/signature genes and supports rapid taxonomic and strain-level profiling, but not functional profiling.\n\n\n2.12.1 Available catalogues\n\n\n\n\n\n\n\n\n\n\n\nMicrobial gene catalogue\nName\nGene count (M)\nMSPs\nSize full (GB)\nSize light (GB)\n\n\n\n\nCanis lupus familiaris gut\nclf_1_0_gut\n0.95\n234\n1.4\n0.1\n\n\nFelis catus gut\nfc_1_3_gut\n1.3\n344\n2.0\n0.2\n\n\nGallus gallus domesticus caecal\ngg_13_6_caecal\n13.6\n2420\n19.6\n1.2\n\n\nHomo sapiens gut\nhs_10_4_gut\n10.4\n1990\n12.6\n0.7\n\n\nHomo sapiens oral\nhs_8_4_oral\n8.4\n853\n13.7\n0.5\n\n\nHomo sapiens skin\nhs_2_9_skin\n2.9\n392\n3.9\n0.2\n\n\nMus musculus gut\nmm_5_0_gut\n5.0\n1252\n10.3\n0.6\n\n\nOryctolagus cuniculus gut\noc_5_7_gut\n5.7\n1053\n8.0\n0.4\n\n\nRattus norvegicus gut\nrn_5_9_gut\n5.9\n1627\n7.0\n0.6\n\n\nSus domesticus gut\nssc_9_3_gut\n9.3\n1523\n11.3\n0.7\n\n\n\nDownload a full catalogue with:\nmeteor download -i &lt;name&gt; -c -o &lt;refdir&gt;\nDownload a light catalogue with:\nmeteor download -i &lt;name&gt; -c --fast -o &lt;refdir&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#import-fastq-files",
+    "href": "chapters/01_meteor2.html#import-fastq-files",
+    "title": "2  Meteor2 documentation",
+    "section": "2.13 2. Import FASTQ files",
+    "text": "2.13 2. Import FASTQ files\nMeteor2 requires an initial FASTQ indexing step:\nmeteor fastq -i &lt;fastqdir&gt; [-p paired reads] -o &lt;outputdir&gt;\nWhen multiple sequencing files are available for the same library, the -m option can be used to group them automatically.\nFor example, if the directory contains:\nIllumina_lib1-SAMPLE_01.fastq\nIllumina_lib1-SAMPLE_02.fastq\nIllumina_lib2-SAMPLE_01.fastq\nIllumina_lib2-SAMPLE_02.fastq\nThe following command will group files belonging to the same sample/library structure:\nmeteor fastq -i ./ -m SAMPLE_\\\\d+ -o outputdir",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#mapping",
+    "href": "chapters/01_meteor2.html#mapping",
+    "title": "2  Meteor2 documentation",
+    "section": "2.14 3. Mapping",
+    "text": "2.14 3. Mapping\nFASTQ files are mapped against a reference catalogue to generate gene count tables:\nmeteor mapping -i &lt;fastqdir/sampledir&gt; -r &lt;refdir&gt; -o &lt;mappingdir&gt;\nBefore this step, it is recommended to remove:\n\nlow-quality reads,\nshort reads (e.g. &lt; 60 nt),\nhost-derived reads.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#taxonomic-and-functional-profiling",
+    "href": "chapters/01_meteor2.html#taxonomic-and-functional-profiling",
+    "title": "2  Meteor2 documentation",
+    "section": "2.15 4. Taxonomic and functional profiling",
+    "text": "2.15 4. Taxonomic and functional profiling\nGenes in the catalogue are clustered into Metagenomic Species Pan-genomes (MSPs) with MSPminer (plazaonate2019mspminer?) and functionally annotated against:\n\nKEGG (kanehisa2016kegg?),\ndbCAN (yuan2023dbcan?),\nMUSTARD (roux2019mustard?).\n\nMSP and functional profiles are computed from the gene count table with:\nmeteor profile -i &lt;mappingdir/sampledir&gt; -o &lt;profiledir&gt; -r &lt;refdir&gt; -n coverage\nThe -n parameter enables read-count normalization by gene length. If omitted, no normalization is applied to the gene table.\nThis profiling step can generate:\n\na species abundance table,\nan ARG abundance table (full catalogue only),\na dbCAN abundance table (full catalogue only),\na Gut Metabolic Modules (GMM) abundance table (full catalogue only),\na Gut Brain Modules (GBM) abundance table (full catalogue only).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#merging-sample-outputs",
+    "href": "chapters/01_meteor2.html#merging-sample-outputs",
+    "title": "2  Meteor2 documentation",
+    "section": "2.16 5. Merging sample outputs",
+    "text": "2.16 5. Merging sample outputs\nTo merge outputs from multiple samples into a single table:\nmeteor merge -i &lt;profiledir&gt; -r &lt;refdir&gt; -o &lt;mergingdir&gt;",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#strain-profiling",
+    "href": "chapters/01_meteor2.html#strain-profiling",
+    "title": "2  Meteor2 documentation",
+    "section": "2.17 6. Strain profiling",
+    "text": "2.17 6. Strain profiling\nMeteor2 can profile strains across large metagenomic datasets by identifying sample-specific mutations and projecting them onto MSP reference sequences.\nTo perform strain profiling:\nmeteor strain -i &lt;mappingdir/sampledir&gt; -o &lt;straindir&gt; -r &lt;refdir&gt;\nTo compute mutation rates and build trees between strains:\nmeteor tree -i &lt;straindir&gt; -o &lt;treedir&gt;\nThis step generates:\n\na mutation rate matrix,\na FASTA file for each reconstructed strain in each sample,\na detailed pairwise comparison table for each strain.\n\n\n2.17.1 Pairwise strain comparison table\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nsample1\nFirst sample in the comparison\n\n\nsample2\nSecond sample in the comparison\n\n\ntotal_length\nTotal length of the alignment (in bases)\n\n\noverlap_noN_info_count\nNumber of positions where both samples have minimal information (A, C, G, T or IUPAC codes excluding N, gaps, and ?)\n\n\noverlap_noIUPAC_info_count\nNumber of positions where both samples have maximal information (strictly A, C, G, T)\n\n\noverlap_noN_info_pc\nPercentage of total_length with minimal-information overlap\n\n\noverlap_noIUPAC_info_pc\nPercentage of total_length with maximal-information overlap\n\n\nnoN_info_pc_sample1\nIn sample1, percentage of positions with minimal information\n\n\nnoN_info_pc_sample2\nIn sample2, percentage of positions with minimal information\n\n\nnoIUPAC_info_pc_sample1\nIn sample1, percentage of positions with maximal information\n\n\nnoIUPAC_info_pc_sample2\nIn sample2, percentage of positions with maximal information\n\n\ndistance\nGenetic distance between samples (0.0 = identical)\n\n\ndistance_category\nCategorical classification: same_strain, same_subspecies, or divergent\n\n\n\n\n\n2.17.2 Distance-based classification\nSamples are automatically classified according to their genetic distance:\n\n\n\n\n\n\n\n\n\nCategory\nDistance threshold\nApproximate similarity\nBiological interpretation\n\n\n\n\nsame_strain\n≤ 0.0001\n≥ 99.99%\nSame strain / clone\n\n\nsame_subspecies\n≤ 0.015\n≥ 97%\nSame subspecies\n\n\ndivergent\n&gt; 0.015\n&lt; 97%\nDifferent lineage\n\n\n\nNotes\n\nMaximal information: unambiguous nucleotides only (A, C, G, T)\nMinimal information: includes IUPAC ambiguity codes (R, Y, S, W, K, M, B, D, H, V) but excludes N, gaps (-), and unknown characters (?)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_meteor2.html#suggested-bibliography-keys",
+    "href": "chapters/01_meteor2.html#suggested-bibliography-keys",
+    "title": "2  Meteor2 documentation",
+    "section": "2.18 Suggested bibliography keys",
+    "text": "2.18 Suggested bibliography keys\nUse the following citation keys in your reference.bib:\n\n@ghozlane2025meteor2\n@plazaonate2019mspminer\n@vallescolomer2019neuroactive\n@vieirasilva2016species\n@kanehisa2012keggmapper\n@kanehisa2016kegg\n@langmead2012bowtie2\n@coelho2022biogeography\n@metahit2014catalog\n@garrison2012freebayes\n@yuan2023dbcan\n@roux2019mustard\n@meteorgithub",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/03_results.html",
+    "href": "chapters/03_results.html",
+    "title": "4  RNA Integrity Number (RIN): technical background",
+    "section": "",
+    "text": "The complete quality control results for all submitted samples are summarized in Table 4.1, including RNA concentration, total RNA amount, RNA Integrity Number (RIN), and final QC status. Representative electropherograms generated during the analysis are shown in Figure 4.1.\n\n\n\n\n\n\nNote\n\n\n\n\n\n\n\n\n\nFigure 4.1: Representative RNA electropherograms illustrating different levels of RNA integrity (RIN = 10, 5, and 3).\n\n\n\nThe RNA Integrity Number (RIN) is a numerical score ranging from 1 (fully degraded RNA) to 10 (intact RNA), widely used to assess total RNA quality. RIN values are computed from automated electrophoretic analyses performed on platforms such as the Agilent Bioanalyzer.\nThe RIN algorithm evaluates multiple features of the electropherogram, including:\n\nThe presence, height, and sharpness of ribosomal RNA peaks (primarily 18S and 28S rRNA in eukaryotes). High-quality RNA typically displays well-defined 18S and 28S peaks with an approximate 2:1 intensity ratio.\nBackground signal and degree of fragmentation. Degraded RNA is characterized by reduced or absent ribosomal peaks and increased signal corresponding to low-molecular-weight fragments.\nOverall signal distribution across fragment sizes, reflecting progressive RNA degradation.\n\nIn high-quality samples, electropherograms show sharp and well-resolved rRNA peaks with low background noise. In contrast, degraded samples exhibit flattened or missing rRNA peaks and a pronounced accumulation of short RNA fragments.\n\n\nMost samples exhibited RIN values between 7.0 and 9.8, which are generally considered suitable for RNA-Seq library construction and downstream differential gene expression analyses. RNA concentrations also fell within acceptable ranges for library preparation, although moderate variability among samples was observed.\nTwo samples deviated from the expected quality standards:\n\nIT12 showed a low RIN value (3.8), indicating substantial RNA degradation. This sample was classified as Fail and deemed unsuitable for RNA-Seq.\nIT16 displayed an intermediate RIN value of 6.0, suggesting partial degradation that could compromise sequencing quality and data interpretation.\n\nAdditionally, ITPNK exhibited slight genomic DNA contamination, as indicated in the Novogene QC report. Despite this observation, the sample passed overall QC criteria.\nGiven that the sequencing budget covered 24 RNA-Seq libraries and 26 samples were initially submitted, samples IT12 and IT16 were excluded from sequencing. The remaining samples met the quality requirements for transcriptomic analysis and were retained for RNA-Seq library preparation and sequencing.\n\nQC SummaryBioanalyzer Electropherograms\n\n\n\n\n\nTable 4.1: Summary of RNA concentration, integrity (RIN), and QC status for samples assessed prior to RNA-Seq library preparation.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo.\nSample\nConcentration (ng/µl)\nVolume (µl)\nTotal amount (µg)\nRIN\nSample QC Results\n\n\n\n\n1\nP31\n1851.34\n16\n29.62141\n7.7\nPass\n\n\n2\nP32\n2022.42\n16\n32.35878\n8.3\nPass\n\n\n3\nP33\n483.84\n13\n6.28990\n8.8\nPass\n\n\n4\nP34\n826.81\n17\n14.05583\n8.8\nPass\n\n\n5\nP35\n430.00\n16\n6.87994\n8.2\nPass\n\n\n6\nP36\n447.89\n16\n7.16622\n7.2\nPass\n\n\n7\nP41\n1270.12\n16\n20.32186\n9.3\nPass\n\n\n8\nP42\n888.98\n19\n16.89067\n8.8\nPass\n\n\n9\nP43\n1343.73\n19\n25.53087\n8.0\nPass\n\n\n10\nP44\n1961.08\n18\n35.29941\n7.8\nPass\n\n\n11\nP45\n709.86\n18\n12.77749\n8.1\nPass\n\n\n12\nP46\n768.56\n18\n13.83416\n8.9\nPass\n\n\n13\nP47\n342.27\n19\n6.50313\n8.5\nPass\n\n\n14\nP48\n404.26\n17\n6.87242\n7.8\nPass\n\n\n15\nP49\n954.50\n16\n15.27201\n8.8\nPass\n\n\n16\nP50\n295.43\n16\n4.72680\n9.6\nPass\n\n\n17\nP51\n2511.00\n13\n32.64302\n9.5\nPass\n\n\n18\nP52\n578.87\n15\n8.68312\n9.8\nPass\n\n\n19\nP1G\n150.06\n16\n2.40097\n8.9\nPass\n\n\n20\nP2G\n192.33\n16\n3.07729\n9.0\nPass\n\n\n21\nPNKD\n417.18\n18\n7.50923\n8.7\nPass\n\n\n22\nPNKV\n221.19\n17\n3.76027\n8.4\nPass\n\n\n23\nIT12\n2422.80\n17\n41.18753\n3.8\nFail\n\n\n24\nIT16\n2988.15\n18\n53.78664\n6.0\nPass\n\n\n25\nIT1G\n2842.68\n16\n45.48292\n7.8\nPass\n\n\n26\nITPNK\n4493.36\n18\n80.88050\n7.1\nPass\n\n\n\n\n\n\n\n\n\n\nIT12IT16IT1GITPNKPNKDPNKVP1GP2GP31P32P33P34P35P36P41P42P43P44P45P46P47P48P49P50P51P52\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure: RNA quality control electropherograms generated using the Agilent 5400 Bioanalyzer. Each tab corresponds to one sample and displays the characteristic 18S and 28S rRNA peaks and fragment size distribution used to assess RNA integrity prior to sequencing.\n\n\n\n\n\n\n\n\n\n\nNoteTechnical notes from the Novogene RNA QC report\n\n\n\nQ1. What is the influence of RNA concentration on library construction?\nRNA concentration determines the total RNA input available for library preparation. Insufficient RNA input may result in low library yield or library construction failure. Additional RNA concentration steps may increase degradation risk.\nQ2. Does genomic DNA contamination affect poly(A)-enriched mRNA library preparation?\nGenomic DNA is not retained during poly(A) enrichment–based mRNA library preparation. Therefore, low-level genomic DNA contamination does not affect downstream library construction when samples pass QC.\nQ3. What RNA purification methods are used and how much RNA loss is expected?\nRNA purification is typically performed using column-based or magnetic bead–based methods. RNA loss after purification is expected to be approximately 60%, depending on the purification strategy and initial RNA quality.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>RNA Integrity Number (RIN): technical background</span>"
+    ]
+  }
+]

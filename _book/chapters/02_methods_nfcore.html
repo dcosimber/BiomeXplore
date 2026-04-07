@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Bioinformatic Analysis – HOLOFISHCOLOUR — Transcriptomic Analysis</title>
+<title>3&nbsp; Bioinformatic Analysis – BiomeXplore project</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -31,22 +34,21 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../chapters/03_results.html" rel="next">
-<link href="../chapters/01_intro.html" rel="prev">
+<link href="../chapters/01_meteor2.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-7e34ecb6a0e7991f0346b0751d4a7c3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-974a37f8285a4498876f7c989793177c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -265,7 +267,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">HOLOFISHCOLOUR — Transcriptomic Analysis</a> 
+      <a href="../">BiomeXplore project</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -286,8 +288,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/01_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  <a href="../chapters/01_meteor2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -322,20 +324,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
     </ul>
     </div>
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">3.0.1</span> Overview</a></li>
-  <li><a href="#reference-genome" id="toc-reference-genome" class="nav-link" data-scroll-target="#reference-genome"><span class="header-section-number">3.1</span> Reference Genome</a>
-  <ul class="collapse">
-  <li><a href="#genome-statistics" id="toc-genome-statistics" class="nav-link" data-scroll-target="#genome-statistics"><span class="header-section-number">3.1.1</span> Genome statistics</a></li>
-  <li><a href="#genome-and-annotation-files-used" id="toc-genome-and-annotation-files-used" class="nav-link" data-scroll-target="#genome-and-annotation-files-used"><span class="header-section-number">3.1.2</span> Genome and annotation files used</a></li>
-  </ul></li>
-  <li><a href="#notes-and-next-steps" id="toc-notes-and-next-steps" class="nav-link" data-scroll-target="#notes-and-next-steps"><span class="header-section-number">3.2</span> Notes and Next Steps</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">4</span> References</a></li>
-  </ul>
-</nav>
+    
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -364,142 +353,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level3" data-number="3.0.1">
-<h3 data-number="3.0.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">3.0.1</span> Overview</h3>
-<p>The bioinformatic workflow included:</p>
-<ol type="1">
-<li>Raw read quality control</li>
-<li>Alignment to the reference genome</li>
-<li>Gene-level quantification</li>
-<li>Differential expression analysis</li>
-<li>Functional enrichment analysis</li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="figures/Flowchart_RNAseq_pipeline.png" class="img-fluid figure-img"></p>
-<figcaption>RNA-seq bioinformatic workflow</figcaption>
-</figure>
-</div>
-</section>
-<section id="reference-genome" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="reference-genome"><span class="header-section-number">3.1</span> Reference Genome</h2>
-<p>RNA-seq analyses were conducted using the <strong>Scophthalmus maximus ASM1334776v1</strong> reference genome assembly and its corresponding gene annotation, both obtained from <strong>Ensembl (release 113)</strong>. This assembly provides comprehensive coverage of the turbot genome, including both assembled chromosomes and unplaced contigs and scaffolds.</p>
-<p>The reference genome and annotation files are publicly available from Ensembl:<br>
-<a href="https://www.ensembl.org/Scophthalmus_maximus/Info/Index" class="uri">https://www.ensembl.org/Scophthalmus_maximus/Info/Index</a></p>
-<section id="genome-statistics" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="genome-statistics"><span class="header-section-number">3.1.1</span> Genome statistics</h3>
-<div id="tbl-ref_gen_summary" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ref_gen_summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.1: Reference genome summary statistics
-</figcaption>
-<div aria-describedby="tbl-ref_gen_summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Feature</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Assembly</td>
-<td>ASM1334776v1</td>
-</tr>
-<tr class="even">
-<td>Genome size</td>
-<td>556,696,898 bp</td>
-</tr>
-<tr class="odd">
-<td>Coding genes</td>
-<td>21,263</td>
-</tr>
-<tr class="even">
-<td>Non-coding genes</td>
-<td>12,989</td>
-</tr>
-<tr class="odd">
-<td>Pseudogenes</td>
-<td>201</td>
-</tr>
-<tr class="even">
-<td>Gene transcripts</td>
-<td>76,329</td>
-</tr>
-<tr class="odd">
-<td>Annotation source</td>
-<td>Ensembl (v113)</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
-</section>
-<section id="genome-and-annotation-files-used" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="genome-and-annotation-files-used"><span class="header-section-number">3.1.2</span> Genome and annotation files used</h3>
-<p>For read alignment and transcript quantification, we used the <strong>toplevel genome FASTA file</strong> (<code>Scophthalmus_maximus.ASM1334776v1.dna.toplevel.fa</code>) and the <strong>full Ensembl gene annotation in GTF format</strong> (<code>Scophthalmus_maximus.ASM1334776v1.113.gtf</code>). These files were downloaded from the Ensembl FTP server (release 113):</p>
-<ul>
-<li><p>Genome FASTA: <a href="https://ftp.ensembl.org/pub/release-113/fasta/scophthalmus_maximus/dna/" class="uri">https://ftp.ensembl.org/pub/release-113/fasta/scophthalmus_maximus/dna/</a></p></li>
-<li><p>Gene annotation (GTF): <a href="https://ftp.ensembl.org/pub/release-113/gtf/scophthalmus_maximus/" class="uri">https://ftp.ensembl.org/pub/release-113/gtf/scophthalmus_maximus/</a></p></li>
-</ul>
-<p>This combination ensures that RNA-seq reads mapping to both chromosomal and non-chromosomal regions are retained, preventing the loss of annotated genes located in unassembled genomic regions. The <strong>GTF format</strong> was selected due to its broad compatibility with RNA-seq analysis tools such as <strong>STAR</strong>, <strong>HTSeq</strong>, and <strong>featureCounts</strong>, and its suitability for transcript-level quantification.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="Genome and annotation file types (Ensembl technical note)">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Genome and annotation file types (Ensembl technical note)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ensembl provides multiple genome sequence and annotation file types, each optimized for different applications. The main file types relevant for RNA-seq analyses are summarized below.</p>
-<p><strong>Genome FASTA files</strong></p>
-<ul>
-<li><p><strong><code>*.dna.toplevel.fa</code></strong> ✅ <em>(used in this study)</em><br>
-Includes all assembled chromosomes as well as unplaced contigs and scaffolds. This is the most comprehensive genome representation and ensures that RNA-seq reads mapping to non-chromosomal regions are not lost.</p></li>
-<li><p><strong><code>*.dna.primary_assembly.fa</code></strong><br>
-Contains only primary assembled chromosomes and selected scaffolds, excluding smaller unplaced contigs.</p></li>
-<li><p><strong><code>*.dna.chromosome.*.fa</code></strong><br>
-Individual FASTA files for each chromosome, mainly useful for region-specific or targeted analyses.</p></li>
-<li><p><strong><code>*.dna.nonchromosomal.fa</code></strong><br>
-Contains only unplaced contigs and scaffolds and is not suitable for whole-transcriptome RNA-seq analyses.</p></li>
-<li><p><strong><code>*.dna_sm.toplevel.fa</code></strong><br>
-Equivalent to the toplevel FASTA file but soft-masked (repetitive regions in lowercase). This is not required for standard RNA-seq workflows.</p></li>
-</ul>
-<p><strong>Gene annotation files</strong></p>
-<ul>
-<li><p><strong>GTF (<code>*.gtf</code>)</strong> ✅ <em>(used in this study)</em><br>
-Compact gene annotation format optimized for RNA-seq analysis pipelines. Fully compatible with tools such as <strong>STAR</strong>, <strong>HTSeq</strong>, and <strong>featureCounts</strong>.</p></li>
-<li><p><strong>GFF3 (<code>*.gff3</code>)</strong><br>
-A more general-purpose annotation format that includes additional genomic features but often requires conversion for RNA-seq applications.</p></li>
-<li><p><strong>Ab initio GTF (<code>*.abinitio.gtf</code>)</strong><br>
-Contains gene predictions generated without experimental evidence and was not used due to lower reliability.</p></li>
-</ul>
-<p>Overall, the combination of the <strong>toplevel genome assembly</strong> and the <strong>full Ensembl GTF annotation</strong> provides a robust and comprehensive reference framework for RNA-seq analyses, minimizing mapping bias and ensuring accurate gene expression quantification across the entire turbot genome.</p>
-</div>
-</div>
-<hr>
-</section>
-</section>
-<section id="notes-and-next-steps" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="notes-and-next-steps"><span class="header-section-number">3.2</span> Notes and Next Steps</h2>
-<p>This transcriptomic dataset provides a solid foundation for:</p>
-<ul>
-<li>Integrating GWAS candidate genes</li>
-<li>Cross-validating pigmentation pathways</li>
-<li>Comparative analyses with other flatfish species</li>
-<li>Multi-omics integration within the HOLOFISHCOLOUR framework</li>
-</ul>
-<p>Further refinement will include: - Differential expression results - GO / KEGG enrichment - Integration with phenotypic pigmentation metrics</p>
-<hr>
-</section>
-<section id="references" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> References</h1>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -588,7 +443,7 @@ Contains gene predictions generated without experimental evidence and was not us
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/dcosimber\.github\.io\/BiomeXplore\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -917,8 +772,8 @@ Contains gene predictions generated without experimental evidence and was not us
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/01_intro.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      <a href="../chapters/01_meteor2.html" class="pagination-link" aria-label="Meteor2 documentation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

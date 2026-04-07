@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Meteor2 documentation – BiomeXplore project</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/02_methods_nfcore.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-974a37f8285a4498876f7c989793177c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01_meteor2.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">BiomeXplore project</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_meteor2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02_methods_nfcore.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bioinformatic Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03_results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03_qc_multiqc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04_alignment_quant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">04_alignment_quant.html</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05_differential_expression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">05_differential_expression.html</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><span class="header-section-number">2.1</span> Background</a></li>
+  <li><a href="#what-is-meteor2" id="toc-what-is-meteor2" class="nav-link" data-scroll-target="#what-is-meteor2"><span class="header-section-number">2.2</span> What is Meteor2?</a></li>
+  <li><a href="#microbial-gene-catalogues" id="toc-microbial-gene-catalogues" class="nav-link" data-scroll-target="#microbial-gene-catalogues"><span class="header-section-number">2.3</span> Microbial gene catalogues</a></li>
+  <li><a href="#overview-of-the-workflow" id="toc-overview-of-the-workflow" class="nav-link" data-scroll-target="#overview-of-the-workflow"><span class="header-section-number">2.4</span> Overview of the workflow</a></li>
+  <li><a href="#quantification-modes" id="toc-quantification-modes" class="nav-link" data-scroll-target="#quantification-modes"><span class="header-section-number">2.5</span> Quantification modes</a></li>
+  <li><a href="#taxonomic-profiling" id="toc-taxonomic-profiling" class="nav-link" data-scroll-target="#taxonomic-profiling"><span class="header-section-number">2.6</span> Taxonomic profiling</a>
+  <ul class="collapse">
+  <li><a href="#normalization" id="toc-normalization" class="nav-link" data-scroll-target="#normalization"><span class="header-section-number">2.6.1</span> Normalization</a></li>
+  <li><a href="#reduction-to-msp-abundance" id="toc-reduction-to-msp-abundance" class="nav-link" data-scroll-target="#reduction-to-msp-abundance"><span class="header-section-number">2.6.2</span> Reduction to MSP abundance</a></li>
+  </ul></li>
+  <li><a href="#functional-profiling" id="toc-functional-profiling" class="nav-link" data-scroll-target="#functional-profiling"><span class="header-section-number">2.7</span> Functional profiling</a>
+  <ul class="collapse">
+  <li><a href="#functional-modules" id="toc-functional-modules" class="nav-link" data-scroll-target="#functional-modules"><span class="header-section-number">2.7.1</span> Functional modules</a></li>
+  </ul></li>
+  <li><a href="#strain-level-analysis" id="toc-strain-level-analysis" class="nav-link" data-scroll-target="#strain-level-analysis"><span class="header-section-number">2.8</span> Strain-level analysis</a>
+  <ul class="collapse">
+  <li><a href="#snv-calling" id="toc-snv-calling" class="nav-link" data-scroll-target="#snv-calling"><span class="header-section-number">2.8.1</span> 1. SNV calling</a></li>
+  <li><a href="#reconstruction-of-sample-specific-msps" id="toc-reconstruction-of-sample-specific-msps" class="nav-link" data-scroll-target="#reconstruction-of-sample-specific-msps"><span class="header-section-number">2.8.2</span> 2. Reconstruction of sample-specific MSPs</a></li>
+  <li><a href="#mutation-rate-and-distance-estimation" id="toc-mutation-rate-and-distance-estimation" class="nav-link" data-scroll-target="#mutation-rate-and-distance-estimation"><span class="header-section-number">2.8.3</span> 3. Mutation rate and distance estimation</a></li>
+  </ul></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2.9</span> Installation</a></li>
+  <li><a href="#nextflow-wrapper" id="toc-nextflow-wrapper" class="nav-link" data-scroll-target="#nextflow-wrapper"><span class="header-section-number">2.10</span> Nextflow wrapper</a>
+  <ul class="collapse">
+  <li><a href="#main-parameters" id="toc-main-parameters" class="nav-link" data-scroll-target="#main-parameters"><span class="header-section-number">2.10.1</span> Main parameters</a></li>
+  </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">2.11</span> Getting started</a></li>
+  <li><a href="#download-a-reference-catalogue" id="toc-download-a-reference-catalogue" class="nav-link" data-scroll-target="#download-a-reference-catalogue"><span class="header-section-number">2.12</span> 1. Download a reference catalogue</a>
+  <ul class="collapse">
+  <li><a href="#available-catalogues" id="toc-available-catalogues" class="nav-link" data-scroll-target="#available-catalogues"><span class="header-section-number">2.12.1</span> Available catalogues</a></li>
+  </ul></li>
+  <li><a href="#import-fastq-files" id="toc-import-fastq-files" class="nav-link" data-scroll-target="#import-fastq-files"><span class="header-section-number">2.13</span> 2. Import FASTQ files</a></li>
+  <li><a href="#mapping" id="toc-mapping" class="nav-link" data-scroll-target="#mapping"><span class="header-section-number">2.14</span> 3. Mapping</a></li>
+  <li><a href="#taxonomic-and-functional-profiling" id="toc-taxonomic-and-functional-profiling" class="nav-link" data-scroll-target="#taxonomic-and-functional-profiling"><span class="header-section-number">2.15</span> 4. Taxonomic and functional profiling</a></li>
+  <li><a href="#merging-sample-outputs" id="toc-merging-sample-outputs" class="nav-link" data-scroll-target="#merging-sample-outputs"><span class="header-section-number">2.16</span> 5. Merging sample outputs</a></li>
+  <li><a href="#strain-profiling" id="toc-strain-profiling" class="nav-link" data-scroll-target="#strain-profiling"><span class="header-section-number">2.17</span> 6. Strain profiling</a>
+  <ul class="collapse">
+  <li><a href="#pairwise-strain-comparison-table" id="toc-pairwise-strain-comparison-table" class="nav-link" data-scroll-target="#pairwise-strain-comparison-table"><span class="header-section-number">2.17.1</span> Pairwise strain comparison table</a></li>
+  <li><a href="#distance-based-classification" id="toc-distance-based-classification" class="nav-link" data-scroll-target="#distance-based-classification"><span class="header-section-number">2.17.2</span> Distance-based classification</a></li>
+  </ul></li>
+  <li><a href="#suggested-bibliography-keys" id="toc-suggested-bibliography-keys" class="nav-link" data-scroll-target="#suggested-bibliography-keys"><span class="header-section-number">2.18</span> Suggested bibliography keys</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="background" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="background"><span class="header-section-number">2.1</span> Background</h2>
+<p>A comprehensive understanding of microbial communities requires the integration of <strong>taxonomic, functional, and strain-level profiling</strong> (<em>TFSP</em>). In shotgun metagenomics, these three layers are tightly connected: taxonomy identifies <em>who is there</em>, functional profiling estimates <em>what they can do</em>, and strain-level analysis provides insight into <em>within-species variation</em> and population structure.</p>
+<p>Most reference-based metagenomic profilers rely on one of three broad strategies:</p>
+<ol type="1">
+<li><strong>whole-genome reference databases</strong>,</li>
+<li><strong>species-specific marker genes</strong>, or</li>
+<li><strong>universal single-copy marker genes</strong>.</li>
+</ol>
+<p>These approaches are often highly effective for taxonomic assignment, but they usually provide only indirect or partial access to functional interpretation. In practice, this means that taxonomic and functional profiling are frequently performed with separate tools and databases, which can increase workflow complexity and create inconsistencies between the two outputs.</p>
+<p>This limitation is particularly evident in approaches designed for broad applicability across many ecosystems. Because these methods often depend on conserved marker genes, they gain generalizability at the cost of reduced sensitivity to <strong>ecosystem-specific functional variation</strong>. As a result, functional characterization often requires additional annotation workflows based on pan-genome, orthology, or pathway resources.</p>
+<p>An alternative strategy is to use <strong>ecosystem-specific microbial gene catalogues</strong>. These catalogue-based approaches rely on smaller but highly informative reference collections and enable a more coherent integration of taxonomic and functional profiling. This is the conceptual framework on which <strong>Meteor2</strong> is based <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>.</p>
+<hr>
+</section>
+<section id="what-is-meteor2" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="what-is-meteor2"><span class="header-section-number">2.2</span> What is Meteor2?</h2>
+<p><strong>Meteor2</strong> is a tool for <strong>quantitative metagenomic profiling of complex ecosystems</strong> based on <strong>microbial gene catalogues</strong>. Rather than relying primarily on universal marker genes, Meteor2 quantifies genes by mapping reads against ecosystem-specific reference catalogues and derives <strong>taxonomic, functional, and strain-level profiles</strong> from the same reference framework <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>.</p>
+<p>Its main analytical unit is the <strong>Metagenomic Species Pan-genome (MSP)</strong>, originally introduced with <strong>MSPminer</strong> <span class="citation" data-cites="plazaonate2019mspminer">(<a href="#ref-plazaonate2019mspminer" role="doc-biblioref"><strong>plazaonate2019mspminer?</strong></a>)</span>. In this framework, genes are grouped into microbial species-level units based on co-abundance patterns across samples. Within each MSP, a subset of highly connected genes is defined as <strong>signature genes</strong>, which are used as the most robust indicators for MSP detection and quantification.</p>
+<p>Meteor2 uses microbial gene catalogues to perform:</p>
+<ul>
+<li><strong>species-level taxonomic profiling</strong> (<em>Bacteria, Archaea, and Eukaryotes</em>),</li>
+<li><strong>functional profiling</strong>,</li>
+<li><strong>strain-level population structure inference</strong>.</li>
+</ul>
+<p>In addition, Meteor2 integrates several functional annotation repertoires into its catalogues, including:</p>
+<ul>
+<li><strong>KEGG Orthologs (KO)</strong> from KEGG database <span class="citation" data-cites="kanehisa2016kegg">(<a href="#ref-kanehisa2016kegg" role="doc-biblioref"><strong>kanehisa2016kegg?</strong></a>)</span>,</li>
+<li><strong>carbohydrante-active enzymes (CAZymes)</strong> from dbCAN <span class="citation" data-cites="yuan2023dbcan">(<a href="#ref-yuan2023dbcan" role="doc-biblioref"><strong>yuan2023dbcan?</strong></a>)</span>,</li>
+<li><strong>antibiotic resistance genes (ARGs)</strong> from MUSTARD <span class="citation" data-cites="roux2019mustard">(<a href="#ref-roux2019mustard" role="doc-biblioref"><strong>roux2019mustard?</strong></a>)</span>.</li>
+</ul>
+<p>These annotations can be quantified either at the <strong>individual gene level</strong> or at the <strong>MSP level</strong>, thereby linking taxonomic composition to functional potential within a unified framework.</p>
+<hr>
+</section>
+<section id="microbial-gene-catalogues" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="microbial-gene-catalogues"><span class="header-section-number">2.3</span> Microbial gene catalogues</h2>
+<p>Meteor2 currently supports <strong>10 curated microbial gene catalogues</strong>, each tailored to a specific host-associated ecosystem <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>. These catalogues cover:</p>
+<ul>
+<li><strong>human microbiomes</strong>: gut, oral, and skin,</li>
+<li><strong>domestic animals</strong>: cat and dog,</li>
+<li><strong>laboratory models</strong>: mouse and rat,</li>
+<li><strong>livestock</strong>: chicken, pig, and rabbit.</li>
+</ul>
+<p>Each catalogue includes two main components:</p>
+<ol type="1">
+<li><strong>MSPs</strong>, in which genes are clustered by co-abundance;</li>
+<li><strong>unclustered genes</strong>, which may represent biological content that is not captured by metagenome-assembled genomes (MAGs) or stable MSP structures <span class="citation" data-cites="coelho2022biogeography">(<a href="#ref-coelho2022biogeography" role="doc-biblioref"><strong>coelho2022biogeography?</strong></a>)</span>.</li>
+</ol>
+<p>Meteor2 also incorporates three types of higher-level functional module systems:</p>
+<ul>
+<li><strong>Gut Brain Modules (GBMs)</strong> <span class="citation" data-cites="vallescolomer2019neuroactive">(<a href="#ref-vallescolomer2019neuroactive" role="doc-biblioref"><strong>vallescolomer2019neuroactive?</strong></a>)</span>,</li>
+<li><strong>Gut Metabolic Modules (GMMs)</strong> <span class="citation" data-cites="vieirasilva2016species">(<a href="#ref-vieirasilva2016species" role="doc-biblioref"><strong>vieirasilva2016species?</strong></a>)</span>,</li>
+<li><strong>KEGG modules</strong> <span class="citation" data-cites="kanehisa2012keggmapper">(<a href="#ref-kanehisa2012keggmapper" role="doc-biblioref"><strong>kanehisa2012keggmapper?</strong></a>)</span>.</li>
+</ul>
+<p>For rapid analysis, Meteor2 additionally provides a <strong>light / fast mode</strong>, based on a reduced catalogue containing only <strong>100 signature genes per MSP</strong>. These genes correspond to the most connected genes within each MSP and allow accelerated taxonomic and strain-level profiling. Functional profiling is not available in this reduced mode <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>.</p>
+<hr>
+</section>
+<section id="overview-of-the-workflow" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="overview-of-the-workflow"><span class="header-section-number">2.4</span> Overview of the workflow</h2>
+<p>Meteor2 estimates the abundance of <strong>genes</strong>, <strong>MSPs</strong>, and <strong>functions</strong> within microbial communities, and also reconstructs <strong>sample-specific strain variation</strong>.</p>
+<p>The analytical workflow consists of four main steps <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>:</p>
+<ol type="1">
+<li><strong>Download</strong> an ecosystem-specific microbial gene catalogue</li>
+<li><strong>Align</strong> short metagenomic reads to the catalogue</li>
+<li><strong>Compute abundance profiles</strong> for genes, MSPs, and functions</li>
+<li><strong>Reconstruct sample-specific MSP genotypes</strong> and estimate mutation rates</li>
+</ol>
+<p>The pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using <strong>Bowtie2</strong> <span class="citation" data-cites="langmead2012bowtie2">(<a href="#ref-langmead2012bowtie2" role="doc-biblioref"><strong>langmead2012bowtie2?</strong></a>)</span>. From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs <strong>SNV calling</strong> and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="meteor2_pipeline.png" class="img-fluid figure-img"></p>
+<figcaption>Overview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.</figcaption>
+</figure>
+</div>
+<p><strong>Figure 1.</strong> Overview of the Meteor2 pipeline for TFSP analysis.</p>
+<hr>
+</section>
+<section id="quantification-modes" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="quantification-modes"><span class="header-section-number">2.5</span> Quantification modes</h2>
+<p>After read alignment, Meteor2 re-estimates gene counts using one of three counting modes:</p>
+<ul>
+<li><strong><code>unique</code></strong>: counts only reads with a single valid alignment.</li>
+<li><strong><code>total</code></strong>: assigns all alignments to all matched genes and sums them directly.</li>
+<li><strong><code>shared</code></strong>: redistributes multi-mapping reads proportionally across the genes they align to, based on the genes’ unique read counts. If all unique counts are zero, the read is distributed evenly across all compatible genes.</li>
+</ul>
+<p>The <strong><code>shared</code></strong> mode is particularly useful when reads map to homologous genes and a proportional assignment strategy is preferred over strict unique counting.</p>
+<hr>
+</section>
+<section id="taxonomic-profiling" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="taxonomic-profiling"><span class="header-section-number">2.6</span> Taxonomic profiling</h2>
+<p>Meteor2 derives taxonomic profiles from <strong>gene count tables</strong> through two main operations:</p>
+<ol type="1">
+<li><strong>normalization</strong>,</li>
+<li><strong>reduction from genes to MSPs</strong>.</li>
+</ol>
+<section id="normalization" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="normalization"><span class="header-section-number">2.6.1</span> Normalization</h3>
+<p>Meteor2 supports the following normalization strategies:</p>
+<ul>
+<li><strong>Depth coverage</strong>: read count divided by gene length and multiplied by 100, with gene length corrected for edge effects due to read length <span class="citation" data-cites="metahit2014catalog">(<a href="#ref-metahit2014catalog" role="doc-biblioref"><strong>metahit2014catalog?</strong></a>)</span>.</li>
+<li><strong>FPKM</strong> (<em>Fragments Per Kilobase Million</em>).</li>
+</ul>
+</section>
+<section id="reduction-to-msp-abundance" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="reduction-to-msp-abundance"><span class="header-section-number">2.6.2</span> Reduction to MSP abundance</h3>
+<p>MSP abundance is estimated by averaging the abundance of <strong>signature genes</strong> after normalization. By default, Meteor2 considers the <strong>100 most central signature genes</strong> per MSP.</p>
+<p>An MSP is assigned an abundance of <strong>0</strong> if too few signature genes are detected in the sample. In standard catalogues, the default requirement is more stringent; in <strong>light catalogues</strong>, the detection threshold is reduced, with a default requirement of <strong>20%</strong> of signature genes.</p>
+<p>This approach provides a robust species-level abundance estimate while minimizing noise from poorly supported genes.</p>
+<hr>
+</section>
+</section>
+<section id="functional-profiling" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="functional-profiling"><span class="header-section-number">2.7</span> Functional profiling</h2>
+<p>Meteor2 computes the abundance of functional entities in two complementary ways:</p>
+<ul>
+<li>by aggregating the abundance of <strong>genes annotated with a given function</strong>,</li>
+<li>or by aggregating the abundance of <strong>MSPs carrying that function</strong>.</li>
+</ul>
+<p>When MSP-based functional inference is used, only genes that are actually <strong>detected in the sample</strong> (at least one mapped read) are considered.</p>
+<section id="functional-modules" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="functional-modules"><span class="header-section-number">2.7.1</span> Functional modules</h3>
+<p>Meteor2 supports module-level profiling for systems such as <strong>GBMs</strong>, <strong>GMMs</strong>, and <strong>KEGG modules</strong>. For a given module, an MSP is considered a <strong>module carrier</strong> when the module completeness exceeds <strong>90%</strong> in that sample <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>.</p>
+<p>Because some module steps can be satisfied by alternative functions, Meteor2 evaluates all compatible alternative configurations and retains the <strong>maximum completeness value</strong>. The total abundance of all MSP carriers defines the <strong>module potential</strong> in that sample, together with the list of contributing taxa.</p>
+<p>This strategy provides an explicit bridge between <strong>community composition</strong> and <strong>functional potential</strong>, making it possible to identify not only which functions are present, but also which species are likely contributing to them.</p>
+<hr>
+</section>
+</section>
+<section id="strain-level-analysis" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="strain-level-analysis"><span class="header-section-number">2.8</span> Strain-level analysis</h2>
+<p>Meteor2 performs strain-level analysis in three main stages:</p>
+<ol type="1">
+<li><strong>SNV calling</strong> using <strong>FreeBayes</strong> <span class="citation" data-cites="garrison2012freebayes">(<a href="#ref-garrison2012freebayes" role="doc-biblioref"><strong>garrison2012freebayes?</strong></a>)</span></li>
+<li><strong>Reconstruction of sample-specific MSP sequences</strong></li>
+<li><strong>Pairwise comparison and phylogenetic analysis</strong> of reconstructed MSPs</li>
+</ol>
+<section id="snv-calling" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="snv-calling"><span class="header-section-number">2.8.1</span> 1. SNV calling</h3>
+<p>Meteor2 identifies single nucleotide variants from mapped reads and uses them to build a <strong>sample-specific consensus gene catalogue</strong>.</p>
+</section>
+<section id="reconstruction-of-sample-specific-msps" class="level3" data-number="2.8.2">
+<h3 data-number="2.8.2" class="anchored" data-anchor-id="reconstruction-of-sample-specific-msps"><span class="header-section-number">2.8.2</span> 2. Reconstruction of sample-specific MSPs</h3>
+<p>Only MSPs with sufficient coverage are retained for downstream strain analysis. By default, at least <strong>80 out of 100 signature genes</strong> must have a minimum <strong>breadth coverage of 0.5</strong>.</p>
+</section>
+<section id="mutation-rate-and-distance-estimation" class="level3" data-number="2.8.3">
+<h3 data-number="2.8.3" class="anchored" data-anchor-id="mutation-rate-and-distance-estimation"><span class="header-section-number">2.8.3</span> 3. Mutation rate and distance estimation</h3>
+<p>MSPs detected in at least <strong>two samples</strong> are considered for mutation-rate analysis. By default, at least <strong>10 informative sites</strong> are required to estimate distances. Pairwise distances between sample-specific MSP sequences are then computed under a <strong>General Time Reversible (GTR)</strong> evolutionary model, allowing strain similarity and divergence to be quantified <span class="citation" data-cites="ghozlane2025meteor2">(<a href="#ref-ghozlane2025meteor2" role="doc-biblioref"><strong>ghozlane2025meteor2?</strong></a>)</span>.</p>
+<p>Meteor2 can also generate phylogenetic trees from these reconstructed sequences.</p>
+<hr>
+</section>
+</section>
+<section id="installation" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="installation"><span class="header-section-number">2.9</span> Installation</h2>
+<p>Meteor2 can be installed with <strong>conda</strong>, including its dependencies:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">--name</span> meteor <span class="at">-c</span> conda-forge <span class="at">-c</span> bioconda meteor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Alternatively, it can be installed with <strong>pip</strong> using a recent Python version:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install meteor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To test the installation:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="nextflow-wrapper" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="nextflow-wrapper"><span class="header-section-number">2.10</span> Nextflow wrapper</h2>
+<p>Meteor2 also provides a <strong>Nextflow wrapper</strong> (<code>nf-meteor.nf</code>) for automated execution of the full workflow <span class="citation" data-cites="meteorgithub">(<a href="#ref-meteorgithub" role="doc-biblioref"><strong>meteorgithub?</strong></a>)</span>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nf-meteor.nf</span> <span class="at">--in</span> <span class="op">&lt;</span>fastq_dir<span class="op">&gt;</span> --catalogue_name <span class="op">&lt;</span>catalogue_name<span class="op">&gt;</span> --out <span class="op">&lt;</span>output_dir<span class="op">&gt;</span> --cpus <span class="op">&lt;</span>nb_cpus<span class="op">&gt;</span> -w <span class="op">&lt;</span>temp_work_dir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="main-parameters" class="level3" data-number="2.10.1">
+<h3 data-number="2.10.1" class="anchored" data-anchor-id="main-parameters"><span class="header-section-number">2.10.1</span> Main parameters</h3>
+<ul>
+<li><code>--in</code>: directory containing paired <code>fastq.gz</code> files</li>
+<li><code>--out</code>: output directory</li>
+<li><code>--cpus</code>: number of CPUs to use</li>
+<li><code>--catalogue_name</code>: name of a prebuilt catalogue</li>
+<li><code>--catalogue</code>: path to a custom catalogue (overrides <code>--catalogue_name</code>)</li>
+<li><code>--fast</code>: enable fast mode (<em>no functional analysis</em>)</li>
+<li><code>--check_catalogue</code>: check whether the catalogue is compatible with the input reads</li>
+</ul>
+<p>Allowed <code>--catalogue_name</code> values include:</p>
+<ul>
+<li><code>fc_1_3_gut</code></li>
+<li><code>gg_13_6_caecal</code></li>
+<li><code>clf_1_0_gut</code></li>
+<li><code>hs_10_4_gut</code></li>
+<li><code>hs_8_4_oral</code></li>
+<li><code>hs_2_9_skin</code></li>
+<li><code>mm_5_0_gut</code></li>
+<li><code>oc_5_7_gut</code></li>
+<li><code>rn_5_9_gut</code></li>
+<li><code>ssc_9_3_gut</code></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="getting-started" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">2.11</span> Getting started</h2>
+<p>A basic Meteor2 workflow typically involves the following steps:</p>
+<ol type="1">
+<li><strong>Download or build a reference catalogue</strong></li>
+<li><strong>Import and index FASTQ files</strong></li>
+<li><strong>Map reads against the reference catalogue</strong></li>
+<li><strong>Compute taxonomic and functional abundance profiles</strong></li>
+<li><strong>Perform strain-level profiling</strong></li>
+<li><strong>Merge outputs across samples when needed</strong></li>
+</ol>
+<hr>
+</section>
+<section id="download-a-reference-catalogue" class="level2" data-number="2.12">
+<h2 data-number="2.12" class="anchored" data-anchor-id="download-a-reference-catalogue"><span class="header-section-number">2.12</span> 1. Download a reference catalogue</h2>
+<p>Meteor2 requires a locally available microbial gene catalogue, either in <strong>full</strong> or <strong>light</strong> format.</p>
+<ul>
+<li>The <strong>full catalogue</strong> contains all genes and supports <strong>taxonomic, functional, and strain-level profiling</strong>.</li>
+<li>The <strong>light catalogue</strong> contains only marker/signature genes and supports <strong>rapid taxonomic and strain-level profiling</strong>, but <strong>not functional profiling</strong>.</li>
+</ul>
+<section id="available-catalogues" class="level3" data-number="2.12.1">
+<h3 data-number="2.12.1" class="anchored" data-anchor-id="available-catalogues"><span class="header-section-number">2.12.1</span> Available catalogues</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 4%">
+<col style="width: 14%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Microbial gene catalogue</th>
+<th style="text-align: right;">Name</th>
+<th style="text-align: right;">Gene count (M)</th>
+<th style="text-align: right;">MSPs</th>
+<th style="text-align: right;">Size full (GB)</th>
+<th style="text-align: right;">Size light (GB)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>Canis lupus familiaris</em> gut</td>
+<td style="text-align: right;"><code>clf_1_0_gut</code></td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+<tr class="even">
+<td><em>Felis catus</em> gut</td>
+<td style="text-align: right;"><code>fc_1_3_gut</code></td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">344</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="odd">
+<td><em>Gallus gallus domesticus</em> caecal</td>
+<td style="text-align: right;"><code>gg_13_6_caecal</code></td>
+<td style="text-align: right;">13.6</td>
+<td style="text-align: right;">2420</td>
+<td style="text-align: right;">19.6</td>
+<td style="text-align: right;">1.2</td>
+</tr>
+<tr class="even">
+<td><em>Homo sapiens</em> gut</td>
+<td style="text-align: right;"><code>hs_10_4_gut</code></td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">12.6</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr class="odd">
+<td><em>Homo sapiens</em> oral</td>
+<td style="text-align: right;"><code>hs_8_4_oral</code></td>
+<td style="text-align: right;">8.4</td>
+<td style="text-align: right;">853</td>
+<td style="text-align: right;">13.7</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td><em>Homo sapiens</em> skin</td>
+<td style="text-align: right;"><code>hs_2_9_skin</code></td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">392</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+<tr class="odd">
+<td><em>Mus musculus</em> gut</td>
+<td style="text-align: right;"><code>mm_5_0_gut</code></td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">1252</td>
+<td style="text-align: right;">10.3</td>
+<td style="text-align: right;">0.6</td>
+</tr>
+<tr class="even">
+<td><em>Oryctolagus cuniculus</em> gut</td>
+<td style="text-align: right;"><code>oc_5_7_gut</code></td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">1053</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">0.4</td>
+</tr>
+<tr class="odd">
+<td><em>Rattus norvegicus</em> gut</td>
+<td style="text-align: right;"><code>rn_5_9_gut</code></td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">1627</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">0.6</td>
+</tr>
+<tr class="even">
+<td><em>Sus domesticus</em> gut</td>
+<td style="text-align: right;"><code>ssc_9_3_gut</code></td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">1523</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+</tbody>
+</table>
+<p>Download a full catalogue with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> download <span class="at">-i</span> <span class="op">&lt;</span>name<span class="op">&gt;</span> -c <span class="at">-o</span> <span class="op">&lt;</span>refdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Download a light catalogue with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> download <span class="at">-i</span> <span class="op">&lt;</span>name<span class="op">&gt;</span> -c <span class="at">--fast</span> <span class="at">-o</span> <span class="op">&lt;</span>refdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="import-fastq-files" class="level2" data-number="2.13">
+<h2 data-number="2.13" class="anchored" data-anchor-id="import-fastq-files"><span class="header-section-number">2.13</span> 2. Import FASTQ files</h2>
+<p>Meteor2 requires an initial FASTQ indexing step:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> fastq <span class="at">-i</span> <span class="op">&lt;</span>fastqdir<span class="op">&gt;</span> [-p paired reads] <span class="at">-o</span> <span class="op">&lt;</span>outputdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When multiple sequencing files are available for the same library, the <code>-m</code> option can be used to group them automatically.</p>
+<p>For example, if the directory contains:</p>
+<pre class="text"><code>Illumina_lib1-SAMPLE_01.fastq
+Illumina_lib1-SAMPLE_02.fastq
+Illumina_lib2-SAMPLE_01.fastq
+Illumina_lib2-SAMPLE_02.fastq</code></pre>
+<p>The following command will group files belonging to the same sample/library structure:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> fastq <span class="at">-i</span> ./ <span class="at">-m</span> SAMPLE_<span class="dt">\\</span>d+ <span class="at">-o</span> outputdir</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="mapping" class="level2" data-number="2.14">
+<h2 data-number="2.14" class="anchored" data-anchor-id="mapping"><span class="header-section-number">2.14</span> 3. Mapping</h2>
+<p>FASTQ files are mapped against a reference catalogue to generate gene count tables:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> mapping <span class="at">-i</span> <span class="op">&lt;</span>fastqdir/sampledir<span class="op">&gt;</span> -r <span class="op">&lt;</span>refdir<span class="op">&gt;</span> -o <span class="op">&lt;</span>mappingdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Before this step, it is recommended to remove:</p>
+<ul>
+<li>low-quality reads,</li>
+<li>short reads (e.g.&nbsp;&lt; 60 nt),</li>
+<li>host-derived reads.</li>
+</ul>
+<hr>
+</section>
+<section id="taxonomic-and-functional-profiling" class="level2" data-number="2.15">
+<h2 data-number="2.15" class="anchored" data-anchor-id="taxonomic-and-functional-profiling"><span class="header-section-number">2.15</span> 4. Taxonomic and functional profiling</h2>
+<p>Genes in the catalogue are clustered into <strong>Metagenomic Species Pan-genomes (MSPs)</strong> with <strong>MSPminer</strong> <span class="citation" data-cites="plazaonate2019mspminer">(<a href="#ref-plazaonate2019mspminer" role="doc-biblioref"><strong>plazaonate2019mspminer?</strong></a>)</span> and functionally annotated against:</p>
+<ul>
+<li><strong>KEGG</strong> <span class="citation" data-cites="kanehisa2016kegg">(<a href="#ref-kanehisa2016kegg" role="doc-biblioref"><strong>kanehisa2016kegg?</strong></a>)</span>,</li>
+<li><strong>dbCAN</strong> <span class="citation" data-cites="yuan2023dbcan">(<a href="#ref-yuan2023dbcan" role="doc-biblioref"><strong>yuan2023dbcan?</strong></a>)</span>,</li>
+<li><strong>MUSTARD</strong> <span class="citation" data-cites="roux2019mustard">(<a href="#ref-roux2019mustard" role="doc-biblioref"><strong>roux2019mustard?</strong></a>)</span>.</li>
+</ul>
+<p>MSP and functional profiles are computed from the gene count table with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> profile <span class="at">-i</span> <span class="op">&lt;</span>mappingdir/sampledir<span class="op">&gt;</span> -o <span class="op">&lt;</span>profiledir<span class="op">&gt;</span> -r <span class="op">&lt;</span>refdir<span class="op">&gt;</span> -n coverage</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>-n</code> parameter enables read-count normalization by gene length. If omitted, no normalization is applied to the gene table.</p>
+<p>This profiling step can generate:</p>
+<ul>
+<li>a <strong>species abundance table</strong>,</li>
+<li>an <strong>ARG abundance table</strong> (<em>full catalogue only</em>),</li>
+<li>a <strong>dbCAN abundance table</strong> (<em>full catalogue only</em>),</li>
+<li>a <strong>Gut Metabolic Modules (GMM)</strong> abundance table (<em>full catalogue only</em>),</li>
+<li>a <strong>Gut Brain Modules (GBM)</strong> abundance table (<em>full catalogue only</em>).</li>
+</ul>
+<hr>
+</section>
+<section id="merging-sample-outputs" class="level2" data-number="2.16">
+<h2 data-number="2.16" class="anchored" data-anchor-id="merging-sample-outputs"><span class="header-section-number">2.16</span> 5. Merging sample outputs</h2>
+<p>To merge outputs from multiple samples into a single table:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> merge <span class="at">-i</span> <span class="op">&lt;</span>profiledir<span class="op">&gt;</span> -r <span class="op">&lt;</span>refdir<span class="op">&gt;</span> -o <span class="op">&lt;</span>mergingdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="strain-profiling" class="level2" data-number="2.17">
+<h2 data-number="2.17" class="anchored" data-anchor-id="strain-profiling"><span class="header-section-number">2.17</span> 6. Strain profiling</h2>
+<p>Meteor2 can profile strains across large metagenomic datasets by identifying sample-specific mutations and projecting them onto MSP reference sequences.</p>
+<p>To perform strain profiling:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> strain <span class="at">-i</span> <span class="op">&lt;</span>mappingdir/sampledir<span class="op">&gt;</span> -o <span class="op">&lt;</span>straindir<span class="op">&gt;</span> -r <span class="op">&lt;</span>refdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To compute mutation rates and build trees between strains:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> tree <span class="at">-i</span> <span class="op">&lt;</span>straindir<span class="op">&gt;</span> -o <span class="op">&lt;</span>treedir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This step generates:</p>
+<ul>
+<li>a <strong>mutation rate matrix</strong>,</li>
+<li>a <strong>FASTA file</strong> for each reconstructed strain in each sample,</li>
+<li>a <strong>detailed pairwise comparison table</strong> for each strain.</li>
+</ul>
+<section id="pairwise-strain-comparison-table" class="level3" data-number="2.17.1">
+<h3 data-number="2.17.1" class="anchored" data-anchor-id="pairwise-strain-comparison-table"><span class="header-section-number">2.17.1</span> Pairwise strain comparison table</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sample1</code></td>
+<td>First sample in the comparison</td>
+</tr>
+<tr class="even">
+<td><code>sample2</code></td>
+<td>Second sample in the comparison</td>
+</tr>
+<tr class="odd">
+<td><code>total_length</code></td>
+<td>Total length of the alignment (in bases)</td>
+</tr>
+<tr class="even">
+<td><code>overlap_noN_info_count</code></td>
+<td>Number of positions where <strong>both</strong> samples have minimal information (A, C, G, T or IUPAC codes excluding <code>N</code>, gaps, and <code>?</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>overlap_noIUPAC_info_count</code></td>
+<td>Number of positions where <strong>both</strong> samples have maximal information (strictly <code>A</code>, <code>C</code>, <code>G</code>, <code>T</code>)</td>
+</tr>
+<tr class="even">
+<td><code>overlap_noN_info_pc</code></td>
+<td>Percentage of <code>total_length</code> with minimal-information overlap</td>
+</tr>
+<tr class="odd">
+<td><code>overlap_noIUPAC_info_pc</code></td>
+<td>Percentage of <code>total_length</code> with maximal-information overlap</td>
+</tr>
+<tr class="even">
+<td><code>noN_info_pc_sample1</code></td>
+<td>In <code>sample1</code>, percentage of positions with minimal information</td>
+</tr>
+<tr class="odd">
+<td><code>noN_info_pc_sample2</code></td>
+<td>In <code>sample2</code>, percentage of positions with minimal information</td>
+</tr>
+<tr class="even">
+<td><code>noIUPAC_info_pc_sample1</code></td>
+<td>In <code>sample1</code>, percentage of positions with maximal information</td>
+</tr>
+<tr class="odd">
+<td><code>noIUPAC_info_pc_sample2</code></td>
+<td>In <code>sample2</code>, percentage of positions with maximal information</td>
+</tr>
+<tr class="even">
+<td><code>distance</code></td>
+<td>Genetic distance between samples (<code>0.0</code> = identical)</td>
+</tr>
+<tr class="odd">
+<td><code>distance_category</code></td>
+<td>Categorical classification: <code>same_strain</code>, <code>same_subspecies</code>, or <code>divergent</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="distance-based-classification" class="level3" data-number="2.17.2">
+<h3 data-number="2.17.2" class="anchored" data-anchor-id="distance-based-classification"><span class="header-section-number">2.17.2</span> Distance-based classification</h3>
+<p>Samples are automatically classified according to their genetic distance:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th style="text-align: right;">Distance threshold</th>
+<th>Approximate similarity</th>
+<th>Biological interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>same_strain</code></td>
+<td style="text-align: right;">≤ 0.0001</td>
+<td>≥ 99.99%</td>
+<td>Same strain / clone</td>
+</tr>
+<tr class="even">
+<td><code>same_subspecies</code></td>
+<td style="text-align: right;">≤ 0.015</td>
+<td>≥ 97%</td>
+<td>Same subspecies</td>
+</tr>
+<tr class="odd">
+<td><code>divergent</code></td>
+<td style="text-align: right;">&gt; 0.015</td>
+<td>&lt; 97%</td>
+<td>Different lineage</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notes</strong></p>
+<ul>
+<li><strong>Maximal information</strong>: unambiguous nucleotides only (<code>A</code>, <code>C</code>, <code>G</code>, <code>T</code>)</li>
+<li><strong>Minimal information</strong>: includes IUPAC ambiguity codes (<code>R, Y, S, W, K, M, B, D, H, V</code>) but excludes <code>N</code>, gaps (<code>-</code>), and unknown characters (<code>?</code>)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="suggested-bibliography-keys" class="level2" data-number="2.18">
+<h2 data-number="2.18" class="anchored" data-anchor-id="suggested-bibliography-keys"><span class="header-section-number">2.18</span> Suggested bibliography keys</h2>
+<p>Use the following citation keys in your <code>reference.bib</code>:</p>
+<ul>
+<li><code>@ghozlane2025meteor2</code></li>
+<li><code>@plazaonate2019mspminer</code></li>
+<li><code>@vallescolomer2019neuroactive</code></li>
+<li><code>@vieirasilva2016species</code></li>
+<li><code>@kanehisa2012keggmapper</code></li>
+<li><code>@kanehisa2016kegg</code></li>
+<li><code>@langmead2012bowtie2</code></li>
+<li><code>@coelho2022biogeography</code></li>
+<li><code>@metahit2014catalog</code></li>
+<li><code>@garrison2012freebayes</code></li>
+<li><code>@yuan2023dbcan</code></li>
+<li><code>@roux2019mustard</code></li>
+<li><code>@meteorgithub</code></li>
+</ul>
+<pre><code></code></pre>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dcosimber\.github\.io\/BiomeXplore\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/02_methods_nfcore.html" class="pagination-link" aria-label="Bioinformatic Analysis">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bioinformatic Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

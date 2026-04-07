@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; RNA-seq data processing and quality assessment – HOLOFISHCOLOUR — Transcriptomic Analysis</title>
+<title>alignment_quant – BiomeXplore project</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -30,23 +33,22 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/04_alignment_quant.html" rel="next">
-<link href="../chapters/03_results.html" rel="prev">
+<link href="../chapters/05_differential_expression.html" rel="next">
+<link href="../chapters/03_qc_multiqc.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-7e34ecb6a0e7991f0346b0751d4a7c3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-974a37f8285a4498876f7c989793177c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -250,7 +252,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03_qc_multiqc.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/04_alignment_quant.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">04_alignment_quant.html</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -265,7 +267,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">HOLOFISHCOLOUR — Transcriptomic Analysis</a> 
+      <a href="../">BiomeXplore project</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -286,8 +288,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/01_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  <a href="../chapters/01_meteor2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -304,13 +306,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03_qc_multiqc.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/03_qc_multiqc.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/04_alignment_quant.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/04_alignment_quant.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">04_alignment_quant.html</span></span></a>
   </div>
 </li>
@@ -322,117 +324,21 @@ ul.task-list li input[type="checkbox"] {
 </li>
     </ul>
     </div>
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#overview-of-sequencing-data" id="toc-overview-of-sequencing-data" class="nav-link active" data-scroll-target="#overview-of-sequencing-data"><span class="header-section-number">5.1</span> Overview of sequencing data</a></li>
-  <li><a href="#quality-control-summary-multiqc" id="toc-quality-control-summary-multiqc" class="nav-link" data-scroll-target="#quality-control-summary-multiqc"><span class="header-section-number">5.2</span> Quality control summary (MultiQC)</a></li>
-  <li><a href="#read-trimming-and-filtering" id="toc-read-trimming-and-filtering" class="nav-link" data-scroll-target="#read-trimming-and-filtering"><span class="header-section-number">5.3</span> Read trimming and filtering</a></li>
-  <li><a href="#alignment-to-the-reference-genome-star" id="toc-alignment-to-the-reference-genome-star" class="nav-link" data-scroll-target="#alignment-to-the-reference-genome-star"><span class="header-section-number">5.4</span> Alignment to the reference genome (STAR)</a></li>
-  <li><a href="#transcript-quantification-salmon" id="toc-transcript-quantification-salmon" class="nav-link" data-scroll-target="#transcript-quantification-salmon"><span class="header-section-number">5.5</span> Transcript quantification (Salmon)</a></li>
-  <li><a href="#summary-of-data-quality" id="toc-summary-of-data-quality" class="nav-link" data-scroll-target="#summary-of-data-quality"><span class="header-section-number">5.6</span> Summary of data quality</a></li>
-  </ul>
-</nav>
+    
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
 
 
-<section id="overview-of-sequencing-data" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="overview-of-sequencing-data"><span class="header-section-number">5.1</span> Overview of sequencing data</h2>
-<p>Brief overview of the RNA-seq dataset processed in this report:</p>
-<ul>
-<li><strong>Samples:</strong> <em>[N]</em> libraries (paired-end)</li>
-<li><strong>Library type:</strong> stranded mRNA-seq</li>
-<li><strong>Read configuration:</strong> 2 × 150 bp (PE150)</li>
-<li><strong>Target yield:</strong> ~6 Gb per sample (Novogene service specifications)</li>
-</ul>
-<blockquote class="blockquote">
-<p>Replace <em>[N]</em> with the final number of sequenced libraries included in nf-core/rnaseq.</p>
-</blockquote>
-<hr>
-</section>
-<section id="quality-control-summary-multiqc" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="quality-control-summary-multiqc"><span class="header-section-number">5.2</span> Quality control summary (MultiQC)</h2>
-<p>The complete MultiQC report generated by the nf-core/rnaseq pipeline is embedded below. This report aggregates QC metrics across all samples, including sequencing quality (FastQC), trimming summaries (Trim Galore), alignment statistics (STAR), and quantification metrics (Salmon).</p>
-<div style="border:1px solid #e5e5e5; border-radius:10px; overflow:hidden;">
-<iframe src="../multiqc/star_salmon/multiqc_report.html" width="100%" height="950" style="border:0;">
-</iframe>
-</div>
-<p>If the embedded report does not display properly, open it directly here:<br>
-<a href="../multiqc/star_salmon/multiqc_report.html">MultiQC report</a></p>
-<hr>
-</section>
-<section id="read-trimming-and-filtering" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="read-trimming-and-filtering"><span class="header-section-number">5.3</span> Read trimming and filtering</h2>
-<p>Summarise the main trimming outcomes reported in MultiQC:</p>
-<ul>
-<li>Adapter sequences: <em>[removed / not detected]</em><br>
-</li>
-<li>Reads retained after trimming: <em>[~X%]</em><br>
-</li>
-<li>Any notable sample outliers: <em>[yes/no]</em></li>
-</ul>
-<blockquote class="blockquote">
-<p>Keep this section short unless you had real issues (e.g., heavy adapter contamination or strong sample-to-sample variability).</p>
-</blockquote>
-<hr>
-</section>
-<section id="alignment-to-the-reference-genome-star" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="alignment-to-the-reference-genome-star"><span class="header-section-number">5.4</span> Alignment to the reference genome (STAR)</h2>
-<p>Key mapping metrics from STAR (as reported in MultiQC):</p>
-<ul>
-<li>Uniquely mapped reads: <em>[median X%, range Y–Z%]</em><br>
-</li>
-<li>Multi-mapped reads: <em>[median X%]</em><br>
-</li>
-<li>Unmapped reads: <em>[median X%]</em></li>
-</ul>
-<p>Overall, alignment rates were <em>[consistent / variable]</em> across samples, with <em>[no / a few]</em> technical outliers.</p>
-<hr>
-</section>
-<section id="transcript-quantification-salmon" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="transcript-quantification-salmon"><span class="header-section-number">5.5</span> Transcript quantification (Salmon)</h2>
-<p>Quantification metrics reported by Salmon:</p>
-<ul>
-<li>Mapping rate: <em>[median X%, range Y–Z%]</em><br>
-</li>
-<li>Number of expressed genes detected: <em>[approx. X]</em><br>
-</li>
-<li>Overall, quantification profiles were <em>[consistent]</em> and suitable for downstream differential expression analysis.</li>
-</ul>
-<hr>
-</section>
-<section id="summary-of-data-quality" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="summary-of-data-quality"><span class="header-section-number">5.6</span> Summary of data quality</h2>
-<p>Overall, the RNA-seq dataset showed <em>[high]</em> sequencing quality, <em>[effective]</em> trimming, and <em>[robust]</em> alignment/quantification performance across samples, supporting its suitability for downstream differential expression and functional analyses.</p>
-
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -521,7 +427,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/dcosimber\.github\.io\/BiomeXplore\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -850,13 +756,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/03_results.html" class="pagination-link" aria-label="RNA Integrity Number (RIN): technical background">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></span>
+      <a href="../chapters/03_qc_multiqc.html" class="pagination-link" aria-label="RNA-seq data processing and quality assessment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/04_alignment_quant.html" class="pagination-link" aria-label="04_alignment_quant.html">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">04_alignment_quant.html</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/05_differential_expression.html" class="pagination-link" aria-label="05_differential_expression.html">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">05_differential_expression.html</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
