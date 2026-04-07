@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; RNA Integrity Number (RIN): technical background – BiomeXplore project</title>
+<title>5&nbsp; RNA Integrity Number (RIN): technical background – BiomeXplore project</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/03_qc_multiqc.html" rel="next">
-<link href="../chapters/02_methods_nfcore.html" rel="prev">
+<link href="../chapters/04_alignment_quant.html" rel="next">
+<link href="../chapters/03_qc_multiqc.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -76,6 +76,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -252,7 +253,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03_results.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03_results.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -300,14 +301,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03_results.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></span></a>
+  <a href="../chapters/03_qc_multiqc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03_qc_multiqc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span></a>
+  <a href="../chapters/03_results.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -324,11 +325,11 @@ ul.task-list li input[type="checkbox"] {
 </li>
     </ul>
     </div>
-    
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -336,7 +337,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></h1>
 </div>
 
 
@@ -353,7 +354,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The complete quality control results for all submitted samples are summarized in <a href="#tbl-rnaseq-qc" class="quarto-xref">Table&nbsp;<span>4.1</span></a>, including RNA concentration, total RNA amount, RNA Integrity Number (RIN), and final QC status. Representative electropherograms generated during the analysis are shown in <a href="#fig-rin-electropherograms" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>.</p>
+<p>The complete quality control results for all submitted samples are summarized in <a href="#tbl-rnaseq-qc" class="quarto-xref">Table&nbsp;<span>5.1</span></a>, including RNA concentration, total RNA amount, RNA Integrity Number (RIN), and final QC status. Representative electropherograms generated during the analysis are shown in <a href="#fig-rin-electropherograms" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -370,7 +371,7 @@ Note
 <img src="../figures/01_intro/RIN_explanation.png" class="img-fluid figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rin-electropherograms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.1: Representative RNA electropherograms illustrating different levels of RNA integrity (RIN = 10, 5, and 3).
+Figure&nbsp;5.1: Representative RNA electropherograms illustrating different levels of RNA integrity (RIN = 10, 5, and 3).
 </figcaption>
 </figure>
 </div>
@@ -399,7 +400,7 @@ Figure&nbsp;4.1: Representative RNA electropherograms illustrating different lev
 <div id="tbl-rnaseq-qc" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rnaseq-qc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;4.1: Summary of RNA concentration, integrity (RIN), and QC status for samples assessed prior to RNA-Seq library preparation.
+Table&nbsp;5.1: Summary of RNA concentration, integrity (RIN), and QC status for samples assessed prior to RNA-Seq library preparation.
 </figcaption>
 <div aria-describedby="tbl-rnaseq-qc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1192,13 +1193,13 @@ RNA purification is typically performed using column-based or magnetic bead–ba
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/02_methods_nfcore.html" class="pagination-link" aria-label="Bioinformatic Analysis">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bioinformatic Analysis</span></span>
+      <a href="../chapters/03_qc_multiqc.html" class="pagination-link" aria-label="RNA-seq data processing and quality assessment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/03_qc_multiqc.html" class="pagination-link" aria-label="RNA-seq data processing and quality assessment">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/04_alignment_quant.html" class="pagination-link" aria-label="04_alignment_quant.html">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">04_alignment_quant.html</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1207,4 +1208,5 @@ RNA purification is typically performed using column-based or magnetic bead–ba
 
 
 
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

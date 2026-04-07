@@ -77,7 +77,7 @@ The analytical workflow consists of four main steps @ghozlane2025meteor2:
 
 The pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using **Bowtie2** @langmead2012bowtie2. From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs **SNV calling** and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.
 
-![Overview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.](/figures/01_meteor2/meteor2_pipeline.webp)
+![Overview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.](/images/01_meteor2/meteor2_pipeline.webp)
 
 **Figure 1.** Overview of the Meteor2 pipeline for TFSP analysis.
 

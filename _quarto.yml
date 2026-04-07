@@ -1,10 +1,14 @@
 project:
   type: book
-  execute-dir: project
 
 book:
   title: "BiomeXplore project"
   site-url: "https://dcosimber.github.io/BiomeXplore/"
+  sidebar:
+    logo: images/logo_biomexplore.png
+    logo-alt: "BiomeXplore"
+    logo-href: index.html
+    search: true
   author:
     - name: Daniel Costas
       orcid: 0000-0003-4384-8469
@@ -13,19 +17,18 @@ book:
         - name: Instituto de Investigación Sanitaria Galicia Sur (IISGS)
           city: Vigo
           state: Spain
-          url: www.issgs.es
+          url: www.iisgs.es
         - name: Grupo de Microbiología e Infectología
           city: Vigo
           state: Spain
-          url: https://www.iisgaliciasur.es/areas-de-investigacion/enfermedades-inflamatorias-e-infecciosas-y-trastornos-inmunitarios/microbiologia-e-infectologia/
-
+          url: https://biomexplore.eu/
   date: last-modified
   chapters:
     - index.qmd
     - chapters/01_meteor2.qmd
     - chapters/02_methods_nfcore.qmd
-    - chapters/03_results.qmd
     - chapters/03_qc_multiqc.qmd
+    - chapters/03_results.qmd
     - chapters/04_alignment_quant.qmd
     - chapters/05_differential_expression.qmd
 
@@ -37,8 +40,10 @@ format:
     toc-depth: 3
     toc-location: right
     number-sections: true
+    smooth-scroll: true
+    anchor-sections: true
     css: styles.css
     theme:
-      light: flatly
+      light: cosmo
       dark: darkly
     theme-toggle: true

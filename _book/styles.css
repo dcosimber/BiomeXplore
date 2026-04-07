@@ -1,117 +1,378 @@
 /* =====================================================
-   9. Sidebar / book navigation
+   BiomeXplore — Quarto Book styling
+   Layout:
+   - Left: global book navigation
+   - Center: content
+   - Right: page TOC
+   Theme:
+   - light: cosmo
+   - dark: darkly
    ===================================================== */
 
-.sidebar, #quarto-sidebar {
-  background-color: #f8f9fb;
-  border-right: 1px solid #e9ecef;
+
+/* -----------------------------------------------------
+   1. Global typography
+   ----------------------------------------------------- */
+
+body {
+  line-height: 1.65;
 }
 
-#quarto-sidebar .sidebar-title,
-#quarto-sidebar .title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
+p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  margin-bottom: 0.85rem;
 }
 
-#quarto-sidebar nav[role="doc-toc"] ul,
-#quarto-sidebar .sidebar-menu-container ul {
-  padding-left: 0.4rem;
+li {
+  line-height: 1.55;
+  margin-bottom: 0.22rem;
 }
 
-#quarto-sidebar .sidebar-item {
-  margin-bottom: 0.2rem;
+pre,
+code {
+  text-align: left;
+  hyphens: none;
 }
 
-#quarto-sidebar .sidebar-link {
-  border-radius: 8px;
-  padding: 0.35rem 0.6rem;
-  color: #374151;
-  transition: all 0.18s ease;
+pre code {
+  white-space: pre-wrap;
 }
 
-#quarto-sidebar .sidebar-link:hover {
-  background-color: #e9f2ff;
-  color: #0d6efd;
-  text-decoration: none;
-}
 
-#quarto-sidebar .sidebar-item-text.sidebar-link.active,
-#quarto-sidebar .active > .sidebar-link {
-  background-color: #dbeafe;
-  color: #0b5ed7;
-  font-weight: 600;
-}
+/* -----------------------------------------------------
+   2. Main content area
+   ----------------------------------------------------- */
 
-/* =====================================================
-   10. Main content area
-   ===================================================== */
+#quarto-content {
+  padding-top: 1.15rem;
+}
 
 main.content,
 #quarto-document-content {
-  max-width: 900px;
+  max-width: 920px;
 }
 
-body {
-  background-color: #fcfcfd;
+section {
+  margin-bottom: 2.2rem;
 }
 
-/* =====================================================
-   11. Right-side TOC
-   ===================================================== */
 
-.margin-sidebar, .toc-actions, #TOC {
+/* -----------------------------------------------------
+   3. Headings
+   ----------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  line-height: 1.25;
+  margin-top: 1.55em;
+  margin-bottom: 0.55em;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  font-weight: 650;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+h3 {
+  font-weight: 600;
+}
+
+h4 {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+
+/* -----------------------------------------------------
+   4. Left sidebar = book navigation
+   ----------------------------------------------------- */
+
+#quarto-sidebar,
+.sidebar {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Hide sidebar text title and keep only logo */
+#quarto-sidebar .sidebar-title-text,
+#quarto-sidebar .sidebar-title a {
+  display: none !important;
+}
+
+/* Logo area */
+#quarto-sidebar .sidebar-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.4rem;
+}
+
+#quarto-sidebar .sidebar-logo {
+  max-width: 240px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#quarto-sidebar .sidebar-menu-container {
+  margin-top: 0.6rem;
+}
+
+#quarto-sidebar .sidebar-item-container {
+  margin-bottom: 0.18rem;
+}
+
+#quarto-sidebar .sidebar-item-text,
+#quarto-sidebar .sidebar-link {
+  border-radius: 8px;
+  padding: 0.34rem 0.58rem;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+#quarto-sidebar .sidebar-item-text:hover,
+#quarto-sidebar .sidebar-link:hover {
+  text-decoration: none;
+  background-color: rgba(13, 110, 253, 0.08);
+}
+
+#quarto-sidebar .sidebar-item-text.sidebar-link.active,
+#quarto-sidebar .active > .sidebar-item-text,
+#quarto-sidebar .active > .sidebar-link {
+  background-color: rgba(13, 110, 253, 0.14);
+  font-weight: 600;
+}
+
+#quarto-sidebar .sidebar-search {
+  margin-bottom: 1rem;
+}
+
+#quarto-sidebar input[type="search"] {
+  border-radius: 8px;
+}
+
+
+/* -----------------------------------------------------
+   5. Avoid TOC duplication look on left
+   ----------------------------------------------------- */
+
+#quarto-sidebar #TOC,
+#quarto-sidebar .toc-actions,
+#quarto-sidebar .sidebar-toc {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+/* -----------------------------------------------------
+   6. Right sidebar = page TOC
+   ----------------------------------------------------- */
+
+.margin-sidebar,
+#TOC {
   font-size: 0.92rem;
 }
 
 #TOC {
-  border-left: 1px solid #e9ecef;
-  padding-left: 1rem;
+  padding-left: 0.4rem;
+}
+
+#TOC > h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+#TOC ul {
+  padding-left: 0.95rem;
+  margin-bottom: 0;
+}
+
+#TOC li {
+  margin-bottom: 0.18rem;
 }
 
 #TOC a {
   text-decoration: none;
+  line-height: 1.35;
 }
 
 #TOC a:hover {
   text-decoration: underline;
 }
 
-/* =====================================================
-   12. Slightly nicer metadata block
-   ===================================================== */
-
-.quarto-title-meta {
-  font-size: 0.92rem;
-  color: #555;
-}
-
-/* =====================================================
-   13. Dark mode refinements for sidebar
-   ===================================================== */
-
-.quarto-dark .sidebar,
-.quarto-dark #quarto-sidebar {
-  background-color: #1f2430;
-  border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-.quarto-dark #quarto-sidebar .sidebar-link {
-  color: #d6d9df;
-}
-
-.quarto-dark #quarto-sidebar .sidebar-link:hover {
-  background-color: rgba(102,178,255,0.12);
-  color: #66b2ff;
-}
-
-.quarto-dark #quarto-sidebar .sidebar-item-text.sidebar-link.active,
-.quarto-dark #quarto-sidebar .active > .sidebar-link {
-  background-color: rgba(102,178,255,0.18);
-  color: #8ec5ff;
+#TOC .active {
   font-weight: 600;
 }
 
-.quarto-dark #TOC {
-  border-left: 1px solid rgba(255,255,255,0.08);
+
+/* -----------------------------------------------------
+   7. Title block / metadata
+   ----------------------------------------------------- */
+
+.quarto-title-banner {
+  margin-bottom: 1rem;
+}
+
+.quarto-title-meta {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.quarto-title-meta-heading {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  opacity: 0.75;
+}
+
+
+/* -----------------------------------------------------
+   8. Tables
+   ----------------------------------------------------- */
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  width: auto;
+  max-width: 100%;
+}
+
+th {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 600;
+  padding: 0.65em 0.85em;
+  background-color: rgba(0, 0, 0, 0.045);
+}
+
+td {
+  vertical-align: middle;
+  padding: 0.6em 0.8em;
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.018);
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.045);
+}
+
+
+/* -----------------------------------------------------
+   9. Figures & images
+   ----------------------------------------------------- */
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+figure {
+  margin-top: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+figcaption {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  font-size: 0.92em;
+  color: #5f6b7a;
+  margin-top: 0.45em;
+}
+
+
+/* -----------------------------------------------------
+   10. Code blocks
+   ----------------------------------------------------- */
+
+pre {
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+}
+
+code {
+  border-radius: 4px;
+  padding: 0.08rem 0.28rem;
+}
+
+
+/* -----------------------------------------------------
+   11. Bibliography
+   ----------------------------------------------------- */
+
+#refs .csl-entry {
+  margin-bottom: 1em !important;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+
+/* -----------------------------------------------------
+   12. Wide-screen balance
+   ----------------------------------------------------- */
+
+@media (min-width: 1200px) {
+  #quarto-content {
+    column-gap: 1.4rem;
+  }
+}
+
+
+/* -----------------------------------------------------
+   13. Dark mode refinements
+   ----------------------------------------------------- */
+
+.quarto-dark h2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.quarto-dark #quarto-sidebar,
+.quarto-dark .sidebar {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quarto-dark #quarto-sidebar .sidebar-item-text:hover,
+.quarto-dark #quarto-sidebar .sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.quarto-dark #quarto-sidebar .sidebar-item-text.sidebar-link.active,
+.quarto-dark #quarto-sidebar .active > .sidebar-item-text,
+.quarto-dark #quarto-sidebar .active > .sidebar-link {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.quarto-dark th {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.quarto-dark tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.quarto-dark tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.quarto-dark figcaption {
+  color: #c7d0d9;
+}
+
+.quarto-dark code {
+  color: inherit;
 }
