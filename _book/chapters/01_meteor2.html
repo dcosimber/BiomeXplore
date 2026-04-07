@@ -502,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using <strong>Bowtie2</strong> <span class="citation" data-cites="langmead2012bowtie2">(<a href="#ref-langmead2012bowtie2" role="doc-biblioref"><strong>langmead2012bowtie2?</strong></a>)</span>. From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs <strong>SNV calling</strong> and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figures/01_meteor2/meteor2_pipeline.png" class="img-fluid figure-img"></p>
+<p><img src="../figures/01_meteor2/meteor2_pipeline.webp" class="img-fluid figure-img"></p>
 <figcaption>Overview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.</figcaption>
 </figure>
 </div>
