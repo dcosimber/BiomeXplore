@@ -3,20 +3,21 @@ project:
   execute-dir: project
 
 book:
-  title: "HOLOFISHCOLOUR — Transcriptomic Analysis"
+  title: "BiomeXplore project"
+  site-url: "https://dcosimber.github.io/BiomeXplore/"
   author:
     - name: Daniel Costas
       orcid: 0000-0003-4384-8469
-      email: dcostas@iim.csic.es
+      email: daniel.costas@iisgaliciasur.es
       affiliations:
-        - name: Instituto de Investigaciones Marinas (IIM-CSIC)
+        - name: Instituto de Investigación Sanitaria Galicia Sur (IISGS)
           city: Vigo
           state: Spain
-          url: www.iim.csic.es
-        - name: Aquabiotec Lab
+          url: www.issgs.es
+        - name: Grupo de Microbiología e Infectología
           city: Vigo
           state: Spain
-          url: https://acuabiotec.csic.es
+          url: https://www.iisgaliciasur.es/areas-de-investigacion/enfermedades-inflamatorias-e-infecciosas-y-trastornos-inmunitarios/microbiologia-e-infectologia/
 
   date: last-modified
   chapters:

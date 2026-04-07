@@ -1,10 +1,10 @@
-name: Publish Quarto Transcriptomics site
+name: Publish Quarto BiomeXplore site
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - "Transcriptomics/**"
+      - "BiomeXplore/**"
       - ".github/workflows/quarto.yml"
 
 permissions:
