@@ -22,7 +22,7 @@ book:
   date: last-modified
   chapters:
     - index.qmd
-    - chapters/01_intro.qmd
+    - chapters/01_meteor2.qmd
     - chapters/02_methods_nfcore.qmd
     - chapters/03_results.qmd
     - chapters/03_qc_multiqc.qmd
