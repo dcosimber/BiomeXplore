@@ -11,10 +11,10 @@ The report has been structured as a unified, navigable document generated with *
 
 The main objectives of this analysis are:
 
-- To assess the quality of RNA-seq data using comprehensive QC metrics.
-- To obtain reliable gene-level expression estimates.
-- To explore transcriptional differences associated with pigmentation phenotypes.
-- To generate publication-ready outputs suitable for downstream statistical and functional analyses.
+- BLABLA2
+- BLABLA3
+- BLABLA4
+- BLABLA5
 
 ---
 
