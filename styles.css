@@ -99,28 +99,34 @@ h4 {
   border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Hide sidebar text title and keep only logo */
-#quarto-sidebar .sidebar-title-text,
-#quarto-sidebar .sidebar-title a {
+/* Hide sidebar title text and title link text, keep logo visible */
+#quarto-sidebar .sidebar-title-text {
   display: none !important;
 }
 
-/* Logo area */
+/* Make the sidebar title area compact */
 #quarto-sidebar .sidebar-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
-  margin-bottom: 0.4rem;
+  padding-top: 0.9rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
+  min-height: auto;
 }
 
+/* Keep only the logo visually */
 #quarto-sidebar .sidebar-logo {
   max-width: 240px;
   width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
+}
+
+/* Hide the title block text container if present */
+#quarto-sidebar .sidebar-title > div:not(.sidebar-logo-container) {
+  display: none !important;
 }
 
 #quarto-sidebar .sidebar-menu-container {
@@ -323,7 +329,44 @@ code {
 
 
 /* -----------------------------------------------------
-   12. Wide-screen balance
+   12. Theme toggle placement
+   ----------------------------------------------------- */
+
+/* Move the light/dark toggle to the top-right corner */
+.quarto-color-scheme-toggle,
+#quarto-color-scheme-toggle,
+a.quarto-color-scheme-toggle,
+button.quarto-color-scheme-toggle {
+  position: fixed !important;
+  top: 14px !important;
+  right: 18px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 2000 !important;
+  border-radius: 999px;
+  padding: 0.35rem 0.55rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Slightly soften appearance over light theme */
+html:not(.quarto-dark) .quarto-color-scheme-toggle,
+html:not(.quarto-dark) #quarto-color-scheme-toggle,
+html:not(.quarto-dark) a.quarto-color-scheme-toggle,
+html:not(.quarto-dark) button.quarto-color-scheme-toggle {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* Slightly soften appearance over dark theme */
+html.quarto-dark .quarto-color-scheme-toggle,
+html.quarto-dark #quarto-color-scheme-toggle,
+html.quarto-dark a.quarto-color-scheme-toggle,
+html.quarto-dark button.quarto-color-scheme-toggle {
+  background: rgba(33, 37, 41, 0.88);
+}
+
+
+/* -----------------------------------------------------
+   13. Wide-screen balance
    ----------------------------------------------------- */
 
 @media (min-width: 1200px) {
@@ -334,7 +377,7 @@ code {
 
 
 /* -----------------------------------------------------
-   13. Dark mode refinements
+   14. Dark mode refinements
    ----------------------------------------------------- */
 
 .quarto-dark h2 {

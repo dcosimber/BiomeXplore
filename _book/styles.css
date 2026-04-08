@@ -99,9 +99,8 @@ h4 {
   border-right: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Hide sidebar text title and keep only logo */
-#quarto-sidebar .sidebar-title-text,
-#quarto-sidebar .sidebar-title a {
+/* Hide only sidebar text title and keep logo + controls */
+#quarto-sidebar .sidebar-title-text {
   display: none !important;
 }
 

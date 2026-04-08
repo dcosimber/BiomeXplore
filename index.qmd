@@ -3,58 +3,31 @@
 
 BLABLABLAasdasd
 
-The report has been structured as a unified, navigable document generated with **Quarto**, integrating results, figures and quality-control summaries into a single HTML output.
-
 ---
 
 ## Objectives
 
-The main objectives of this analysis are:
+The main objectives are:
 
+- BLABLA1
 - BLABLA2
 - BLABLA3
 - BLABLA4
-- BLABLA5
 
 ---
 
-## Experimental design (brief)
-
-- **Species:** *Scophthalmus maximus* (turbot)  
-- **Tissue:** (e.g. skin / intestine / specify when ready)  
-- **Library type:** Stranded mRNA-seq  
-- **Sequencing platform:** Illumina  
-- **Analysis pipeline:** nf-core/rnaseq  
-
-Detailed methodological information is provided in the corresponding Methods section.
+## Test
 
 ---
 
-## Structure of the report
+## Test
 
-The analysis is organised into the following sections:
-
-1. **Introduction**  
-   Biological background and motivation of the transcriptomic study.
-
-2. **Methods (nf-core / RNA-seq pipeline)**  
-   Description of the computational workflow, software versions and key parameters.
-
-3. **Quality control (MultiQC)**  
-   Assessment of sequencing quality, mapping performance and quantification metrics.
-
-4. **Alignment and quantification**  
-   Summary of alignment results and expression estimates.
-
-5. **Differential expression analysis**  
-   Identification of differentially expressed genes and downstream interpretation.
 
 ---
 
-## Reproducibility and data provenance
+## Test
 
-All analyses were performed on the CESGA HPC infrastructure.  
-Pipeline outputs were generated using nf-core standards and selectively integrated into this report to ensure clarity, traceability and reproducibility.
+Test
 
 
 <!-- trigger pages -->

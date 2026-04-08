@@ -47,4 +47,3 @@ format:
     theme:
       light: cosmo
       dark: darkly
-    theme-toggle: true
