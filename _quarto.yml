@@ -25,12 +25,13 @@ book:
   date: last-modified
   chapters:
     - index.qmd
-    - chapters/01_meteor2.qmd
-    - chapters/02_methods_nfcore.qmd
-    - chapters/03_qc_multiqc.qmd
-    - chapters/03_results.qmd
-    - chapters/04_alignment_quant.qmd
-    - chapters/05_differential_expression.qmd
+    - chapters/01_workflow.qmd
+    - chapters/02_meteor2.qmd
+    - chapters/03_test.qmd
+    - chapters/04_test.qmd
+    - chapters/05_test.qmd
+    - chapters/06_test.qmd
+    - chapters/07_test.qmd
 
 bibliography: references.bib
 
