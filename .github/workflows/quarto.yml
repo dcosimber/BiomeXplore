@@ -3,9 +3,6 @@ name: Publish Quarto BiomeXplore site
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "BiomeXplore/**"
-      - ".github/workflows/quarto.yml"
 
 permissions:
   contents: read
@@ -32,14 +29,12 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render Quarto book
-        run: |
-          cd BiomeXplore
-          quarto render
+        run: quarto render
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: BiomeXplore/_book
+          path: _book
 
       - name: Deploy to GitHub Pages
         id: deployment
