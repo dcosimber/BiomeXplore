@@ -50,198 +50,528 @@
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html",
-    "href": "chapters/01_meteor2.html",
-    "title": "2  Meteor2 documentation",
+    "objectID": "chapters/01_workflow.html",
+    "href": "chapters/01_workflow.html",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
     "section": "",
-    "text": "2.1 Background\nA comprehensive understanding of microbial communities requires the integration of taxonomic, functional, and strain-level profiling (TFSP). In shotgun metagenomics, these three layers are tightly connected: taxonomy identifies who is there, functional profiling estimates what they can do, and strain-level analysis provides insight into within-species variation and population structure.\nMost reference-based metagenomic profilers rely on one of three broad strategies:\nThese approaches are often highly effective for taxonomic assignment, but they usually provide only indirect or partial access to functional interpretation. In practice, this means that taxonomic and functional profiling are frequently performed with separate tools and databases, which can increase workflow complexity and create inconsistencies between the two outputs.\nThis limitation is particularly evident in approaches designed for broad applicability across many ecosystems. Because these methods often depend on conserved marker genes, they gain generalizability at the cost of reduced sensitivity to ecosystem-specific functional variation. As a result, functional characterization often requires additional annotation workflows based on pan-genome, orthology, or pathway resources.\nAn alternative strategy is to use ecosystem-specific microbial gene catalogues. These catalogue-based approaches rely on smaller but highly informative reference collections and enable a more coherent integration of taxonomic and functional profiling. This is the conceptual framework on which Meteor2 is based (ghozlane2025meteor2?).",
+    "text": "2.1 Overview\nThis document describes a reproducible workflow for processing paired-end shotgun metagenomic reads using KneadData for host-read depletion and quality control, followed by Meteor2 for taxonomic, functional, and optional strain-level profiling. The workflow is designed for host-associated microbiome datasets, particularly human gut shotgun metagenomes, and reflects the command-line interfaces and recommendations documented in the official KneadData and Meteor repositories.\nThe pipeline is structured in two major stages:\nThe expected final outputs are:",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#background",
-    "href": "chapters/01_meteor2.html#background",
-    "title": "2  Meteor2 documentation",
+    "objectID": "chapters/01_workflow.html#overview",
+    "href": "chapters/01_workflow.html#overview",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "",
+    "text": "Preprocessing and host-read removal with KneadData\nMetagenomic profiling with Meteor2\n\n\n\nhost-depleted, high-quality paired FASTQ files from KneadData\nper-sample gene count tables from Meteor2 mapping\nper-sample taxonomic and functional abundance profiles from Meteor2 profiling\nmerged multi-sample abundance tables for downstream analysis",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#purpose",
+    "href": "chapters/01_workflow.html#purpose",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.1 1. Purpose",
+    "text": "3.1 1. Purpose\nKneadData is a quality-control and decontamination tool designed for metagenomic and metatranscriptomic sequencing data, especially microbiome datasets. In host-associated samples, sequencing libraries often contain a substantial fraction of host-derived reads. KneadData performs in silico separation of microbial reads from contaminant reads, typically using:\n\nTrimmomatic for adapter/quality trimming\nTRF for optional low-complexity/repetitive sequence filtering\nBowtie2 for contaminant/host read removal against a reference database\n\nIn this workflow, KneadData is used to remove human reads before downstream profiling with Meteor2.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#installation",
+    "href": "chapters/01_workflow.html#installation",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.2 2. Installation",
+    "text": "3.2 2. Installation\n\n3.2.1 2.1 Recommended installation with Conda\nA Conda installation is recommended because it resolves the main dependencies required by KneadData.\nconda create -n kneaddata -c bioconda kneaddata -y\nconda activate kneaddata\nThis installation typically provides the core software required to run the workflow, including:\n\nKneadData\nBowtie2\nTrimmomatic\nJava runtime support\n\nAlternative installation methods exist, including pip and Docker, but Conda is the preferred option for a reproducible local CLI workflow.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#download-the-human-host-reference-database",
+    "href": "chapters/01_workflow.html#download-the-human-host-reference-database",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.3 3. Download the human host reference database",
+    "text": "3.3 3. Download the human host reference database\nKneadData provides helper commands to download reference databases compatible with Bowtie2.\nkneaddata_database --download human_genome bowtie2 $DIR\nWhere:\n\n$DIR is the directory where the reference database will be stored\n\n\n3.3.1 Notes\n\nFor human host depletion, the recommended database is the human hg39 reference supplied by KneadData\nThe database corresponds to T2T-CHM13v2.0\nApproximate size: 3.6 GB\n\nExample:\nkneaddata_database --download human_genome bowtie2 /home/dani/kneaddata_test/database",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#input-requirements",
+    "href": "chapters/01_workflow.html#input-requirements",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.4 4. Input requirements",
+    "text": "3.4 4. Input requirements\nThis workflow assumes paired-end FASTQ input files.\nGeneric paired input:\nsample_R1.fastq.gz\nsample_R2.fastq.gz\nExample real inputs:\n/home/dani/kneaddata_test/input/36522947_R1.fastq.gz\n/home/dani/kneaddata_test/input/36522947_R2.fastq.gz",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#run-kneaddata-on-paired-end-reads",
+    "href": "chapters/01_workflow.html#run-kneaddata-on-paired-end-reads",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.5 5. Run KneadData on paired-end reads",
+    "text": "3.5 5. Run KneadData on paired-end reads\n\n3.5.1 5.1 Basic paired-end command\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output\n\n\n3.5.2 Argument description\n\n\n\nArgument\nDescription\n\n\n\n\n--input1\nForward mate (R1)\n\n\n--input2\nReverse mate (R2)\n\n\n-db\nPath to the KneadData/Bowtie2 contaminant database\n\n\n--output\nDirectory where output files will be written",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#real-execution-examples",
+    "href": "chapters/01_workflow.html#real-execution-examples",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.6 6. Real execution examples",
+    "text": "3.6 6. Real execution examples\n\n3.6.1 Sample 1\nkneaddata \\\n  --input1 /home/dani/kneaddata_test/input/36522947_R1.fastq.gz \\\n  --input2 /home/dani/kneaddata_test/input/36522947_R2.fastq.gz \\\n  -db /home/dani/kneaddata_test/database \\\n  --output /home/dani/kneaddata_test/output\n\n\n3.6.2 Sample 2\nkneaddata \\\n  --input1 /home/dani/kneaddata_test/input/36525128_R1.fastq.gz \\\n  --input2 /home/dani/kneaddata_test/input/36525128_R2.fastq.gz \\\n  -db /home/dani/kneaddata_test/database \\\n  --output /home/dani/kneaddata_test/output",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#parallelization-and-performance-tuning",
+    "href": "chapters/01_workflow.html#parallelization-and-performance-tuning",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.7 7. Parallelization and performance tuning",
+    "text": "3.7 7. Parallelization and performance tuning\nKneadData allows control over computational resources.\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output \\\n  -t 16 \\\n  -p 8\n\n3.7.1 Relevant options\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-t\nNumber of threads used by underlying tools such as Bowtie2/Trimmomatic\n\n\n-p\nNumber of parallel processes\n\n\n\nThese parameters should be adjusted according to available CPU and memory resources.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#batch-execution-over-all-samples-in-an-input-directory",
+    "href": "chapters/01_workflow.html#batch-execution-over-all-samples-in-an-input-directory",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.8 8. Batch execution over all samples in an input directory",
+    "text": "3.8 8. Batch execution over all samples in an input directory\nIf all paired-end reads are stored in the same input directory with a consistent naming convention (*_R1.fastq.gz and *_R2.fastq.gz), processing can be automated.\nINPUT_DIR=/home/dani/kneaddata_test/input\nOUTPUT_DIR=/home/dani/kneaddata_test/output\nDB_DIR=/home/dani/kneaddata_test/database\n\nfor r1 in ${INPUT_DIR}/*_R1.fastq.gz; do\n  base=$(basename \"${r1}\" _R1.fastq.gz)\n\n  kneaddata \\\n    --input1 \"${INPUT_DIR}/${base}_R1.fastq.gz\" \\\n    --input2 \"${INPUT_DIR}/${base}_R2.fastq.gz\" \\\n    -db \"${DB_DIR}\" \\\n    --output \"${OUTPUT_DIR}\"\ndone\nThis assumes each sample has exactly one forward file and one reverse file.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#main-output-files-produced-by-kneaddata",
+    "href": "chapters/01_workflow.html#main-output-files-produced-by-kneaddata",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.9 9. Main output files produced by KneadData",
+    "text": "3.9 9. Main output files produced by KneadData\nKneadData creates several intermediate and final files. The primary outputs of interest for downstream metagenomic profiling are the paired clean files.\n\n3.9.1 9.1 Main paired outputs\nTypical filenames:\n36522947_R1_kneaddata_paired_1.fastq\n36522947_R1_kneaddata_paired_2.fastq\nThese files contain reads that:\n\nremain properly paired after trimming\npassed quality control\ndid not align to the host reference database\n\nThese are the clean paired-end reads that should be used as input for Meteor2.\n\n\n3.9.2 9.2 Unmatched outputs\nTypical filenames:\n36522947_R1_kneaddata_unmatched_1.fastq\n36522947_R1_kneaddata_unmatched_2.fastq\nThese contain reads that survived filtering but lost their mate during trimming or decontamination. They may be useful in some contexts, but for the workflow documented here they are not used downstream in Meteor2.\n\n\n3.9.3 9.3 Intermediate files\nKneadData also generates multiple intermediate files, for example:\n\ndecompressed FASTQ files\nreformatted identifier files\ntrimmed paired and trimmed single files\nBowtie2 clean intermediate files\n\nThese are useful for auditing and troubleshooting, but they are not the final files intended for profiling.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#important-naming-caveat-in-kneaddata-outputs",
+    "href": "chapters/01_workflow.html#important-naming-caveat-in-kneaddata-outputs",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.10 10. Important naming caveat in KneadData outputs",
+    "text": "3.10 10. Important naming caveat in KneadData outputs\nKneadData uses the basename of --input1 as the prefix for all generated outputs. This means that output filenames may look confusing at first sight.\nExample:\n36522947_R1_kneaddata_paired_2.fastq\nEven though the file ends in _paired_2.fastq and corresponds to the reverse mate, its prefix still contains R1 because KneadData derives the output prefix from the first input file.\nThis does not indicate a technical problem, but the filenames are not ideal for downstream clarity.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#recommended-renaming-strategy",
+    "href": "chapters/01_workflow.html#recommended-renaming-strategy",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.11 11. Recommended renaming strategy",
+    "text": "3.11 11. Recommended renaming strategy\nTo standardize the naming and make downstream processing easier, it is advisable to rename or symlink the paired clean files.\n\n3.11.1 Example renaming\nmv 36522947_R1_kneaddata_paired_1.fastq 36522947_clean_R1.fastq\nmv 36522947_R1_kneaddata_paired_2.fastq 36522947_clean_R2.fastq\nA consistent naming convention is strongly recommended before importing the files into Meteor2.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#optional-use-of---output-prefix",
+    "href": "chapters/01_workflow.html#optional-use-of---output-prefix",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.12 12. Optional use of --output-prefix",
+    "text": "3.12 12. Optional use of --output-prefix\nKneadData also supports explicit output naming through an output prefix.\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output \\\n  --output-prefix sample_name\nThis can make the generated filenames more predictable and easier to standardize.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#practical-summary-of-the-kneaddata-stage",
+    "href": "chapters/01_workflow.html#practical-summary-of-the-kneaddata-stage",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "3.13 13. Practical summary of the KneadData stage",
+    "text": "3.13 13. Practical summary of the KneadData stage\nAt the end of the KneadData stage, the files that should be retained for downstream profiling are the paired clean FASTQ files:\n*_kneaddata_paired_1.fastq\n*_kneaddata_paired_2.fastq\nThese represent:\n\nhigh-quality reads\nhost-depleted reads\npaired-end reads suitable for microbial profiling",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#purpose-1",
+    "href": "chapters/01_workflow.html#purpose-1",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.1 14. Purpose",
+    "text": "4.1 14. Purpose\nMeteor2 is a platform for quantitative shotgun metagenomic profiling of complex microbial ecosystems. It relies on ecosystem-specific microbial gene catalogues and supports:\n\ntaxonomic profiling\nfunctional profiling\noptional strain-level analysis\n\nFor the present workflow, Meteor2 is used after KneadData to profile human gut microbiome shotgun data.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#installation-1",
+    "href": "chapters/01_workflow.html#installation-1",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.2 15. Installation",
+    "text": "4.2 15. Installation\nMeteor2 can be installed in a dedicated Conda environment.\nconda create --name meteor -c conda-forge -c bioconda meteor -y\nconda activate meteor\nA separate environment from KneadData is recommended to avoid dependency conflicts.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#catalogue-download",
+    "href": "chapters/01_workflow.html#catalogue-download",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.3 16. Catalogue download",
+    "text": "4.3 16. Catalogue download\nMeteor2 requires a gene catalogue matching the ecosystem under study.\nFor human gut samples, the corresponding catalogue is:\nhs_10_4_gut\n\n4.3.1 16.1 Recommended catalogue download with Meteor2\nMeteor provides an internal command to download, verify, and prepare catalogues.\n\n4.3.1.1 Full catalogue\nmeteor download -i hs_10_4_gut -o /home/dani/meteor2_test/catalogues -c\n\n\n4.3.1.2 Light / fast catalogue\nmeteor download -i hs_10_4_gut --fast -o /home/dani/meteor2_test/catalogues -c\n\n\n\n4.3.2 Why this is the preferred method\nUsing meteor download is preferable because it:\n\ndownloads the correct catalogue version\nverifies file integrity with checksum validation\nprepares the catalogue automatically",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#alternative-manual-catalogue-download-and-extraction",
+    "href": "chapters/01_workflow.html#alternative-manual-catalogue-download-and-extraction",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.4 17. Alternative manual catalogue download and extraction",
+    "text": "4.4 17. Alternative manual catalogue download and extraction\nIf the catalogue has already been downloaded manually, the corresponding files may look like this:\nhs_10_4_gut.tar.xz\nhs_10_4_gut_taxo.tar.xz\nIn that case, they must be extracted manually.\ncd /home/dani/meteor2_test/catalogues\n\ntar -xvf hs_10_4_gut.tar.xz\ntar -xvf hs_10_4_gut_taxo.tar.xz\nThis step is only necessary if the catalogue was not obtained through meteor download.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#input-requirements-for-meteor2",
+    "href": "chapters/01_workflow.html#input-requirements-for-meteor2",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.5 18. Input requirements for Meteor2",
+    "text": "4.5 18. Input requirements for Meteor2\nMeteor2 does not start directly from a single FASTQ pair passed to a generic top-level command. Instead, the workflow is divided into multiple subcommands.\nThe first step is FASTQ import/indexing with meteor fastq.\nMeteor expects a directory containing input FASTQ files. For paired-end data, filenames must follow one of the accepted patterns:\nsample_R1.fastq and sample_R2.fastq\nor\nsample_1.fastq and sample_2.fastq\n\n4.5.1 Important implication for KneadData outputs\nKneadData output names such as:\n36522947_R1_kneaddata_paired_1.fastq\n36522947_R1_kneaddata_paired_2.fastq\ncan still be compatible with Meteor2 because the suffix pattern _1.fastq / _2.fastq is present. However, for clarity, traceability, and standardization, it is strongly recommended to rename or symlink the KneadData outputs into a simpler, explicit paired-end convention before running meteor fastq.\n\n\n4.5.2 Suggested Meteor input naming\n36522947_R1.fastq\n36522947_R2.fastq\n36525128_R1.fastq\n36525128_R2.fastq",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#avoiding-file-duplication-with-symbolic-links",
+    "href": "chapters/01_workflow.html#avoiding-file-duplication-with-symbolic-links",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.6 19. Avoiding file duplication with symbolic links",
+    "text": "4.6 19. Avoiding file duplication with symbolic links\nSince KneadData outputs may already consume substantial disk space, one practical strategy is to create symbolic links instead of copying files.\n\n4.6.1 Example\nmkdir -p /home/dani/meteor2_test/input\ncd /home/dani/meteor2_test/input\n\nln -s /path/to/36522947_R1_kneaddata_paired_1.fastq 36522947_R1.fastq\nln -s /path/to/36522947_R1_kneaddata_paired_2.fastq 36522947_R2.fastq\n\nln -s /path/to/36525128_R1_kneaddata_paired_1.fastq 36525128_R1.fastq\nln -s /path/to/36525128_R1_kneaddata_paired_2.fastq 36525128_R2.fastq\nThis preserves storage and keeps the Meteor input directory clean and standardized.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#step-1-import-and-index-fastq-files-with-meteor-fastq",
+    "href": "chapters/01_workflow.html#step-1-import-and-index-fastq-files-with-meteor-fastq",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.7 20. Step 1: import and index FASTQ files with meteor fastq",
+    "text": "4.7 20. Step 1: import and index FASTQ files with meteor fastq\nThis command prepares a Meteor-compatible FASTQ repository from the input directory.\nmeteor fastq \\\n  -i /home/dani/meteor2_test/input \\\n  -p \\\n  -o /home/dani/meteor2_test/results/fastq\n\n4.7.1 Meaning of the arguments\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing FASTQ files\n\n\n-p\nIndicates that the FASTQ files are paired-end\n\n\n-o\nOutput directory for the Meteor FASTQ repository\n\n\n\n\n\n4.7.2 Notes\n\nMeteor2 expects the directory of FASTQ files, not an individual FASTQ file here\nThe output will contain one subdirectory per imported sample/library\nIf multiple sequencing runs belong to the same library, the -m option can be used to group them using a regular expression",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping",
+    "href": "chapters/01_workflow.html#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.8 21. Step 2: mapping against the gene catalogue with meteor mapping",
+    "text": "4.8 21. Step 2: mapping against the gene catalogue with meteor mapping\nAfter FASTQ import, each sample must be mapped separately against the selected catalogue.\n\n4.8.1 Example for one sample\nmeteor mapping \\\n  -i /home/dani/meteor2_test/results/fastq/36522947_R1_kneaddata_paired \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/mapping \\\n  -t 6\n\n\n4.8.2 Important note\nThe input of meteor mapping is not the original FASTQ file. It is the sample directory generated by meteor fastq for a given sample.\n\n\n4.8.3 Meaning of the arguments\n\n\n\n\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory corresponding to one imported sample in the Meteor FASTQ repository\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for mapping results\n\n\n-t\nNumber of threads",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#automating-the-mapping-step-across-all-samples",
+    "href": "chapters/01_workflow.html#automating-the-mapping-step-across-all-samples",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.9 22. Automating the mapping step across all samples",
+    "text": "4.9 22. Automating the mapping step across all samples\nBecause meteor mapping is run per sample directory, it should be automated when several samples are present.\nFASTQ_REPO=/home/dani/meteor2_test/results/fastq\nREF_DIR=/home/dani/meteor2_test/catalogues/hs_10_4_gut\nMAP_DIR=/home/dani/meteor2_test/results/mapping\n\nfor sample_dir in ${FASTQ_REPO}/*; do\n  if [ -d \"${sample_dir}\" ]; then\n    meteor mapping \\\n      -i \"${sample_dir}\" \\\n      -r \"${REF_DIR}\" \\\n      -o \"${MAP_DIR}\" \\\n      -t 6\n  fi\ndone\nThis loop processes all imported samples one by one.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#step-3-taxonomic-and-functional-profiling-with-meteor-profile",
+    "href": "chapters/01_workflow.html#step-3-taxonomic-and-functional-profiling-with-meteor-profile",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.10 23. Step 3: taxonomic and functional profiling with meteor profile",
+    "text": "4.10 23. Step 3: taxonomic and functional profiling with meteor profile\nOnce mapping has been completed for a sample, taxonomic and functional profiling can be performed.\n\n4.10.1 Example\nmeteor profile \\\n  -i /home/dani/meteor2_test/results/mapping \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/profile \\\n  -n coverage\n\n\n4.10.2 Meaning of the arguments\n\n\n\n\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing mapped sample output\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for profiled sample results\n\n\n-n coverage\nLength-normalized abundance calculation using coverage normalization\n\n\n\n\n\n4.10.3 Notes on normalization\nThe -n coverage option performs gene-length normalization and is the recommended mode in the standard Meteor workflow.\nIf omitted, no normalization is applied to the gene table.\n\n\n4.10.4 Typical profile outputs\nDepending on the catalogue type, this step can generate:\n\nspecies abundance tables\nARD abundance tables\ndbCAN abundance tables\ngut metabolic module abundance tables\ngut brain module abundance tables",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#automating-the-profiling-step-across-all-mapped-samples",
+    "href": "chapters/01_workflow.html#automating-the-profiling-step-across-all-mapped-samples",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.11 24. Automating the profiling step across all mapped samples",
+    "text": "4.11 24. Automating the profiling step across all mapped samples\nAs with mapping, profiling is conceptually sample-based and should be applied to each mapped sample directory when needed.\nMAP_DIR=/home/dani/meteor2_test/results/mapping\nREF_DIR=/home/dani/meteor2_test/catalogues/hs_10_4_gut\nPROFILE_DIR=/home/dani/meteor2_test/results/profile\n\nfor sample_dir in ${MAP_DIR}/*; do\n  if [ -d \"${sample_dir}\" ]; then\n    meteor profile \\\n      -i \"${sample_dir}\" \\\n      -r \"${REF_DIR}\" \\\n      -o \"${PROFILE_DIR}\" \\\n      -n coverage\n  fi\ndone",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#step-4-merge-all-profiled-samples-with-meteor-merge",
+    "href": "chapters/01_workflow.html#step-4-merge-all-profiled-samples-with-meteor-merge",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.12 25. Step 4: merge all profiled samples with meteor merge",
+    "text": "4.12 25. Step 4: merge all profiled samples with meteor merge\nOnce all samples have been profiled, the outputs can be merged into multi-sample abundance tables.\nmeteor merge \\\n  -i /home/dani/meteor2_test/results/profile \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/merge\n\n4.12.1 Meaning of the arguments\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing profiled sample subdirectories\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for merged tables\n\n\n\n\n\n4.12.2 Output purpose\nThis step produces merged matrices suitable for downstream statistical analysis across samples.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#optional-downstream-strain-analysis",
+    "href": "chapters/01_workflow.html#optional-downstream-strain-analysis",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "4.13 26. Optional downstream strain analysis",
+    "text": "4.13 26. Optional downstream strain analysis\nMeteor2 also supports strain-level analysis, although this is optional and outside the core taxonomic/functional workflow described above.\n\n4.13.1 Strain inference\nmeteor strain \\\n  -i &lt;mapping_sample_dir&gt; \\\n  -o &lt;strain_dir&gt; \\\n  -r &lt;refdir&gt;\n\n\n4.13.2 Strain tree computation\nmeteor tree \\\n  -i &lt;strain_dir&gt; \\\n  -o &lt;tree_dir&gt;\nThese steps are only relevant if strain-resolved comparisons are part of the study design.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#example-layout",
+    "href": "chapters/01_workflow.html#example-layout",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "5.1 Example layout",
+    "text": "5.1 Example layout\nproject/\n├── kneaddata/\n│   ├── input/\n│   ├── database/\n│   └── output/\n├── meteor2/\n│   ├── catalogues/\n│   ├── input/\n│   ├── output/\n│   └── results/\n│       ├── fastq/\n│       ├── mapping/\n│       ├── profile/\n│       └── merge/",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#general-recommendations",
+    "href": "chapters/01_workflow.html#general-recommendations",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "6.1 27. General recommendations",
+    "text": "6.1 27. General recommendations\n\n6.1.1 27.1 Keep the paired clean FASTQ files from KneadData\nFor this workflow, the correct files to propagate downstream are:\n*_kneaddata_paired_1.fastq\n*_kneaddata_paired_2.fastq\nDo not use the unmatched files unless there is a specific analytical reason to process single-end survivors separately.\n\n\n6.1.2 27.2 Standardize names before Meteor import\nEven if Meteor can recognize _1 and _2, cleaner names simplify the workflow and reduce ambiguity.\n\n\n6.1.3 27.3 Prefer symbolic links over duplication when possible\nLarge shotgun datasets quickly become storage-intensive. Symlinks allow a clean and reproducible organization without copying files.\n\n\n6.1.4 27.4 Keep environments separate\nUse independent Conda environments for KneadData and Meteor2.\n\n\n6.1.5 27.5 Document the exact catalogue version used\nCatalogue versioning is critical for reproducibility because Meteor2 relies on environment-specific references.\n\n\n6.1.6 27.6 Record all parameters used\nAt minimum, document:\n\nKneadData database version\nKneadData thread/process settings\nMeteor catalogue name and version\nMeteor normalization mode\nsoftware versions and execution dates",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#conceptual-flow",
+    "href": "chapters/01_workflow.html#conceptual-flow",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "7.1 28. Conceptual flow",
+    "text": "7.1 28. Conceptual flow\nRaw paired-end shotgun FASTQ\n        ↓\nKneadData\n  - trimming\n  - repetitive sequence filtering\n  - human read removal\n        ↓\nClean paired FASTQ\n        ↓\nMeteor fastq\n        ↓\nMeteor mapping\n        ↓\nMeteor profile\n        ↓\nMeteor merge\n        ↓\nMulti-sample taxonomic and functional abundance tables",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#kneaddata",
+    "href": "chapters/01_workflow.html#kneaddata",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "8.1 29. KneadData",
+    "text": "8.1 29. KneadData\nconda create -n kneaddata -c bioconda kneaddata -y\nconda activate kneaddata\nkneaddata_database --download human_genome bowtie2 /path/to/database\n\nkneaddata \\\n  --input1 sample_R1.fastq.gz \\\n  --input2 sample_R2.fastq.gz \\\n  -db /path/to/database \\\n  --output /path/to/kneaddata_output",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_workflow.html#meteor2",
+    "href": "chapters/01_workflow.html#meteor2",
+    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "section": "8.2 30. Meteor2",
+    "text": "8.2 30. Meteor2\nconda create --name meteor -c conda-forge -c bioconda meteor -y\nconda activate meteor\n\nmeteor download -i hs_10_4_gut -o /path/to/catalogues -c\n\nmeteor fastq \\\n  -i /path/to/input_fastq_dir \\\n  -p \\\n  -o /path/to/results/fastq\n\nmeteor mapping \\\n  -i /path/to/results/fastq/sample_dir \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/mapping \\\n  -t 6\n\nmeteor profile \\\n  -i /path/to/results/mapping/sample_dir \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/profile \\\n  -n coverage\n\nmeteor merge \\\n  -i /path/to/results/profile \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/merge",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02_meteor2.html",
+    "href": "chapters/02_meteor2.html",
+    "title": "3  Meteor2 documentation",
+    "section": "",
+    "text": "3.1 Background\nA comprehensive understanding of microbial communities requires the integration of taxonomic, functional, and strain-level profiling (TFSP). In shotgun metagenomics, these three layers are tightly connected: taxonomy identifies who is there, functional profiling estimates what they can do, and strain-level analysis provides insight into within-species variation and population structure.\nMost reference-based metagenomic profilers rely on one of three broad strategies:\nThese approaches are often highly effective for taxonomic assignment, but they usually provide only indirect or partial access to functional interpretation. In practice, this means that taxonomic and functional profiling are frequently performed with separate tools and databases, which can increase workflow complexity and create inconsistencies between the two outputs.\nThis limitation is particularly evident in approaches designed for broad applicability across many ecosystems. Because these methods often depend on conserved marker genes, they gain generalizability at the cost of reduced sensitivity to ecosystem-specific functional variation. As a result, functional characterization often requires additional annotation workflows based on pan-genome, orthology, or pathway resources.\nAn alternative strategy is to use ecosystem-specific microbial gene catalogues. These catalogue-based approaches rely on smaller but highly informative reference collections and enable a more coherent integration of taxonomic and functional profiling. This is the conceptual framework on which Meteor2 is based (ghozlane2025meteor2?).",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02_meteor2.html#background",
+    "href": "chapters/02_meteor2.html#background",
+    "title": "3  Meteor2 documentation",
     "section": "",
     "text": "whole-genome reference databases,\nspecies-specific marker genes, or\nuniversal single-copy marker genes.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#what-is-meteor2",
-    "href": "chapters/01_meteor2.html#what-is-meteor2",
-    "title": "2  Meteor2 documentation",
-    "section": "2.2 What is Meteor2?",
-    "text": "2.2 What is Meteor2?\nMeteor2 is a tool for quantitative metagenomic profiling of complex ecosystems based on microbial gene catalogues. Rather than relying primarily on universal marker genes, Meteor2 quantifies genes by mapping reads against ecosystem-specific reference catalogues and derives taxonomic, functional, and strain-level profiles from the same reference framework (ghozlane2025meteor2?).\nIts main analytical unit is the Metagenomic Species Pan-genome (MSP), originally introduced with MSPminer (plazaonate2019mspminer?). In this framework, genes are grouped into microbial species-level units based on co-abundance patterns across samples. Within each MSP, a subset of highly connected genes is defined as signature genes, which are used as the most robust indicators for MSP detection and quantification.\nMeteor2 uses microbial gene catalogues to perform:\n\nspecies-level taxonomic profiling (Bacteria, Archaea, and Eukaryotes),\nfunctional profiling,\nstrain-level population structure inference.\n\nIn addition, Meteor2 integrates several functional annotation repertoires into its catalogues, including:\n\nKEGG Orthologs (KO) from KEGG database (kanehisa2016kegg?),\ncarbohydrante-active enzymes (CAZymes) from dbCAN (yuan2023dbcan?),\nantibiotic resistance genes (ARGs) from MUSTARD (roux2019mustard?).\n\nThese annotations can be quantified either at the individual gene level or at the MSP level, thereby linking taxonomic composition to functional potential within a unified framework.",
+    "objectID": "chapters/02_meteor2.html#what-is-meteor2",
+    "href": "chapters/02_meteor2.html#what-is-meteor2",
+    "title": "3  Meteor2 documentation",
+    "section": "3.2 What is Meteor2?",
+    "text": "3.2 What is Meteor2?\nMeteor2 is a tool for quantitative metagenomic profiling of complex ecosystems based on microbial gene catalogues. Rather than relying primarily on universal marker genes, Meteor2 quantifies genes by mapping reads against ecosystem-specific reference catalogues and derives taxonomic, functional, and strain-level profiles from the same reference framework (ghozlane2025meteor2?).\nIts main analytical unit is the Metagenomic Species Pan-genome (MSP), originally introduced with MSPminer (plazaonate2019mspminer?). In this framework, genes are grouped into microbial species-level units based on co-abundance patterns across samples. Within each MSP, a subset of highly connected genes is defined as signature genes, which are used as the most robust indicators for MSP detection and quantification.\nMeteor2 uses microbial gene catalogues to perform:\n\nspecies-level taxonomic profiling (Bacteria, Archaea, and Eukaryotes),\nfunctional profiling,\nstrain-level population structure inference.\n\nIn addition, Meteor2 integrates several functional annotation repertoires into its catalogues, including:\n\nKEGG Orthologs (KO) from KEGG database (kanehisa2016kegg?),\ncarbohydrante-active enzymes (CAZymes) from dbCAN (yuan2023dbcan?),\nantibiotic resistance genes (ARGs) from MUSTARD (roux2019mustard?).\n\nThese annotations can be quantified either at the individual gene level or at the MSP level, thereby linking taxonomic composition to functional potential within a unified framework.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#microbial-gene-catalogues",
-    "href": "chapters/01_meteor2.html#microbial-gene-catalogues",
-    "title": "2  Meteor2 documentation",
-    "section": "2.3 Microbial gene catalogues",
-    "text": "2.3 Microbial gene catalogues\nMeteor2 currently supports 10 curated microbial gene catalogues, each tailored to a specific host-associated ecosystem (ghozlane2025meteor2?). These catalogues cover:\n\nhuman microbiomes: gut, oral, and skin,\ndomestic animals: cat and dog,\nlaboratory models: mouse and rat,\nlivestock: chicken, pig, and rabbit.\n\nEach catalogue includes two main components:\n\nMSPs, in which genes are clustered by co-abundance;\nunclustered genes, which may represent biological content that is not captured by metagenome-assembled genomes (MAGs) or stable MSP structures (coelho2022biogeography?).\n\nMeteor2 also incorporates three types of higher-level functional module systems:\n\nGut Brain Modules (GBMs) (vallescolomer2019neuroactive?),\nGut Metabolic Modules (GMMs) (vieirasilva2016species?),\nKEGG modules (kanehisa2012keggmapper?).\n\nFor rapid analysis, Meteor2 additionally provides a light / fast mode, based on a reduced catalogue containing only 100 signature genes per MSP. These genes correspond to the most connected genes within each MSP and allow accelerated taxonomic and strain-level profiling. Functional profiling is not available in this reduced mode (ghozlane2025meteor2?).",
+    "objectID": "chapters/02_meteor2.html#microbial-gene-catalogues",
+    "href": "chapters/02_meteor2.html#microbial-gene-catalogues",
+    "title": "3  Meteor2 documentation",
+    "section": "3.3 Microbial gene catalogues",
+    "text": "3.3 Microbial gene catalogues\nMeteor2 currently supports 10 curated microbial gene catalogues, each tailored to a specific host-associated ecosystem (ghozlane2025meteor2?). These catalogues cover:\n\nhuman microbiomes: gut, oral, and skin,\ndomestic animals: cat and dog,\nlaboratory models: mouse and rat,\nlivestock: chicken, pig, and rabbit.\n\nEach catalogue includes two main components:\n\nMSPs, in which genes are clustered by co-abundance;\nunclustered genes, which may represent biological content that is not captured by metagenome-assembled genomes (MAGs) or stable MSP structures (coelho2022biogeography?).\n\nMeteor2 also incorporates three types of higher-level functional module systems:\n\nGut Brain Modules (GBMs) (vallescolomer2019neuroactive?),\nGut Metabolic Modules (GMMs) (vieirasilva2016species?),\nKEGG modules (kanehisa2012keggmapper?).\n\nFor rapid analysis, Meteor2 additionally provides a light / fast mode, based on a reduced catalogue containing only 100 signature genes per MSP. These genes correspond to the most connected genes within each MSP and allow accelerated taxonomic and strain-level profiling. Functional profiling is not available in this reduced mode (ghozlane2025meteor2?).",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#overview-of-the-workflow",
-    "href": "chapters/01_meteor2.html#overview-of-the-workflow",
-    "title": "2  Meteor2 documentation",
-    "section": "2.4 Overview of the workflow",
-    "text": "2.4 Overview of the workflow\nMeteor2 estimates the abundance of genes, MSPs, and functions within microbial communities, and also reconstructs sample-specific strain variation.\nThe analytical workflow consists of four main steps (ghozlane2025meteor2?):\n\nDownload an ecosystem-specific microbial gene catalogue\nAlign short metagenomic reads to the catalogue\nCompute abundance profiles for genes, MSPs, and functions\nReconstruct sample-specific MSP genotypes and estimate mutation rates\n\nThe pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using Bowtie2 (langmead2012bowtie2?). From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs SNV calling and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.\n\n\n\nOverview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.\n\n\nFigure 1. Overview of the Meteor2 pipeline for TFSP analysis.",
+    "objectID": "chapters/02_meteor2.html#overview-of-the-workflow",
+    "href": "chapters/02_meteor2.html#overview-of-the-workflow",
+    "title": "3  Meteor2 documentation",
+    "section": "3.4 Overview of the workflow",
+    "text": "3.4 Overview of the workflow\nMeteor2 estimates the abundance of genes, MSPs, and functions within microbial communities, and also reconstructs sample-specific strain variation.\nThe analytical workflow consists of four main steps (ghozlane2025meteor2?):\n\nDownload an ecosystem-specific microbial gene catalogue\nAlign short metagenomic reads to the catalogue\nCompute abundance profiles for genes, MSPs, and functions\nReconstruct sample-specific MSP genotypes and estimate mutation rates\n\nThe pipeline starts by aligning metagenomic reads against a reference microbial gene catalogue using Bowtie2 (langmead2012bowtie2?). From the mapping results, Meteor2 derives gene abundance estimates and propagates these measurements to species- and function-level summaries. In parallel, a strain branch performs SNV calling and reconstructs sample-specific consensus sequences for downstream phylogenetic and distance-based analyses.\n\n\n\nOverview of the Meteor2 pipeline for TFSP analysis. The workflow begins with read alignment against a microbial gene catalogue. One branch derives gene, MSP, and functional abundance profiles, while the second branch performs SNV calling and reconstructs sample-specific MSP sequences for downstream phylogenetic and mutation-rate analyses.\n\n\nFigure 1. Overview of the Meteor2 pipeline for TFSP analysis.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#quantification-modes",
-    "href": "chapters/01_meteor2.html#quantification-modes",
-    "title": "2  Meteor2 documentation",
-    "section": "2.5 Quantification modes",
-    "text": "2.5 Quantification modes\nAfter read alignment, Meteor2 re-estimates gene counts using one of three counting modes:\n\nunique: counts only reads with a single valid alignment.\ntotal: assigns all alignments to all matched genes and sums them directly.\nshared: redistributes multi-mapping reads proportionally across the genes they align to, based on the genes’ unique read counts. If all unique counts are zero, the read is distributed evenly across all compatible genes.\n\nThe shared mode is particularly useful when reads map to homologous genes and a proportional assignment strategy is preferred over strict unique counting.",
+    "objectID": "chapters/02_meteor2.html#quantification-modes",
+    "href": "chapters/02_meteor2.html#quantification-modes",
+    "title": "3  Meteor2 documentation",
+    "section": "3.5 Quantification modes",
+    "text": "3.5 Quantification modes\nAfter read alignment, Meteor2 re-estimates gene counts using one of three counting modes:\n\nunique: counts only reads with a single valid alignment.\ntotal: assigns all alignments to all matched genes and sums them directly.\nshared: redistributes multi-mapping reads proportionally across the genes they align to, based on the genes’ unique read counts. If all unique counts are zero, the read is distributed evenly across all compatible genes.\n\nThe shared mode is particularly useful when reads map to homologous genes and a proportional assignment strategy is preferred over strict unique counting.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#taxonomic-profiling",
-    "href": "chapters/01_meteor2.html#taxonomic-profiling",
-    "title": "2  Meteor2 documentation",
-    "section": "2.6 Taxonomic profiling",
-    "text": "2.6 Taxonomic profiling\nMeteor2 derives taxonomic profiles from gene count tables through two main operations:\n\nnormalization,\nreduction from genes to MSPs.\n\n\n2.6.1 Normalization\nMeteor2 supports the following normalization strategies:\n\nDepth coverage: read count divided by gene length and multiplied by 100, with gene length corrected for edge effects due to read length (metahit2014catalog?).\nFPKM (Fragments Per Kilobase Million).\n\n\n\n2.6.2 Reduction to MSP abundance\nMSP abundance is estimated by averaging the abundance of signature genes after normalization. By default, Meteor2 considers the 100 most central signature genes per MSP.\nAn MSP is assigned an abundance of 0 if too few signature genes are detected in the sample. In standard catalogues, the default requirement is more stringent; in light catalogues, the detection threshold is reduced, with a default requirement of 20% of signature genes.\nThis approach provides a robust species-level abundance estimate while minimizing noise from poorly supported genes.",
+    "objectID": "chapters/02_meteor2.html#taxonomic-profiling",
+    "href": "chapters/02_meteor2.html#taxonomic-profiling",
+    "title": "3  Meteor2 documentation",
+    "section": "3.6 Taxonomic profiling",
+    "text": "3.6 Taxonomic profiling\nMeteor2 derives taxonomic profiles from gene count tables through two main operations:\n\nnormalization,\nreduction from genes to MSPs.\n\n\n3.6.1 Normalization\nMeteor2 supports the following normalization strategies:\n\nDepth coverage: read count divided by gene length and multiplied by 100, with gene length corrected for edge effects due to read length (metahit2014catalog?).\nFPKM (Fragments Per Kilobase Million).\n\n\n\n3.6.2 Reduction to MSP abundance\nMSP abundance is estimated by averaging the abundance of signature genes after normalization. By default, Meteor2 considers the 100 most central signature genes per MSP.\nAn MSP is assigned an abundance of 0 if too few signature genes are detected in the sample. In standard catalogues, the default requirement is more stringent; in light catalogues, the detection threshold is reduced, with a default requirement of 20% of signature genes.\nThis approach provides a robust species-level abundance estimate while minimizing noise from poorly supported genes.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#functional-profiling",
-    "href": "chapters/01_meteor2.html#functional-profiling",
-    "title": "2  Meteor2 documentation",
-    "section": "2.7 Functional profiling",
-    "text": "2.7 Functional profiling\nMeteor2 computes the abundance of functional entities in two complementary ways:\n\nby aggregating the abundance of genes annotated with a given function,\nor by aggregating the abundance of MSPs carrying that function.\n\nWhen MSP-based functional inference is used, only genes that are actually detected in the sample (at least one mapped read) are considered.\n\n2.7.1 Functional modules\nMeteor2 supports module-level profiling for systems such as GBMs, GMMs, and KEGG modules. For a given module, an MSP is considered a module carrier when the module completeness exceeds 90% in that sample (ghozlane2025meteor2?).\nBecause some module steps can be satisfied by alternative functions, Meteor2 evaluates all compatible alternative configurations and retains the maximum completeness value. The total abundance of all MSP carriers defines the module potential in that sample, together with the list of contributing taxa.\nThis strategy provides an explicit bridge between community composition and functional potential, making it possible to identify not only which functions are present, but also which species are likely contributing to them.",
+    "objectID": "chapters/02_meteor2.html#functional-profiling",
+    "href": "chapters/02_meteor2.html#functional-profiling",
+    "title": "3  Meteor2 documentation",
+    "section": "3.7 Functional profiling",
+    "text": "3.7 Functional profiling\nMeteor2 computes the abundance of functional entities in two complementary ways:\n\nby aggregating the abundance of genes annotated with a given function,\nor by aggregating the abundance of MSPs carrying that function.\n\nWhen MSP-based functional inference is used, only genes that are actually detected in the sample (at least one mapped read) are considered.\n\n3.7.1 Functional modules\nMeteor2 supports module-level profiling for systems such as GBMs, GMMs, and KEGG modules. For a given module, an MSP is considered a module carrier when the module completeness exceeds 90% in that sample (ghozlane2025meteor2?).\nBecause some module steps can be satisfied by alternative functions, Meteor2 evaluates all compatible alternative configurations and retains the maximum completeness value. The total abundance of all MSP carriers defines the module potential in that sample, together with the list of contributing taxa.\nThis strategy provides an explicit bridge between community composition and functional potential, making it possible to identify not only which functions are present, but also which species are likely contributing to them.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#strain-level-analysis",
-    "href": "chapters/01_meteor2.html#strain-level-analysis",
-    "title": "2  Meteor2 documentation",
-    "section": "2.8 Strain-level analysis",
-    "text": "2.8 Strain-level analysis\nMeteor2 performs strain-level analysis in three main stages:\n\nSNV calling using FreeBayes (garrison2012freebayes?)\nReconstruction of sample-specific MSP sequences\nPairwise comparison and phylogenetic analysis of reconstructed MSPs\n\n\n2.8.1 1. SNV calling\nMeteor2 identifies single nucleotide variants from mapped reads and uses them to build a sample-specific consensus gene catalogue.\n\n\n2.8.2 2. Reconstruction of sample-specific MSPs\nOnly MSPs with sufficient coverage are retained for downstream strain analysis. By default, at least 80 out of 100 signature genes must have a minimum breadth coverage of 0.5.\n\n\n2.8.3 3. Mutation rate and distance estimation\nMSPs detected in at least two samples are considered for mutation-rate analysis. By default, at least 10 informative sites are required to estimate distances. Pairwise distances between sample-specific MSP sequences are then computed under a General Time Reversible (GTR) evolutionary model, allowing strain similarity and divergence to be quantified (ghozlane2025meteor2?).\nMeteor2 can also generate phylogenetic trees from these reconstructed sequences.",
+    "objectID": "chapters/02_meteor2.html#strain-level-analysis",
+    "href": "chapters/02_meteor2.html#strain-level-analysis",
+    "title": "3  Meteor2 documentation",
+    "section": "3.8 Strain-level analysis",
+    "text": "3.8 Strain-level analysis\nMeteor2 performs strain-level analysis in three main stages:\n\nSNV calling using FreeBayes (garrison2012freebayes?)\nReconstruction of sample-specific MSP sequences\nPairwise comparison and phylogenetic analysis of reconstructed MSPs\n\n\n3.8.1 1. SNV calling\nMeteor2 identifies single nucleotide variants from mapped reads and uses them to build a sample-specific consensus gene catalogue.\n\n\n3.8.2 2. Reconstruction of sample-specific MSPs\nOnly MSPs with sufficient coverage are retained for downstream strain analysis. By default, at least 80 out of 100 signature genes must have a minimum breadth coverage of 0.5.\n\n\n3.8.3 3. Mutation rate and distance estimation\nMSPs detected in at least two samples are considered for mutation-rate analysis. By default, at least 10 informative sites are required to estimate distances. Pairwise distances between sample-specific MSP sequences are then computed under a General Time Reversible (GTR) evolutionary model, allowing strain similarity and divergence to be quantified (ghozlane2025meteor2?).\nMeteor2 can also generate phylogenetic trees from these reconstructed sequences.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#installation",
-    "href": "chapters/01_meteor2.html#installation",
-    "title": "2  Meteor2 documentation",
-    "section": "2.9 Installation",
-    "text": "2.9 Installation\nMeteor2 can be installed with conda, including its dependencies:\nconda create --name meteor -c conda-forge -c bioconda meteor\nAlternatively, it can be installed with pip using a recent Python version:\npip install meteor\nTo test the installation:\nmeteor test",
+    "objectID": "chapters/02_meteor2.html#installation",
+    "href": "chapters/02_meteor2.html#installation",
+    "title": "3  Meteor2 documentation",
+    "section": "3.9 Installation",
+    "text": "3.9 Installation\nMeteor2 can be installed with conda, including its dependencies:\nconda create --name meteor -c conda-forge -c bioconda meteor\nAlternatively, it can be installed with pip using a recent Python version:\npip install meteor\nTo test the installation:\nmeteor test",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#nextflow-wrapper",
-    "href": "chapters/01_meteor2.html#nextflow-wrapper",
-    "title": "2  Meteor2 documentation",
-    "section": "2.10 Nextflow wrapper",
-    "text": "2.10 Nextflow wrapper\nMeteor2 also provides a Nextflow wrapper (nf-meteor.nf) for automated execution of the full workflow (meteorgithub?).\nnf-meteor.nf --in &lt;fastq_dir&gt; --catalogue_name &lt;catalogue_name&gt; --out &lt;output_dir&gt; --cpus &lt;nb_cpus&gt; -w &lt;temp_work_dir&gt;\n\n2.10.1 Main parameters\n\n--in: directory containing paired fastq.gz files\n--out: output directory\n--cpus: number of CPUs to use\n--catalogue_name: name of a prebuilt catalogue\n--catalogue: path to a custom catalogue (overrides --catalogue_name)\n--fast: enable fast mode (no functional analysis)\n--check_catalogue: check whether the catalogue is compatible with the input reads\n\nAllowed --catalogue_name values include:\n\nfc_1_3_gut\ngg_13_6_caecal\nclf_1_0_gut\nhs_10_4_gut\nhs_8_4_oral\nhs_2_9_skin\nmm_5_0_gut\noc_5_7_gut\nrn_5_9_gut\nssc_9_3_gut",
+    "objectID": "chapters/02_meteor2.html#nextflow-wrapper",
+    "href": "chapters/02_meteor2.html#nextflow-wrapper",
+    "title": "3  Meteor2 documentation",
+    "section": "3.10 Nextflow wrapper",
+    "text": "3.10 Nextflow wrapper\nMeteor2 also provides a Nextflow wrapper (nf-meteor.nf) for automated execution of the full workflow (meteorgithub?).\nnf-meteor.nf --in &lt;fastq_dir&gt; --catalogue_name &lt;catalogue_name&gt; --out &lt;output_dir&gt; --cpus &lt;nb_cpus&gt; -w &lt;temp_work_dir&gt;\n\n3.10.1 Main parameters\n\n--in: directory containing paired fastq.gz files\n--out: output directory\n--cpus: number of CPUs to use\n--catalogue_name: name of a prebuilt catalogue\n--catalogue: path to a custom catalogue (overrides --catalogue_name)\n--fast: enable fast mode (no functional analysis)\n--check_catalogue: check whether the catalogue is compatible with the input reads\n\nAllowed --catalogue_name values include:\n\nfc_1_3_gut\ngg_13_6_caecal\nclf_1_0_gut\nhs_10_4_gut\nhs_8_4_oral\nhs_2_9_skin\nmm_5_0_gut\noc_5_7_gut\nrn_5_9_gut\nssc_9_3_gut",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#getting-started",
-    "href": "chapters/01_meteor2.html#getting-started",
-    "title": "2  Meteor2 documentation",
-    "section": "2.11 Getting started",
-    "text": "2.11 Getting started\nA basic Meteor2 workflow typically involves the following steps:\n\nDownload or build a reference catalogue\nImport and index FASTQ files\nMap reads against the reference catalogue\nCompute taxonomic and functional abundance profiles\nPerform strain-level profiling\nMerge outputs across samples when needed",
+    "objectID": "chapters/02_meteor2.html#getting-started",
+    "href": "chapters/02_meteor2.html#getting-started",
+    "title": "3  Meteor2 documentation",
+    "section": "3.11 Getting started",
+    "text": "3.11 Getting started\nA basic Meteor2 workflow typically involves the following steps:\n\nDownload or build a reference catalogue\nImport and index FASTQ files\nMap reads against the reference catalogue\nCompute taxonomic and functional abundance profiles\nPerform strain-level profiling\nMerge outputs across samples when needed",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#download-a-reference-catalogue",
-    "href": "chapters/01_meteor2.html#download-a-reference-catalogue",
-    "title": "2  Meteor2 documentation",
-    "section": "2.12 1. Download a reference catalogue",
-    "text": "2.12 1. Download a reference catalogue\nMeteor2 requires a locally available microbial gene catalogue, either in full or light format.\n\nThe full catalogue contains all genes and supports taxonomic, functional, and strain-level profiling.\nThe light catalogue contains only marker/signature genes and supports rapid taxonomic and strain-level profiling, but not functional profiling.\n\n\n2.12.1 Available catalogues\n\n\n\n\n\n\n\n\n\n\n\nMicrobial gene catalogue\nName\nGene count (M)\nMSPs\nSize full (GB)\nSize light (GB)\n\n\n\n\nCanis lupus familiaris gut\nclf_1_0_gut\n0.95\n234\n1.4\n0.1\n\n\nFelis catus gut\nfc_1_3_gut\n1.3\n344\n2.0\n0.2\n\n\nGallus gallus domesticus caecal\ngg_13_6_caecal\n13.6\n2420\n19.6\n1.2\n\n\nHomo sapiens gut\nhs_10_4_gut\n10.4\n1990\n12.6\n0.7\n\n\nHomo sapiens oral\nhs_8_4_oral\n8.4\n853\n13.7\n0.5\n\n\nHomo sapiens skin\nhs_2_9_skin\n2.9\n392\n3.9\n0.2\n\n\nMus musculus gut\nmm_5_0_gut\n5.0\n1252\n10.3\n0.6\n\n\nOryctolagus cuniculus gut\noc_5_7_gut\n5.7\n1053\n8.0\n0.4\n\n\nRattus norvegicus gut\nrn_5_9_gut\n5.9\n1627\n7.0\n0.6\n\n\nSus domesticus gut\nssc_9_3_gut\n9.3\n1523\n11.3\n0.7\n\n\n\nDownload a full catalogue with:\nmeteor download -i &lt;name&gt; -c -o &lt;refdir&gt;\nDownload a light catalogue with:\nmeteor download -i &lt;name&gt; -c --fast -o &lt;refdir&gt;",
+    "objectID": "chapters/02_meteor2.html#download-a-reference-catalogue",
+    "href": "chapters/02_meteor2.html#download-a-reference-catalogue",
+    "title": "3  Meteor2 documentation",
+    "section": "3.12 1. Download a reference catalogue",
+    "text": "3.12 1. Download a reference catalogue\nMeteor2 requires a locally available microbial gene catalogue, either in full or light format.\n\nThe full catalogue contains all genes and supports taxonomic, functional, and strain-level profiling.\nThe light catalogue contains only marker/signature genes and supports rapid taxonomic and strain-level profiling, but not functional profiling.\n\n\n3.12.1 Available catalogues\n\n\n\n\n\n\n\n\n\n\n\nMicrobial gene catalogue\nName\nGene count (M)\nMSPs\nSize full (GB)\nSize light (GB)\n\n\n\n\nCanis lupus familiaris gut\nclf_1_0_gut\n0.95\n234\n1.4\n0.1\n\n\nFelis catus gut\nfc_1_3_gut\n1.3\n344\n2.0\n0.2\n\n\nGallus gallus domesticus caecal\ngg_13_6_caecal\n13.6\n2420\n19.6\n1.2\n\n\nHomo sapiens gut\nhs_10_4_gut\n10.4\n1990\n12.6\n0.7\n\n\nHomo sapiens oral\nhs_8_4_oral\n8.4\n853\n13.7\n0.5\n\n\nHomo sapiens skin\nhs_2_9_skin\n2.9\n392\n3.9\n0.2\n\n\nMus musculus gut\nmm_5_0_gut\n5.0\n1252\n10.3\n0.6\n\n\nOryctolagus cuniculus gut\noc_5_7_gut\n5.7\n1053\n8.0\n0.4\n\n\nRattus norvegicus gut\nrn_5_9_gut\n5.9\n1627\n7.0\n0.6\n\n\nSus domesticus gut\nssc_9_3_gut\n9.3\n1523\n11.3\n0.7\n\n\n\nDownload a full catalogue with:\nmeteor download -i &lt;name&gt; -c -o &lt;refdir&gt;\nDownload a light catalogue with:\nmeteor download -i &lt;name&gt; -c --fast -o &lt;refdir&gt;",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#import-fastq-files",
-    "href": "chapters/01_meteor2.html#import-fastq-files",
-    "title": "2  Meteor2 documentation",
-    "section": "2.13 2. Import FASTQ files",
-    "text": "2.13 2. Import FASTQ files\nMeteor2 requires an initial FASTQ indexing step:\nmeteor fastq -i &lt;fastqdir&gt; [-p paired reads] -o &lt;outputdir&gt;\nWhen multiple sequencing files are available for the same library, the -m option can be used to group them automatically.\nFor example, if the directory contains:\nIllumina_lib1-SAMPLE_01.fastq\nIllumina_lib1-SAMPLE_02.fastq\nIllumina_lib2-SAMPLE_01.fastq\nIllumina_lib2-SAMPLE_02.fastq\nThe following command will group files belonging to the same sample/library structure:\nmeteor fastq -i ./ -m SAMPLE_\\\\d+ -o outputdir",
+    "objectID": "chapters/02_meteor2.html#import-fastq-files",
+    "href": "chapters/02_meteor2.html#import-fastq-files",
+    "title": "3  Meteor2 documentation",
+    "section": "3.13 2. Import FASTQ files",
+    "text": "3.13 2. Import FASTQ files\nMeteor2 requires an initial FASTQ indexing step:\nmeteor fastq -i &lt;fastqdir&gt; [-p paired reads] -o &lt;outputdir&gt;\nWhen multiple sequencing files are available for the same library, the -m option can be used to group them automatically.\nFor example, if the directory contains:\nIllumina_lib1-SAMPLE_01.fastq\nIllumina_lib1-SAMPLE_02.fastq\nIllumina_lib2-SAMPLE_01.fastq\nIllumina_lib2-SAMPLE_02.fastq\nThe following command will group files belonging to the same sample/library structure:\nmeteor fastq -i ./ -m SAMPLE_\\\\d+ -o outputdir",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#mapping",
-    "href": "chapters/01_meteor2.html#mapping",
-    "title": "2  Meteor2 documentation",
-    "section": "2.14 3. Mapping",
-    "text": "2.14 3. Mapping\nFASTQ files are mapped against a reference catalogue to generate gene count tables:\nmeteor mapping -i &lt;fastqdir/sampledir&gt; -r &lt;refdir&gt; -o &lt;mappingdir&gt;\nBefore this step, it is recommended to remove:\n\nlow-quality reads,\nshort reads (e.g. &lt; 60 nt),\nhost-derived reads.",
+    "objectID": "chapters/02_meteor2.html#mapping",
+    "href": "chapters/02_meteor2.html#mapping",
+    "title": "3  Meteor2 documentation",
+    "section": "3.14 3. Mapping",
+    "text": "3.14 3. Mapping\nFASTQ files are mapped against a reference catalogue to generate gene count tables:\nmeteor mapping -i &lt;fastqdir/sampledir&gt; -r &lt;refdir&gt; -o &lt;mappingdir&gt;\nBefore this step, it is recommended to remove:\n\nlow-quality reads,\nshort reads (e.g. &lt; 60 nt),\nhost-derived reads.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#taxonomic-and-functional-profiling",
-    "href": "chapters/01_meteor2.html#taxonomic-and-functional-profiling",
-    "title": "2  Meteor2 documentation",
-    "section": "2.15 4. Taxonomic and functional profiling",
-    "text": "2.15 4. Taxonomic and functional profiling\nGenes in the catalogue are clustered into Metagenomic Species Pan-genomes (MSPs) with MSPminer (plazaonate2019mspminer?) and functionally annotated against:\n\nKEGG (kanehisa2016kegg?),\ndbCAN (yuan2023dbcan?),\nMUSTARD (roux2019mustard?).\n\nMSP and functional profiles are computed from the gene count table with:\nmeteor profile -i &lt;mappingdir/sampledir&gt; -o &lt;profiledir&gt; -r &lt;refdir&gt; -n coverage\nThe -n parameter enables read-count normalization by gene length. If omitted, no normalization is applied to the gene table.\nThis profiling step can generate:\n\na species abundance table,\nan ARG abundance table (full catalogue only),\na dbCAN abundance table (full catalogue only),\na Gut Metabolic Modules (GMM) abundance table (full catalogue only),\na Gut Brain Modules (GBM) abundance table (full catalogue only).",
+    "objectID": "chapters/02_meteor2.html#taxonomic-and-functional-profiling",
+    "href": "chapters/02_meteor2.html#taxonomic-and-functional-profiling",
+    "title": "3  Meteor2 documentation",
+    "section": "3.15 4. Taxonomic and functional profiling",
+    "text": "3.15 4. Taxonomic and functional profiling\nGenes in the catalogue are clustered into Metagenomic Species Pan-genomes (MSPs) with MSPminer (plazaonate2019mspminer?) and functionally annotated against:\n\nKEGG (kanehisa2016kegg?),\ndbCAN (yuan2023dbcan?),\nMUSTARD (roux2019mustard?).\n\nMSP and functional profiles are computed from the gene count table with:\nmeteor profile -i &lt;mappingdir/sampledir&gt; -o &lt;profiledir&gt; -r &lt;refdir&gt; -n coverage\nThe -n parameter enables read-count normalization by gene length. If omitted, no normalization is applied to the gene table.\nThis profiling step can generate:\n\na species abundance table,\nan ARG abundance table (full catalogue only),\na dbCAN abundance table (full catalogue only),\na Gut Metabolic Modules (GMM) abundance table (full catalogue only),\na Gut Brain Modules (GBM) abundance table (full catalogue only).",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#merging-sample-outputs",
-    "href": "chapters/01_meteor2.html#merging-sample-outputs",
-    "title": "2  Meteor2 documentation",
-    "section": "2.16 5. Merging sample outputs",
-    "text": "2.16 5. Merging sample outputs\nTo merge outputs from multiple samples into a single table:\nmeteor merge -i &lt;profiledir&gt; -r &lt;refdir&gt; -o &lt;mergingdir&gt;",
+    "objectID": "chapters/02_meteor2.html#merging-sample-outputs",
+    "href": "chapters/02_meteor2.html#merging-sample-outputs",
+    "title": "3  Meteor2 documentation",
+    "section": "3.16 5. Merging sample outputs",
+    "text": "3.16 5. Merging sample outputs\nTo merge outputs from multiple samples into a single table:\nmeteor merge -i &lt;profiledir&gt; -r &lt;refdir&gt; -o &lt;mergingdir&gt;",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#strain-profiling",
-    "href": "chapters/01_meteor2.html#strain-profiling",
-    "title": "2  Meteor2 documentation",
-    "section": "2.17 6. Strain profiling",
-    "text": "2.17 6. Strain profiling\nMeteor2 can profile strains across large metagenomic datasets by identifying sample-specific mutations and projecting them onto MSP reference sequences.\nTo perform strain profiling:\nmeteor strain -i &lt;mappingdir/sampledir&gt; -o &lt;straindir&gt; -r &lt;refdir&gt;\nTo compute mutation rates and build trees between strains:\nmeteor tree -i &lt;straindir&gt; -o &lt;treedir&gt;\nThis step generates:\n\na mutation rate matrix,\na FASTA file for each reconstructed strain in each sample,\na detailed pairwise comparison table for each strain.\n\n\n2.17.1 Pairwise strain comparison table\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nsample1\nFirst sample in the comparison\n\n\nsample2\nSecond sample in the comparison\n\n\ntotal_length\nTotal length of the alignment (in bases)\n\n\noverlap_noN_info_count\nNumber of positions where both samples have minimal information (A, C, G, T or IUPAC codes excluding N, gaps, and ?)\n\n\noverlap_noIUPAC_info_count\nNumber of positions where both samples have maximal information (strictly A, C, G, T)\n\n\noverlap_noN_info_pc\nPercentage of total_length with minimal-information overlap\n\n\noverlap_noIUPAC_info_pc\nPercentage of total_length with maximal-information overlap\n\n\nnoN_info_pc_sample1\nIn sample1, percentage of positions with minimal information\n\n\nnoN_info_pc_sample2\nIn sample2, percentage of positions with minimal information\n\n\nnoIUPAC_info_pc_sample1\nIn sample1, percentage of positions with maximal information\n\n\nnoIUPAC_info_pc_sample2\nIn sample2, percentage of positions with maximal information\n\n\ndistance\nGenetic distance between samples (0.0 = identical)\n\n\ndistance_category\nCategorical classification: same_strain, same_subspecies, or divergent\n\n\n\n\n\n2.17.2 Distance-based classification\nSamples are automatically classified according to their genetic distance:\n\n\n\n\n\n\n\n\n\nCategory\nDistance threshold\nApproximate similarity\nBiological interpretation\n\n\n\n\nsame_strain\n≤ 0.0001\n≥ 99.99%\nSame strain / clone\n\n\nsame_subspecies\n≤ 0.015\n≥ 97%\nSame subspecies\n\n\ndivergent\n&gt; 0.015\n&lt; 97%\nDifferent lineage\n\n\n\nNotes\n\nMaximal information: unambiguous nucleotides only (A, C, G, T)\nMinimal information: includes IUPAC ambiguity codes (R, Y, S, W, K, M, B, D, H, V) but excludes N, gaps (-), and unknown characters (?)",
+    "objectID": "chapters/02_meteor2.html#strain-profiling",
+    "href": "chapters/02_meteor2.html#strain-profiling",
+    "title": "3  Meteor2 documentation",
+    "section": "3.17 6. Strain profiling",
+    "text": "3.17 6. Strain profiling\nMeteor2 can profile strains across large metagenomic datasets by identifying sample-specific mutations and projecting them onto MSP reference sequences.\nTo perform strain profiling:\nmeteor strain -i &lt;mappingdir/sampledir&gt; -o &lt;straindir&gt; -r &lt;refdir&gt;\nTo compute mutation rates and build trees between strains:\nmeteor tree -i &lt;straindir&gt; -o &lt;treedir&gt;\nThis step generates:\n\na mutation rate matrix,\na FASTA file for each reconstructed strain in each sample,\na detailed pairwise comparison table for each strain.\n\n\n3.17.1 Pairwise strain comparison table\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nsample1\nFirst sample in the comparison\n\n\nsample2\nSecond sample in the comparison\n\n\ntotal_length\nTotal length of the alignment (in bases)\n\n\noverlap_noN_info_count\nNumber of positions where both samples have minimal information (A, C, G, T or IUPAC codes excluding N, gaps, and ?)\n\n\noverlap_noIUPAC_info_count\nNumber of positions where both samples have maximal information (strictly A, C, G, T)\n\n\noverlap_noN_info_pc\nPercentage of total_length with minimal-information overlap\n\n\noverlap_noIUPAC_info_pc\nPercentage of total_length with maximal-information overlap\n\n\nnoN_info_pc_sample1\nIn sample1, percentage of positions with minimal information\n\n\nnoN_info_pc_sample2\nIn sample2, percentage of positions with minimal information\n\n\nnoIUPAC_info_pc_sample1\nIn sample1, percentage of positions with maximal information\n\n\nnoIUPAC_info_pc_sample2\nIn sample2, percentage of positions with maximal information\n\n\ndistance\nGenetic distance between samples (0.0 = identical)\n\n\ndistance_category\nCategorical classification: same_strain, same_subspecies, or divergent\n\n\n\n\n\n3.17.2 Distance-based classification\nSamples are automatically classified according to their genetic distance:\n\n\n\n\n\n\n\n\n\nCategory\nDistance threshold\nApproximate similarity\nBiological interpretation\n\n\n\n\nsame_strain\n≤ 0.0001\n≥ 99.99%\nSame strain / clone\n\n\nsame_subspecies\n≤ 0.015\n≥ 97%\nSame subspecies\n\n\ndivergent\n&gt; 0.015\n&lt; 97%\nDifferent lineage\n\n\n\nNotes\n\nMaximal information: unambiguous nucleotides only (A, C, G, T)\nMinimal information: includes IUPAC ambiguity codes (R, Y, S, W, K, M, B, D, H, V) but excludes N, gaps (-), and unknown characters (?)",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/01_meteor2.html#suggested-bibliography-keys",
-    "href": "chapters/01_meteor2.html#suggested-bibliography-keys",
-    "title": "2  Meteor2 documentation",
-    "section": "2.18 Suggested bibliography keys",
-    "text": "2.18 Suggested bibliography keys\nUse the following citation keys in your reference.bib:\n\n@ghozlane2025meteor2\n@plazaonate2019mspminer\n@vallescolomer2019neuroactive\n@vieirasilva2016species\n@kanehisa2012keggmapper\n@kanehisa2016kegg\n@langmead2012bowtie2\n@coelho2022biogeography\n@metahit2014catalog\n@garrison2012freebayes\n@yuan2023dbcan\n@roux2019mustard\n@meteorgithub",
+    "objectID": "chapters/02_meteor2.html#suggested-bibliography-keys",
+    "href": "chapters/02_meteor2.html#suggested-bibliography-keys",
+    "title": "3  Meteor2 documentation",
+    "section": "3.18 Suggested bibliography keys",
+    "text": "3.18 Suggested bibliography keys\nUse the following citation keys in your reference.bib:\n\n@ghozlane2025meteor2\n@plazaonate2019mspminer\n@vallescolomer2019neuroactive\n@vieirasilva2016species\n@kanehisa2012keggmapper\n@kanehisa2016kegg\n@langmead2012bowtie2\n@coelho2022biogeography\n@metahit2014catalog\n@garrison2012freebayes\n@yuan2023dbcan\n@roux2019mustard\n@meteorgithub",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Meteor2 documentation</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Meteor2 documentation</span>"
     ]
   },
   {
-    "objectID": "chapters/03_results.html",
-    "href": "chapters/03_results.html",
+    "objectID": "chapters/04_test.html",
+    "href": "chapters/04_test.html",
     "title": "5  RNA Integrity Number (RIN): technical background",
     "section": "",
     "text": "The complete quality control results for all submitted samples are summarized in Table 5.1, including RNA concentration, total RNA amount, RNA Integrity Number (RIN), and final QC status. Representative electropherograms generated during the analysis are shown in Figure 5.1.\n\n\n\n\n\n\nNote\n\n\n\n\n\n\n\n\n\nFigure 5.1: Representative RNA electropherograms illustrating different levels of RNA integrity (RIN = 10, 5, and 3).\n\n\n\nThe RNA Integrity Number (RIN) is a numerical score ranging from 1 (fully degraded RNA) to 10 (intact RNA), widely used to assess total RNA quality. RIN values are computed from automated electrophoretic analyses performed on platforms such as the Agilent Bioanalyzer.\nThe RIN algorithm evaluates multiple features of the electropherogram, including:\n\nThe presence, height, and sharpness of ribosomal RNA peaks (primarily 18S and 28S rRNA in eukaryotes). High-quality RNA typically displays well-defined 18S and 28S peaks with an approximate 2:1 intensity ratio.\nBackground signal and degree of fragmentation. Degraded RNA is characterized by reduced or absent ribosomal peaks and increased signal corresponding to low-molecular-weight fragments.\nOverall signal distribution across fragment sizes, reflecting progressive RNA degradation.\n\nIn high-quality samples, electropherograms show sharp and well-resolved rRNA peaks with low background noise. In contrast, degraded samples exhibit flattened or missing rRNA peaks and a pronounced accumulation of short RNA fragments.\n\n\nMost samples exhibited RIN values between 7.0 and 9.8, which are generally considered suitable for RNA-Seq library construction and downstream differential gene expression analyses. RNA concentrations also fell within acceptable ranges for library preparation, although moderate variability among samples was observed.\nTwo samples deviated from the expected quality standards:\n\nIT12 showed a low RIN value (3.8), indicating substantial RNA degradation. This sample was classified as Fail and deemed unsuitable for RNA-Seq.\nIT16 displayed an intermediate RIN value of 6.0, suggesting partial degradation that could compromise sequencing quality and data interpretation.\n\nAdditionally, ITPNK exhibited slight genomic DNA contamination, as indicated in the Novogene QC report. Despite this observation, the sample passed overall QC criteria.\nGiven that the sequencing budget covered 24 RNA-Seq libraries and 26 samples were initially submitted, samples IT12 and IT16 were excluded from sequencing. The remaining samples met the quality requirements for transcriptomic analysis and were retained for RNA-Seq library preparation and sequencing.\n\nQC SummaryBioanalyzer Electropherograms\n\n\n\n\n\nTable 5.1: Summary of RNA concentration, integrity (RIN), and QC status for samples assessed prior to RNA-Seq library preparation.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo.\nSample\nConcentration (ng/µl)\nVolume (µl)\nTotal amount (µg)\nRIN\nSample QC Results\n\n\n\n\n1\nP31\n1851.34\n16\n29.62141\n7.7\nPass\n\n\n2\nP32\n2022.42\n16\n32.35878\n8.3\nPass\n\n\n3\nP33\n483.84\n13\n6.28990\n8.8\nPass\n\n\n4\nP34\n826.81\n17\n14.05583\n8.8\nPass\n\n\n5\nP35\n430.00\n16\n6.87994\n8.2\nPass\n\n\n6\nP36\n447.89\n16\n7.16622\n7.2\nPass\n\n\n7\nP41\n1270.12\n16\n20.32186\n9.3\nPass\n\n\n8\nP42\n888.98\n19\n16.89067\n8.8\nPass\n\n\n9\nP43\n1343.73\n19\n25.53087\n8.0\nPass\n\n\n10\nP44\n1961.08\n18\n35.29941\n7.8\nPass\n\n\n11\nP45\n709.86\n18\n12.77749\n8.1\nPass\n\n\n12\nP46\n768.56\n18\n13.83416\n8.9\nPass\n\n\n13\nP47\n342.27\n19\n6.50313\n8.5\nPass\n\n\n14\nP48\n404.26\n17\n6.87242\n7.8\nPass\n\n\n15\nP49\n954.50\n16\n15.27201\n8.8\nPass\n\n\n16\nP50\n295.43\n16\n4.72680\n9.6\nPass\n\n\n17\nP51\n2511.00\n13\n32.64302\n9.5\nPass\n\n\n18\nP52\n578.87\n15\n8.68312\n9.8\nPass\n\n\n19\nP1G\n150.06\n16\n2.40097\n8.9\nPass\n\n\n20\nP2G\n192.33\n16\n3.07729\n9.0\nPass\n\n\n21\nPNKD\n417.18\n18\n7.50923\n8.7\nPass\n\n\n22\nPNKV\n221.19\n17\n3.76027\n8.4\nPass\n\n\n23\nIT12\n2422.80\n17\n41.18753\n3.8\nFail\n\n\n24\nIT16\n2988.15\n18\n53.78664\n6.0\nPass\n\n\n25\nIT1G\n2842.68\n16\n45.48292\n7.8\nPass\n\n\n26\nITPNK\n4493.36\n18\n80.88050\n7.1\nPass\n\n\n\n\n\n\n\n\n\n\nIT12IT16IT1GITPNKPNKDPNKVP1GP2GP31P32P33P34P35P36P41P42P43P44P45P46P47P48P49P50P51P52\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure: RNA quality control electropherograms generated using the Agilent 5400 Bioanalyzer. Each tab corresponds to one sample and displays the characteristic 18S and 28S rRNA peaks and fragment size distribution used to assess RNA integrity prior to sequencing.\n\n\n\n\n\n\n\n\n\n\nNoteTechnical notes from the Novogene RNA QC report\n\n\n\nQ1. What is the influence of RNA concentration on library construction?\nRNA concentration determines the total RNA input available for library preparation. Insufficient RNA input may result in low library yield or library construction failure. Additional RNA concentration steps may increase degradation risk.\nQ2. Does genomic DNA contamination affect poly(A)-enriched mRNA library preparation?\nGenomic DNA is not retained during poly(A) enrichment–based mRNA library preparation. Therefore, low-level genomic DNA contamination does not affect downstream library construction when samples pass QC.\nQ3. What RNA purification methods are used and how much RNA loss is expected?\nRNA purification is typically performed using column-based or magnetic bead–based methods. RNA loss after purification is expected to be approximately 60%, depending on the purification strategy and initial RNA quality.",

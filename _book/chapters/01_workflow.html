@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2 – BiomeXplore project</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/02_meteor2.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-974a37f8285a4498876f7c989793177c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-cc5044c25b7dc54e1e91a0c87a38f534.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01_workflow.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="index.html" class="sidebar-logo-link">
+      <img src="../images/logo_biomexplore.png" alt="BiomeXplore" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../images/logo_biomexplore.png" alt="BiomeXplore" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">BiomeXplore project</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_workflow.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02_meteor2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bioinformatic Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">RNA Integrity Number (RIN): technical background</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">RNA-seq data processing and quality assessment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">06_test.html</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07_test.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">07_test.html</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">2.1</span> Overview</a></li>
+  <li><a href="#part-i.-host-read-removal-and-quality-control-with-kneaddata" id="toc-part-i.-host-read-removal-and-quality-control-with-kneaddata" class="nav-link" data-scroll-target="#part-i.-host-read-removal-and-quality-control-with-kneaddata"><span class="header-section-number">3</span> Part I. Host read removal and quality control with KneadData</a>
+  <ul class="collapse">
+  <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose"><span class="header-section-number">3.1</span> 1. Purpose</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">3.2</span> 2. Installation</a>
+  <ul class="collapse">
+  <li><a href="#recommended-installation-with-conda" id="toc-recommended-installation-with-conda" class="nav-link" data-scroll-target="#recommended-installation-with-conda"><span class="header-section-number">3.2.1</span> 2.1 Recommended installation with Conda</a></li>
+  </ul></li>
+  <li><a href="#download-the-human-host-reference-database" id="toc-download-the-human-host-reference-database" class="nav-link" data-scroll-target="#download-the-human-host-reference-database"><span class="header-section-number">3.3</span> 3. Download the human host reference database</a>
+  <ul class="collapse">
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes"><span class="header-section-number">3.3.1</span> Notes</a></li>
+  </ul></li>
+  <li><a href="#input-requirements" id="toc-input-requirements" class="nav-link" data-scroll-target="#input-requirements"><span class="header-section-number">3.4</span> 4. Input requirements</a></li>
+  <li><a href="#run-kneaddata-on-paired-end-reads" id="toc-run-kneaddata-on-paired-end-reads" class="nav-link" data-scroll-target="#run-kneaddata-on-paired-end-reads"><span class="header-section-number">3.5</span> 5. Run KneadData on paired-end reads</a>
+  <ul class="collapse">
+  <li><a href="#basic-paired-end-command" id="toc-basic-paired-end-command" class="nav-link" data-scroll-target="#basic-paired-end-command"><span class="header-section-number">3.5.1</span> 5.1 Basic paired-end command</a></li>
+  <li><a href="#argument-description" id="toc-argument-description" class="nav-link" data-scroll-target="#argument-description"><span class="header-section-number">3.5.2</span> Argument description</a></li>
+  </ul></li>
+  <li><a href="#real-execution-examples" id="toc-real-execution-examples" class="nav-link" data-scroll-target="#real-execution-examples"><span class="header-section-number">3.6</span> 6. Real execution examples</a>
+  <ul class="collapse">
+  <li><a href="#sample-1" id="toc-sample-1" class="nav-link" data-scroll-target="#sample-1"><span class="header-section-number">3.6.1</span> Sample 1</a></li>
+  <li><a href="#sample-2" id="toc-sample-2" class="nav-link" data-scroll-target="#sample-2"><span class="header-section-number">3.6.2</span> Sample 2</a></li>
+  </ul></li>
+  <li><a href="#parallelization-and-performance-tuning" id="toc-parallelization-and-performance-tuning" class="nav-link" data-scroll-target="#parallelization-and-performance-tuning"><span class="header-section-number">3.7</span> 7. Parallelization and performance tuning</a>
+  <ul class="collapse">
+  <li><a href="#relevant-options" id="toc-relevant-options" class="nav-link" data-scroll-target="#relevant-options"><span class="header-section-number">3.7.1</span> Relevant options</a></li>
+  </ul></li>
+  <li><a href="#batch-execution-over-all-samples-in-an-input-directory" id="toc-batch-execution-over-all-samples-in-an-input-directory" class="nav-link" data-scroll-target="#batch-execution-over-all-samples-in-an-input-directory"><span class="header-section-number">3.8</span> 8. Batch execution over all samples in an input directory</a></li>
+  <li><a href="#main-output-files-produced-by-kneaddata" id="toc-main-output-files-produced-by-kneaddata" class="nav-link" data-scroll-target="#main-output-files-produced-by-kneaddata"><span class="header-section-number">3.9</span> 9. Main output files produced by KneadData</a>
+  <ul class="collapse">
+  <li><a href="#main-paired-outputs" id="toc-main-paired-outputs" class="nav-link" data-scroll-target="#main-paired-outputs"><span class="header-section-number">3.9.1</span> 9.1 Main paired outputs</a></li>
+  <li><a href="#unmatched-outputs" id="toc-unmatched-outputs" class="nav-link" data-scroll-target="#unmatched-outputs"><span class="header-section-number">3.9.2</span> 9.2 Unmatched outputs</a></li>
+  <li><a href="#intermediate-files" id="toc-intermediate-files" class="nav-link" data-scroll-target="#intermediate-files"><span class="header-section-number">3.9.3</span> 9.3 Intermediate files</a></li>
+  </ul></li>
+  <li><a href="#important-naming-caveat-in-kneaddata-outputs" id="toc-important-naming-caveat-in-kneaddata-outputs" class="nav-link" data-scroll-target="#important-naming-caveat-in-kneaddata-outputs"><span class="header-section-number">3.10</span> 10. Important naming caveat in KneadData outputs</a></li>
+  <li><a href="#recommended-renaming-strategy" id="toc-recommended-renaming-strategy" class="nav-link" data-scroll-target="#recommended-renaming-strategy"><span class="header-section-number">3.11</span> 11. Recommended renaming strategy</a>
+  <ul class="collapse">
+  <li><a href="#example-renaming" id="toc-example-renaming" class="nav-link" data-scroll-target="#example-renaming"><span class="header-section-number">3.11.1</span> Example renaming</a></li>
+  </ul></li>
+  <li><a href="#optional-use-of---output-prefix" id="toc-optional-use-of---output-prefix" class="nav-link" data-scroll-target="#optional-use-of---output-prefix"><span class="header-section-number">3.12</span> 12. Optional use of <code>--output-prefix</code></a></li>
+  <li><a href="#practical-summary-of-the-kneaddata-stage" id="toc-practical-summary-of-the-kneaddata-stage" class="nav-link" data-scroll-target="#practical-summary-of-the-kneaddata-stage"><span class="header-section-number">3.13</span> 13. Practical summary of the KneadData stage</a></li>
+  </ul></li>
+  <li><a href="#part-ii.-metagenomic-profiling-with-meteor2" id="toc-part-ii.-metagenomic-profiling-with-meteor2" class="nav-link" data-scroll-target="#part-ii.-metagenomic-profiling-with-meteor2"><span class="header-section-number">4</span> Part II. Metagenomic profiling with Meteor2</a>
+  <ul class="collapse">
+  <li><a href="#purpose-1" id="toc-purpose-1" class="nav-link" data-scroll-target="#purpose-1"><span class="header-section-number">4.1</span> 14. Purpose</a></li>
+  <li><a href="#installation-1" id="toc-installation-1" class="nav-link" data-scroll-target="#installation-1"><span class="header-section-number">4.2</span> 15. Installation</a></li>
+  <li><a href="#catalogue-download" id="toc-catalogue-download" class="nav-link" data-scroll-target="#catalogue-download"><span class="header-section-number">4.3</span> 16. Catalogue download</a>
+  <ul class="collapse">
+  <li><a href="#recommended-catalogue-download-with-meteor2" id="toc-recommended-catalogue-download-with-meteor2" class="nav-link" data-scroll-target="#recommended-catalogue-download-with-meteor2"><span class="header-section-number">4.3.1</span> 16.1 Recommended catalogue download with Meteor2</a></li>
+  <li><a href="#why-this-is-the-preferred-method" id="toc-why-this-is-the-preferred-method" class="nav-link" data-scroll-target="#why-this-is-the-preferred-method"><span class="header-section-number">4.3.2</span> Why this is the preferred method</a></li>
+  </ul></li>
+  <li><a href="#alternative-manual-catalogue-download-and-extraction" id="toc-alternative-manual-catalogue-download-and-extraction" class="nav-link" data-scroll-target="#alternative-manual-catalogue-download-and-extraction"><span class="header-section-number">4.4</span> 17. Alternative manual catalogue download and extraction</a></li>
+  <li><a href="#input-requirements-for-meteor2" id="toc-input-requirements-for-meteor2" class="nav-link" data-scroll-target="#input-requirements-for-meteor2"><span class="header-section-number">4.5</span> 18. Input requirements for Meteor2</a>
+  <ul class="collapse">
+  <li><a href="#important-implication-for-kneaddata-outputs" id="toc-important-implication-for-kneaddata-outputs" class="nav-link" data-scroll-target="#important-implication-for-kneaddata-outputs"><span class="header-section-number">4.5.1</span> Important implication for KneadData outputs</a></li>
+  <li><a href="#suggested-meteor-input-naming" id="toc-suggested-meteor-input-naming" class="nav-link" data-scroll-target="#suggested-meteor-input-naming"><span class="header-section-number">4.5.2</span> Suggested Meteor input naming</a></li>
+  </ul></li>
+  <li><a href="#avoiding-file-duplication-with-symbolic-links" id="toc-avoiding-file-duplication-with-symbolic-links" class="nav-link" data-scroll-target="#avoiding-file-duplication-with-symbolic-links"><span class="header-section-number">4.6</span> 19. Avoiding file duplication with symbolic links</a>
+  <ul class="collapse">
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">4.6.1</span> Example</a></li>
+  </ul></li>
+  <li><a href="#step-1-import-and-index-fastq-files-with-meteor-fastq" id="toc-step-1-import-and-index-fastq-files-with-meteor-fastq" class="nav-link" data-scroll-target="#step-1-import-and-index-fastq-files-with-meteor-fastq"><span class="header-section-number">4.7</span> 20. Step 1: import and index FASTQ files with <code>meteor fastq</code></a>
+  <ul class="collapse">
+  <li><a href="#meaning-of-the-arguments" id="toc-meaning-of-the-arguments" class="nav-link" data-scroll-target="#meaning-of-the-arguments"><span class="header-section-number">4.7.1</span> Meaning of the arguments</a></li>
+  <li><a href="#notes-1" id="toc-notes-1" class="nav-link" data-scroll-target="#notes-1"><span class="header-section-number">4.7.2</span> Notes</a></li>
+  </ul></li>
+  <li><a href="#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping" id="toc-step-2-mapping-against-the-gene-catalogue-with-meteor-mapping" class="nav-link" data-scroll-target="#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping"><span class="header-section-number">4.8</span> 21. Step 2: mapping against the gene catalogue with <code>meteor mapping</code></a>
+  <ul class="collapse">
+  <li><a href="#example-for-one-sample" id="toc-example-for-one-sample" class="nav-link" data-scroll-target="#example-for-one-sample"><span class="header-section-number">4.8.1</span> Example for one sample</a></li>
+  <li><a href="#important-note" id="toc-important-note" class="nav-link" data-scroll-target="#important-note"><span class="header-section-number">4.8.2</span> Important note</a></li>
+  <li><a href="#meaning-of-the-arguments-1" id="toc-meaning-of-the-arguments-1" class="nav-link" data-scroll-target="#meaning-of-the-arguments-1"><span class="header-section-number">4.8.3</span> Meaning of the arguments</a></li>
+  </ul></li>
+  <li><a href="#automating-the-mapping-step-across-all-samples" id="toc-automating-the-mapping-step-across-all-samples" class="nav-link" data-scroll-target="#automating-the-mapping-step-across-all-samples"><span class="header-section-number">4.9</span> 22. Automating the mapping step across all samples</a></li>
+  <li><a href="#step-3-taxonomic-and-functional-profiling-with-meteor-profile" id="toc-step-3-taxonomic-and-functional-profiling-with-meteor-profile" class="nav-link" data-scroll-target="#step-3-taxonomic-and-functional-profiling-with-meteor-profile"><span class="header-section-number">4.10</span> 23. Step 3: taxonomic and functional profiling with <code>meteor profile</code></a>
+  <ul class="collapse">
+  <li><a href="#example-1" id="toc-example-1" class="nav-link" data-scroll-target="#example-1"><span class="header-section-number">4.10.1</span> Example</a></li>
+  <li><a href="#meaning-of-the-arguments-2" id="toc-meaning-of-the-arguments-2" class="nav-link" data-scroll-target="#meaning-of-the-arguments-2"><span class="header-section-number">4.10.2</span> Meaning of the arguments</a></li>
+  <li><a href="#notes-on-normalization" id="toc-notes-on-normalization" class="nav-link" data-scroll-target="#notes-on-normalization"><span class="header-section-number">4.10.3</span> Notes on normalization</a></li>
+  <li><a href="#typical-profile-outputs" id="toc-typical-profile-outputs" class="nav-link" data-scroll-target="#typical-profile-outputs"><span class="header-section-number">4.10.4</span> Typical profile outputs</a></li>
+  </ul></li>
+  <li><a href="#automating-the-profiling-step-across-all-mapped-samples" id="toc-automating-the-profiling-step-across-all-mapped-samples" class="nav-link" data-scroll-target="#automating-the-profiling-step-across-all-mapped-samples"><span class="header-section-number">4.11</span> 24. Automating the profiling step across all mapped samples</a></li>
+  <li><a href="#step-4-merge-all-profiled-samples-with-meteor-merge" id="toc-step-4-merge-all-profiled-samples-with-meteor-merge" class="nav-link" data-scroll-target="#step-4-merge-all-profiled-samples-with-meteor-merge"><span class="header-section-number">4.12</span> 25. Step 4: merge all profiled samples with <code>meteor merge</code></a>
+  <ul class="collapse">
+  <li><a href="#meaning-of-the-arguments-3" id="toc-meaning-of-the-arguments-3" class="nav-link" data-scroll-target="#meaning-of-the-arguments-3"><span class="header-section-number">4.12.1</span> Meaning of the arguments</a></li>
+  <li><a href="#output-purpose" id="toc-output-purpose" class="nav-link" data-scroll-target="#output-purpose"><span class="header-section-number">4.12.2</span> Output purpose</a></li>
+  </ul></li>
+  <li><a href="#optional-downstream-strain-analysis" id="toc-optional-downstream-strain-analysis" class="nav-link" data-scroll-target="#optional-downstream-strain-analysis"><span class="header-section-number">4.13</span> 26. Optional downstream strain analysis</a>
+  <ul class="collapse">
+  <li><a href="#strain-inference" id="toc-strain-inference" class="nav-link" data-scroll-target="#strain-inference"><span class="header-section-number">4.13.1</span> Strain inference</a></li>
+  <li><a href="#strain-tree-computation" id="toc-strain-tree-computation" class="nav-link" data-scroll-target="#strain-tree-computation"><span class="header-section-number">4.13.2</span> Strain tree computation</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#part-iii.-recommended-directory-organization" id="toc-part-iii.-recommended-directory-organization" class="nav-link" data-scroll-target="#part-iii.-recommended-directory-organization"><span class="header-section-number">5</span> Part III. Recommended directory organization</a>
+  <ul class="collapse">
+  <li><a href="#example-layout" id="toc-example-layout" class="nav-link" data-scroll-target="#example-layout"><span class="header-section-number">5.1</span> Example layout</a></li>
+  </ul></li>
+  <li><a href="#part-iv.-practical-guidance-and-best-practices" id="toc-part-iv.-practical-guidance-and-best-practices" class="nav-link" data-scroll-target="#part-iv.-practical-guidance-and-best-practices"><span class="header-section-number">6</span> Part IV. Practical guidance and best practices</a>
+  <ul class="collapse">
+  <li><a href="#general-recommendations" id="toc-general-recommendations" class="nav-link" data-scroll-target="#general-recommendations"><span class="header-section-number">6.1</span> 27. General recommendations</a>
+  <ul class="collapse">
+  <li><a href="#keep-the-paired-clean-fastq-files-from-kneaddata" id="toc-keep-the-paired-clean-fastq-files-from-kneaddata" class="nav-link" data-scroll-target="#keep-the-paired-clean-fastq-files-from-kneaddata"><span class="header-section-number">6.1.1</span> 27.1 Keep the paired clean FASTQ files from KneadData</a></li>
+  <li><a href="#standardize-names-before-meteor-import" id="toc-standardize-names-before-meteor-import" class="nav-link" data-scroll-target="#standardize-names-before-meteor-import"><span class="header-section-number">6.1.2</span> 27.2 Standardize names before Meteor import</a></li>
+  <li><a href="#prefer-symbolic-links-over-duplication-when-possible" id="toc-prefer-symbolic-links-over-duplication-when-possible" class="nav-link" data-scroll-target="#prefer-symbolic-links-over-duplication-when-possible"><span class="header-section-number">6.1.3</span> 27.3 Prefer symbolic links over duplication when possible</a></li>
+  <li><a href="#keep-environments-separate" id="toc-keep-environments-separate" class="nav-link" data-scroll-target="#keep-environments-separate"><span class="header-section-number">6.1.4</span> 27.4 Keep environments separate</a></li>
+  <li><a href="#document-the-exact-catalogue-version-used" id="toc-document-the-exact-catalogue-version-used" class="nav-link" data-scroll-target="#document-the-exact-catalogue-version-used"><span class="header-section-number">6.1.5</span> 27.5 Document the exact catalogue version used</a></li>
+  <li><a href="#record-all-parameters-used" id="toc-record-all-parameters-used" class="nav-link" data-scroll-target="#record-all-parameters-used"><span class="header-section-number">6.1.6</span> 27.6 Record all parameters used</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#part-v.-end-to-end-workflow-summary" id="toc-part-v.-end-to-end-workflow-summary" class="nav-link" data-scroll-target="#part-v.-end-to-end-workflow-summary"><span class="header-section-number">7</span> Part V. End-to-end workflow summary</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-flow" id="toc-conceptual-flow" class="nav-link" data-scroll-target="#conceptual-flow"><span class="header-section-number">7.1</span> 28. Conceptual flow</a></li>
+  </ul></li>
+  <li><a href="#part-vi.-minimal-command-checklist" id="toc-part-vi.-minimal-command-checklist" class="nav-link" data-scroll-target="#part-vi.-minimal-command-checklist"><span class="header-section-number">8</span> Part VI. Minimal command checklist</a>
+  <ul class="collapse">
+  <li><a href="#kneaddata" id="toc-kneaddata" class="nav-link" data-scroll-target="#kneaddata"><span class="header-section-number">8.1</span> 29. KneadData</a></li>
+  <li><a href="#meteor2" id="toc-meteor2" class="nav-link" data-scroll-target="#meteor2"><span class="header-section-number">8.2</span> 30. Meteor2</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">9</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">2.1</span> Overview</h2>
+<p>This document describes a reproducible workflow for processing paired-end shotgun metagenomic reads using <strong>KneadData</strong> for host-read depletion and quality control, followed by <strong>Meteor2</strong> for taxonomic, functional, and optional strain-level profiling. The workflow is designed for host-associated microbiome datasets, particularly <strong>human gut shotgun metagenomes</strong>, and reflects the command-line interfaces and recommendations documented in the official KneadData and Meteor repositories.</p>
+<p>The pipeline is structured in two major stages:</p>
+<ol type="1">
+<li><strong>Preprocessing and host-read removal with KneadData</strong></li>
+<li><strong>Metagenomic profiling with Meteor2</strong></li>
+</ol>
+<p>The expected final outputs are:</p>
+<ul>
+<li>host-depleted, high-quality paired FASTQ files from KneadData</li>
+<li>per-sample gene count tables from Meteor2 mapping</li>
+<li>per-sample taxonomic and functional abundance profiles from Meteor2 profiling</li>
+<li>merged multi-sample abundance tables for downstream analysis</li>
+</ul>
+<hr>
+</section>
+<section id="part-i.-host-read-removal-and-quality-control-with-kneaddata" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Part I. Host read removal and quality control with KneadData</h1>
+<section id="purpose" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="purpose"><span class="header-section-number">3.1</span> 1. Purpose</h2>
+<p>KneadData is a quality-control and decontamination tool designed for metagenomic and metatranscriptomic sequencing data, especially microbiome datasets. In host-associated samples, sequencing libraries often contain a substantial fraction of host-derived reads. KneadData performs <strong>in silico separation of microbial reads from contaminant reads</strong>, typically using:</p>
+<ul>
+<li><strong>Trimmomatic</strong> for adapter/quality trimming</li>
+<li><strong>TRF</strong> for optional low-complexity/repetitive sequence filtering</li>
+<li><strong>Bowtie2</strong> for contaminant/host read removal against a reference database</li>
+</ul>
+<p>In this workflow, KneadData is used to remove <strong>human reads</strong> before downstream profiling with Meteor2.</p>
+<hr>
+</section>
+<section id="installation" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="installation"><span class="header-section-number">3.2</span> 2. Installation</h2>
+<section id="recommended-installation-with-conda" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="recommended-installation-with-conda"><span class="header-section-number">3.2.1</span> 2.1 Recommended installation with Conda</h3>
+<p>A Conda installation is recommended because it resolves the main dependencies required by KneadData.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> kneaddata <span class="at">-c</span> bioconda kneaddata <span class="at">-y</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate kneaddata</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This installation typically provides the core software required to run the workflow, including:</p>
+<ul>
+<li>KneadData</li>
+<li>Bowtie2</li>
+<li>Trimmomatic</li>
+<li>Java runtime support</li>
+</ul>
+<p>Alternative installation methods exist, including <code>pip</code> and Docker, but Conda is the preferred option for a reproducible local CLI workflow.</p>
+<hr>
+</section>
+</section>
+<section id="download-the-human-host-reference-database" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="download-the-human-host-reference-database"><span class="header-section-number">3.3</span> 3. Download the human host reference database</h2>
+<p>KneadData provides helper commands to download reference databases compatible with Bowtie2.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata_database</span> <span class="at">--download</span> human_genome bowtie2 <span class="va">$DIR</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Where:</p>
+<ul>
+<li><code>$DIR</code> is the directory where the reference database will be stored</li>
+</ul>
+<section id="notes" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="notes"><span class="header-section-number">3.3.1</span> Notes</h3>
+<ul>
+<li>For human host depletion, the recommended database is the <strong>human hg39 reference</strong> supplied by KneadData</li>
+<li>The database corresponds to <strong>T2T-CHM13v2.0</strong></li>
+<li>Approximate size: <strong>3.6 GB</strong></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata_database</span> <span class="at">--download</span> human_genome bowtie2 /home/dani/kneaddata_test/database</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="input-requirements" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="input-requirements"><span class="header-section-number">3.4</span> 4. Input requirements</h2>
+<p>This workflow assumes <strong>paired-end FASTQ</strong> input files.</p>
+<p>Generic paired input:</p>
+<pre class="text"><code>sample_R1.fastq.gz
+sample_R2.fastq.gz</code></pre>
+<p>Example real inputs:</p>
+<pre class="text"><code>/home/dani/kneaddata_test/input/36522947_R1.fastq.gz
+/home/dani/kneaddata_test/input/36522947_R2.fastq.gz</code></pre>
+<hr>
+</section>
+<section id="run-kneaddata-on-paired-end-reads" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="run-kneaddata-on-paired-end-reads"><span class="header-section-number">3.5</span> 5. Run KneadData on paired-end reads</h2>
+<section id="basic-paired-end-command" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="basic-paired-end-command"><span class="header-section-number">3.5.1</span> 5.1 Basic paired-end command</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> seq1.fastq.gz <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> seq2.fastq.gz <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> <span class="va">$DATABASE</span> <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> kneaddata_output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="argument-description" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="argument-description"><span class="header-section-number">3.5.2</span> Argument description</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--input1</code></td>
+<td>Forward mate (R1)</td>
+</tr>
+<tr class="even">
+<td><code>--input2</code></td>
+<td>Reverse mate (R2)</td>
+</tr>
+<tr class="odd">
+<td><code>-db</code></td>
+<td>Path to the KneadData/Bowtie2 contaminant database</td>
+</tr>
+<tr class="even">
+<td><code>--output</code></td>
+<td>Directory where output files will be written</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="real-execution-examples" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="real-execution-examples"><span class="header-section-number">3.6</span> 6. Real execution examples</h2>
+<section id="sample-1" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="sample-1"><span class="header-section-number">3.6.1</span> Sample 1</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> /home/dani/kneaddata_test/input/36522947_R1.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> /home/dani/kneaddata_test/input/36522947_R2.fastq.gz <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> /home/dani/kneaddata_test/database <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> /home/dani/kneaddata_test/output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sample-2" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="sample-2"><span class="header-section-number">3.6.2</span> Sample 2</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> /home/dani/kneaddata_test/input/36525128_R1.fastq.gz <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> /home/dani/kneaddata_test/input/36525128_R2.fastq.gz <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> /home/dani/kneaddata_test/database <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> /home/dani/kneaddata_test/output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="parallelization-and-performance-tuning" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="parallelization-and-performance-tuning"><span class="header-section-number">3.7</span> 7. Parallelization and performance tuning</h2>
+<p>KneadData allows control over computational resources.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> seq1.fastq.gz <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> seq2.fastq.gz <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> <span class="va">$DATABASE</span> <span class="dt">\</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> kneaddata_output <span class="dt">\</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-t</span> 16 <span class="dt">\</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="relevant-options" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="relevant-options"><span class="header-section-number">3.7.1</span> Relevant options</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-t</code></td>
+<td>Number of threads used by underlying tools such as Bowtie2/Trimmomatic</td>
+</tr>
+<tr class="even">
+<td><code>-p</code></td>
+<td>Number of parallel processes</td>
+</tr>
+</tbody>
+</table>
+<p>These parameters should be adjusted according to available CPU and memory resources.</p>
+<hr>
+</section>
+</section>
+<section id="batch-execution-over-all-samples-in-an-input-directory" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="batch-execution-over-all-samples-in-an-input-directory"><span class="header-section-number">3.8</span> 8. Batch execution over all samples in an input directory</h2>
+<p>If all paired-end reads are stored in the same input directory with a consistent naming convention (<code>*_R1.fastq.gz</code> and <code>*_R2.fastq.gz</code>), processing can be automated.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="va">INPUT_DIR</span><span class="op">=</span>/home/dani/kneaddata_test/input</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="va">OUTPUT_DIR</span><span class="op">=</span>/home/dani/kneaddata_test/output</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="va">DB_DIR</span><span class="op">=</span>/home/dani/kneaddata_test/database</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r1 <span class="kw">in</span> <span class="va">${INPUT_DIR}</span>/<span class="pp">*</span>_R1.fastq.gz<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">base</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="st">"</span><span class="va">${r1}</span><span class="st">"</span> _R1.fastq.gz<span class="va">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--input1</span> <span class="st">"</span><span class="va">${INPUT_DIR}</span><span class="st">/</span><span class="va">${base}</span><span class="st">_R1.fastq.gz"</span> <span class="dt">\</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--input2</span> <span class="st">"</span><span class="va">${INPUT_DIR}</span><span class="st">/</span><span class="va">${base}</span><span class="st">_R2.fastq.gz"</span> <span class="dt">\</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">-db</span> <span class="st">"</span><span class="va">${DB_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">--output</span> <span class="st">"</span><span class="va">${OUTPUT_DIR}</span><span class="st">"</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This assumes each sample has exactly one forward file and one reverse file.</p>
+<hr>
+</section>
+<section id="main-output-files-produced-by-kneaddata" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="main-output-files-produced-by-kneaddata"><span class="header-section-number">3.9</span> 9. Main output files produced by KneadData</h2>
+<p>KneadData creates several intermediate and final files. The <strong>primary outputs of interest for downstream metagenomic profiling</strong> are the paired clean files.</p>
+<section id="main-paired-outputs" class="level3" data-number="3.9.1">
+<h3 data-number="3.9.1" class="anchored" data-anchor-id="main-paired-outputs"><span class="header-section-number">3.9.1</span> 9.1 Main paired outputs</h3>
+<p>Typical filenames:</p>
+<pre class="text"><code>36522947_R1_kneaddata_paired_1.fastq
+36522947_R1_kneaddata_paired_2.fastq</code></pre>
+<p>These files contain reads that:</p>
+<ul>
+<li>remain properly paired after trimming</li>
+<li>passed quality control</li>
+<li>did <strong>not</strong> align to the host reference database</li>
+</ul>
+<p>These are the <strong>clean paired-end reads</strong> that should be used as input for Meteor2.</p>
+</section>
+<section id="unmatched-outputs" class="level3" data-number="3.9.2">
+<h3 data-number="3.9.2" class="anchored" data-anchor-id="unmatched-outputs"><span class="header-section-number">3.9.2</span> 9.2 Unmatched outputs</h3>
+<p>Typical filenames:</p>
+<pre class="text"><code>36522947_R1_kneaddata_unmatched_1.fastq
+36522947_R1_kneaddata_unmatched_2.fastq</code></pre>
+<p>These contain reads that survived filtering but lost their mate during trimming or decontamination. They may be useful in some contexts, but for the workflow documented here they are <strong>not used downstream in Meteor2</strong>.</p>
+</section>
+<section id="intermediate-files" class="level3" data-number="3.9.3">
+<h3 data-number="3.9.3" class="anchored" data-anchor-id="intermediate-files"><span class="header-section-number">3.9.3</span> 9.3 Intermediate files</h3>
+<p>KneadData also generates multiple intermediate files, for example:</p>
+<ul>
+<li>decompressed FASTQ files</li>
+<li>reformatted identifier files</li>
+<li>trimmed paired and trimmed single files</li>
+<li>Bowtie2 clean intermediate files</li>
+</ul>
+<p>These are useful for auditing and troubleshooting, but they are not the final files intended for profiling.</p>
+<hr>
+</section>
+</section>
+<section id="important-naming-caveat-in-kneaddata-outputs" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="important-naming-caveat-in-kneaddata-outputs"><span class="header-section-number">3.10</span> 10. Important naming caveat in KneadData outputs</h2>
+<p>KneadData uses the basename of <code>--input1</code> as the prefix for all generated outputs. This means that output filenames may look confusing at first sight.</p>
+<p>Example:</p>
+<pre class="text"><code>36522947_R1_kneaddata_paired_2.fastq</code></pre>
+<p>Even though the file ends in <code>_paired_2.fastq</code> and corresponds to the reverse mate, its prefix still contains <code>R1</code> because KneadData derives the output prefix from the first input file.</p>
+<p>This does <strong>not</strong> indicate a technical problem, but the filenames are not ideal for downstream clarity.</p>
+<hr>
+</section>
+<section id="recommended-renaming-strategy" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="recommended-renaming-strategy"><span class="header-section-number">3.11</span> 11. Recommended renaming strategy</h2>
+<p>To standardize the naming and make downstream processing easier, it is advisable to rename or symlink the paired clean files.</p>
+<section id="example-renaming" class="level3" data-number="3.11.1">
+<h3 data-number="3.11.1" class="anchored" data-anchor-id="example-renaming"><span class="header-section-number">3.11.1</span> Example renaming</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> 36522947_R1_kneaddata_paired_1.fastq 36522947_clean_R1.fastq</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> 36522947_R1_kneaddata_paired_2.fastq 36522947_clean_R2.fastq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A consistent naming convention is strongly recommended before importing the files into Meteor2.</p>
+<hr>
+</section>
+</section>
+<section id="optional-use-of---output-prefix" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="optional-use-of---output-prefix"><span class="header-section-number">3.12</span> 12. Optional use of <code>--output-prefix</code></h2>
+<p>KneadData also supports explicit output naming through an output prefix.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> seq1.fastq.gz <span class="dt">\</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> seq2.fastq.gz <span class="dt">\</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> <span class="va">$DATABASE</span> <span class="dt">\</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> kneaddata_output <span class="dt">\</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output-prefix</span> sample_name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This can make the generated filenames more predictable and easier to standardize.</p>
+<hr>
+</section>
+<section id="practical-summary-of-the-kneaddata-stage" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="practical-summary-of-the-kneaddata-stage"><span class="header-section-number">3.13</span> 13. Practical summary of the KneadData stage</h2>
+<p>At the end of the KneadData stage, the files that should be retained for downstream profiling are the paired clean FASTQ files:</p>
+<pre class="text"><code>*_kneaddata_paired_1.fastq
+*_kneaddata_paired_2.fastq</code></pre>
+<p>These represent:</p>
+<ul>
+<li>high-quality reads</li>
+<li>host-depleted reads</li>
+<li>paired-end reads suitable for microbial profiling</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="part-ii.-metagenomic-profiling-with-meteor2" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Part II. Metagenomic profiling with Meteor2</h1>
+<section id="purpose-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="purpose-1"><span class="header-section-number">4.1</span> 14. Purpose</h2>
+<p>Meteor2 is a platform for quantitative shotgun metagenomic profiling of complex microbial ecosystems. It relies on <strong>ecosystem-specific microbial gene catalogues</strong> and supports:</p>
+<ul>
+<li>taxonomic profiling</li>
+<li>functional profiling</li>
+<li>optional strain-level analysis</li>
+</ul>
+<p>For the present workflow, Meteor2 is used after KneadData to profile <strong>human gut microbiome</strong> shotgun data.</p>
+<hr>
+</section>
+<section id="installation-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="installation-1"><span class="header-section-number">4.2</span> 15. Installation</h2>
+<p>Meteor2 can be installed in a dedicated Conda environment.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">--name</span> meteor <span class="at">-c</span> conda-forge <span class="at">-c</span> bioconda meteor <span class="at">-y</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate meteor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A separate environment from KneadData is recommended to avoid dependency conflicts.</p>
+<hr>
+</section>
+<section id="catalogue-download" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="catalogue-download"><span class="header-section-number">4.3</span> 16. Catalogue download</h2>
+<p>Meteor2 requires a gene catalogue matching the ecosystem under study.</p>
+<p>For <strong>human gut</strong> samples, the corresponding catalogue is:</p>
+<pre class="text"><code>hs_10_4_gut</code></pre>
+<section id="recommended-catalogue-download-with-meteor2" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="recommended-catalogue-download-with-meteor2"><span class="header-section-number">4.3.1</span> 16.1 Recommended catalogue download with Meteor2</h3>
+<p>Meteor provides an internal command to download, verify, and prepare catalogues.</p>
+<section id="full-catalogue" class="level4" data-number="4.3.1.1">
+<h4 data-number="4.3.1.1" class="anchored" data-anchor-id="full-catalogue"><span class="header-section-number">4.3.1.1</span> Full catalogue</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> download <span class="at">-i</span> hs_10_4_gut <span class="at">-o</span> /home/dani/meteor2_test/catalogues <span class="at">-c</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="light-fast-catalogue" class="level4" data-number="4.3.1.2">
+<h4 data-number="4.3.1.2" class="anchored" data-anchor-id="light-fast-catalogue"><span class="header-section-number">4.3.1.2</span> Light / fast catalogue</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> download <span class="at">-i</span> hs_10_4_gut <span class="at">--fast</span> <span class="at">-o</span> /home/dani/meteor2_test/catalogues <span class="at">-c</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="why-this-is-the-preferred-method" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="why-this-is-the-preferred-method"><span class="header-section-number">4.3.2</span> Why this is the preferred method</h3>
+<p>Using <code>meteor download</code> is preferable because it:</p>
+<ul>
+<li>downloads the correct catalogue version</li>
+<li>verifies file integrity with checksum validation</li>
+<li>prepares the catalogue automatically</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="alternative-manual-catalogue-download-and-extraction" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="alternative-manual-catalogue-download-and-extraction"><span class="header-section-number">4.4</span> 17. Alternative manual catalogue download and extraction</h2>
+<p>If the catalogue has already been downloaded manually, the corresponding files may look like this:</p>
+<pre class="text"><code>hs_10_4_gut.tar.xz
+hs_10_4_gut_taxo.tar.xz</code></pre>
+<p>In that case, they must be extracted manually.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/dani/meteor2_test/catalogues</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xvf</span> hs_10_4_gut.tar.xz</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xvf</span> hs_10_4_gut_taxo.tar.xz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This step is only necessary if the catalogue was not obtained through <code>meteor download</code>.</p>
+<hr>
+</section>
+<section id="input-requirements-for-meteor2" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="input-requirements-for-meteor2"><span class="header-section-number">4.5</span> 18. Input requirements for Meteor2</h2>
+<p>Meteor2 does not start directly from a single FASTQ pair passed to a generic top-level command. Instead, the workflow is divided into multiple subcommands.</p>
+<p>The first step is <strong>FASTQ import/indexing</strong> with <code>meteor fastq</code>.</p>
+<p>Meteor expects a directory containing input FASTQ files. For paired-end data, filenames must follow one of the accepted patterns:</p>
+<pre class="text"><code>sample_R1.fastq and sample_R2.fastq</code></pre>
+<p>or</p>
+<pre class="text"><code>sample_1.fastq and sample_2.fastq</code></pre>
+<section id="important-implication-for-kneaddata-outputs" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="important-implication-for-kneaddata-outputs"><span class="header-section-number">4.5.1</span> Important implication for KneadData outputs</h3>
+<p>KneadData output names such as:</p>
+<pre class="text"><code>36522947_R1_kneaddata_paired_1.fastq
+36522947_R1_kneaddata_paired_2.fastq</code></pre>
+<p>can still be compatible with Meteor2 because the suffix pattern <code>_1.fastq</code> / <code>_2.fastq</code> is present. However, for clarity, traceability, and standardization, it is strongly recommended to rename or symlink the KneadData outputs into a simpler, explicit paired-end convention before running <code>meteor fastq</code>.</p>
+</section>
+<section id="suggested-meteor-input-naming" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="suggested-meteor-input-naming"><span class="header-section-number">4.5.2</span> Suggested Meteor input naming</h3>
+<pre class="text"><code>36522947_R1.fastq
+36522947_R2.fastq
+36525128_R1.fastq
+36525128_R2.fastq</code></pre>
+<hr>
+</section>
+</section>
+<section id="avoiding-file-duplication-with-symbolic-links" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="avoiding-file-duplication-with-symbolic-links"><span class="header-section-number">4.6</span> 19. Avoiding file duplication with symbolic links</h2>
+<p>Since KneadData outputs may already consume substantial disk space, one practical strategy is to create symbolic links instead of copying files.</p>
+<section id="example" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="example"><span class="header-section-number">4.6.1</span> Example</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /home/dani/meteor2_test/input</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/dani/meteor2_test/input</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /path/to/36522947_R1_kneaddata_paired_1.fastq 36522947_R1.fastq</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /path/to/36522947_R1_kneaddata_paired_2.fastq 36522947_R2.fastq</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /path/to/36525128_R1_kneaddata_paired_1.fastq 36525128_R1.fastq</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /path/to/36525128_R1_kneaddata_paired_2.fastq 36525128_R2.fastq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This preserves storage and keeps the Meteor input directory clean and standardized.</p>
+<hr>
+</section>
+</section>
+<section id="step-1-import-and-index-fastq-files-with-meteor-fastq" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="step-1-import-and-index-fastq-files-with-meteor-fastq"><span class="header-section-number">4.7</span> 20. Step 1: import and index FASTQ files with <code>meteor fastq</code></h2>
+<p>This command prepares a Meteor-compatible FASTQ repository from the input directory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> fastq <span class="dt">\</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /home/dani/meteor2_test/input <span class="dt">\</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> <span class="dt">\</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /home/dani/meteor2_test/results/fastq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="meaning-of-the-arguments" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="meaning-of-the-arguments"><span class="header-section-number">4.7.1</span> Meaning of the arguments</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>Directory containing FASTQ files</td>
+</tr>
+<tr class="even">
+<td><code>-p</code></td>
+<td>Indicates that the FASTQ files are paired-end</td>
+</tr>
+<tr class="odd">
+<td><code>-o</code></td>
+<td>Output directory for the Meteor FASTQ repository</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="notes-1" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="notes-1"><span class="header-section-number">4.7.2</span> Notes</h3>
+<ul>
+<li>Meteor2 expects the <strong>directory</strong> of FASTQ files, not an individual FASTQ file here</li>
+<li>The output will contain one subdirectory per imported sample/library</li>
+<li>If multiple sequencing runs belong to the same library, the <code>-m</code> option can be used to group them using a regular expression</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="step-2-mapping-against-the-gene-catalogue-with-meteor-mapping" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="step-2-mapping-against-the-gene-catalogue-with-meteor-mapping"><span class="header-section-number">4.8</span> 21. Step 2: mapping against the gene catalogue with <code>meteor mapping</code></h2>
+<p>After FASTQ import, each sample must be mapped separately against the selected catalogue.</p>
+<section id="example-for-one-sample" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="example-for-one-sample"><span class="header-section-number">4.8.1</span> Example for one sample</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> mapping <span class="dt">\</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /home/dani/meteor2_test/results/fastq/36522947_R1_kneaddata_paired <span class="dt">\</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /home/dani/meteor2_test/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /home/dani/meteor2_test/results/mapping <span class="dt">\</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-t</span> 6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="important-note" class="level3" data-number="4.8.2">
+<h3 data-number="4.8.2" class="anchored" data-anchor-id="important-note"><span class="header-section-number">4.8.2</span> Important note</h3>
+<p>The input of <code>meteor mapping</code> is <strong>not</strong> the original FASTQ file. It is the <strong>sample directory generated by <code>meteor fastq</code></strong> for a given sample.</p>
+</section>
+<section id="meaning-of-the-arguments-1" class="level3" data-number="4.8.3">
+<h3 data-number="4.8.3" class="anchored" data-anchor-id="meaning-of-the-arguments-1"><span class="header-section-number">4.8.3</span> Meaning of the arguments</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>Directory corresponding to one imported sample in the Meteor FASTQ repository</td>
+</tr>
+<tr class="even">
+<td><code>-r</code></td>
+<td>Catalogue/reference directory</td>
+</tr>
+<tr class="odd">
+<td><code>-o</code></td>
+<td>Output directory for mapping results</td>
+</tr>
+<tr class="even">
+<td><code>-t</code></td>
+<td>Number of threads</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="automating-the-mapping-step-across-all-samples" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="automating-the-mapping-step-across-all-samples"><span class="header-section-number">4.9</span> 22. Automating the mapping step across all samples</h2>
+<p>Because <code>meteor mapping</code> is run per sample directory, it should be automated when several samples are present.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="va">FASTQ_REPO</span><span class="op">=</span>/home/dani/meteor2_test/results/fastq</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">REF_DIR</span><span class="op">=</span>/home/dani/meteor2_test/catalogues/hs_10_4_gut</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="va">MAP_DIR</span><span class="op">=</span>/home/dani/meteor2_test/results/mapping</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample_dir <span class="kw">in</span> <span class="va">${FASTQ_REPO}</span>/<span class="pp">*</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-d</span> <span class="st">"</span><span class="va">${sample_dir}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">meteor</span> mapping <span class="dt">\</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">-i</span> <span class="st">"</span><span class="va">${sample_dir}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">-r</span> <span class="st">"</span><span class="va">${REF_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">-o</span> <span class="st">"</span><span class="va">${MAP_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">-t</span> 6</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This loop processes all imported samples one by one.</p>
+<hr>
+</section>
+<section id="step-3-taxonomic-and-functional-profiling-with-meteor-profile" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="step-3-taxonomic-and-functional-profiling-with-meteor-profile"><span class="header-section-number">4.10</span> 23. Step 3: taxonomic and functional profiling with <code>meteor profile</code></h2>
+<p>Once mapping has been completed for a sample, taxonomic and functional profiling can be performed.</p>
+<section id="example-1" class="level3" data-number="4.10.1">
+<h3 data-number="4.10.1" class="anchored" data-anchor-id="example-1"><span class="header-section-number">4.10.1</span> Example</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> profile <span class="dt">\</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /home/dani/meteor2_test/results/mapping <span class="dt">\</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /home/dani/meteor2_test/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /home/dani/meteor2_test/results/profile <span class="dt">\</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-n</span> coverage</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="meaning-of-the-arguments-2" class="level3" data-number="4.10.2">
+<h3 data-number="4.10.2" class="anchored" data-anchor-id="meaning-of-the-arguments-2"><span class="header-section-number">4.10.2</span> Meaning of the arguments</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>Directory containing mapped sample output</td>
+</tr>
+<tr class="even">
+<td><code>-r</code></td>
+<td>Catalogue/reference directory</td>
+</tr>
+<tr class="odd">
+<td><code>-o</code></td>
+<td>Output directory for profiled sample results</td>
+</tr>
+<tr class="even">
+<td><code>-n coverage</code></td>
+<td>Length-normalized abundance calculation using coverage normalization</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="notes-on-normalization" class="level3" data-number="4.10.3">
+<h3 data-number="4.10.3" class="anchored" data-anchor-id="notes-on-normalization"><span class="header-section-number">4.10.3</span> Notes on normalization</h3>
+<p>The <code>-n coverage</code> option performs gene-length normalization and is the recommended mode in the standard Meteor workflow.</p>
+<p>If omitted, no normalization is applied to the gene table.</p>
+</section>
+<section id="typical-profile-outputs" class="level3" data-number="4.10.4">
+<h3 data-number="4.10.4" class="anchored" data-anchor-id="typical-profile-outputs"><span class="header-section-number">4.10.4</span> Typical profile outputs</h3>
+<p>Depending on the catalogue type, this step can generate:</p>
+<ul>
+<li>species abundance tables</li>
+<li>ARD abundance tables</li>
+<li>dbCAN abundance tables</li>
+<li>gut metabolic module abundance tables</li>
+<li>gut brain module abundance tables</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="automating-the-profiling-step-across-all-mapped-samples" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="automating-the-profiling-step-across-all-mapped-samples"><span class="header-section-number">4.11</span> 24. Automating the profiling step across all mapped samples</h2>
+<p>As with mapping, profiling is conceptually sample-based and should be applied to each mapped sample directory when needed.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="va">MAP_DIR</span><span class="op">=</span>/home/dani/meteor2_test/results/mapping</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="va">REF_DIR</span><span class="op">=</span>/home/dani/meteor2_test/catalogues/hs_10_4_gut</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="va">PROFILE_DIR</span><span class="op">=</span>/home/dani/meteor2_test/results/profile</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sample_dir <span class="kw">in</span> <span class="va">${MAP_DIR}</span>/<span class="pp">*</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-d</span> <span class="st">"</span><span class="va">${sample_dir}</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">meteor</span> profile <span class="dt">\</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">-i</span> <span class="st">"</span><span class="va">${sample_dir}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">-r</span> <span class="st">"</span><span class="va">${REF_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">-o</span> <span class="st">"</span><span class="va">${PROFILE_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">-n</span> coverage</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="step-4-merge-all-profiled-samples-with-meteor-merge" class="level2" data-number="4.12">
+<h2 data-number="4.12" class="anchored" data-anchor-id="step-4-merge-all-profiled-samples-with-meteor-merge"><span class="header-section-number">4.12</span> 25. Step 4: merge all profiled samples with <code>meteor merge</code></h2>
+<p>Once all samples have been profiled, the outputs can be merged into multi-sample abundance tables.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> merge <span class="dt">\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /home/dani/meteor2_test/results/profile <span class="dt">\</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /home/dani/meteor2_test/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /home/dani/meteor2_test/results/merge</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="meaning-of-the-arguments-3" class="level3" data-number="4.12.1">
+<h3 data-number="4.12.1" class="anchored" data-anchor-id="meaning-of-the-arguments-3"><span class="header-section-number">4.12.1</span> Meaning of the arguments</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>-i</code></td>
+<td>Directory containing profiled sample subdirectories</td>
+</tr>
+<tr class="even">
+<td><code>-r</code></td>
+<td>Catalogue/reference directory</td>
+</tr>
+<tr class="odd">
+<td><code>-o</code></td>
+<td>Output directory for merged tables</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="output-purpose" class="level3" data-number="4.12.2">
+<h3 data-number="4.12.2" class="anchored" data-anchor-id="output-purpose"><span class="header-section-number">4.12.2</span> Output purpose</h3>
+<p>This step produces merged matrices suitable for downstream statistical analysis across samples.</p>
+<hr>
+</section>
+</section>
+<section id="optional-downstream-strain-analysis" class="level2" data-number="4.13">
+<h2 data-number="4.13" class="anchored" data-anchor-id="optional-downstream-strain-analysis"><span class="header-section-number">4.13</span> 26. Optional downstream strain analysis</h2>
+<p>Meteor2 also supports strain-level analysis, although this is optional and outside the core taxonomic/functional workflow described above.</p>
+<section id="strain-inference" class="level3" data-number="4.13.1">
+<h3 data-number="4.13.1" class="anchored" data-anchor-id="strain-inference"><span class="header-section-number">4.13.1</span> Strain inference</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> strain <span class="dt">\</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> <span class="op">&lt;</span>mapping_sample_dir<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="op">&lt;</span>strain_dir<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> <span class="op">&lt;</span>refdir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="strain-tree-computation" class="level3" data-number="4.13.2">
+<h3 data-number="4.13.2" class="anchored" data-anchor-id="strain-tree-computation"><span class="header-section-number">4.13.2</span> Strain tree computation</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> tree <span class="dt">\</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> <span class="op">&lt;</span>strain_dir<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="op">&lt;</span>tree_dir<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>These steps are only relevant if strain-resolved comparisons are part of the study design.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="part-iii.-recommended-directory-organization" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Part III. Recommended directory organization</h1>
+<p>A clear directory structure improves traceability and reproducibility.</p>
+<section id="example-layout" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="example-layout"><span class="header-section-number">5.1</span> Example layout</h2>
+<pre class="text"><code>project/
+├── kneaddata/
+│   ├── input/
+│   ├── database/
+│   └── output/
+├── meteor2/
+│   ├── catalogues/
+│   ├── input/
+│   ├── output/
+│   └── results/
+│       ├── fastq/
+│       ├── mapping/
+│       ├── profile/
+│       └── merge/</code></pre>
+<hr>
+</section>
+</section>
+<section id="part-iv.-practical-guidance-and-best-practices" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Part IV. Practical guidance and best practices</h1>
+<section id="general-recommendations" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="general-recommendations"><span class="header-section-number">6.1</span> 27. General recommendations</h2>
+<section id="keep-the-paired-clean-fastq-files-from-kneaddata" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="keep-the-paired-clean-fastq-files-from-kneaddata"><span class="header-section-number">6.1.1</span> 27.1 Keep the paired clean FASTQ files from KneadData</h3>
+<p>For this workflow, the correct files to propagate downstream are:</p>
+<pre class="text"><code>*_kneaddata_paired_1.fastq
+*_kneaddata_paired_2.fastq</code></pre>
+<p>Do not use the unmatched files unless there is a specific analytical reason to process single-end survivors separately.</p>
+</section>
+<section id="standardize-names-before-meteor-import" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="standardize-names-before-meteor-import"><span class="header-section-number">6.1.2</span> 27.2 Standardize names before Meteor import</h3>
+<p>Even if Meteor can recognize <code>_1</code> and <code>_2</code>, cleaner names simplify the workflow and reduce ambiguity.</p>
+</section>
+<section id="prefer-symbolic-links-over-duplication-when-possible" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="prefer-symbolic-links-over-duplication-when-possible"><span class="header-section-number">6.1.3</span> 27.3 Prefer symbolic links over duplication when possible</h3>
+<p>Large shotgun datasets quickly become storage-intensive. Symlinks allow a clean and reproducible organization without copying files.</p>
+</section>
+<section id="keep-environments-separate" class="level3" data-number="6.1.4">
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="keep-environments-separate"><span class="header-section-number">6.1.4</span> 27.4 Keep environments separate</h3>
+<p>Use independent Conda environments for KneadData and Meteor2.</p>
+</section>
+<section id="document-the-exact-catalogue-version-used" class="level3" data-number="6.1.5">
+<h3 data-number="6.1.5" class="anchored" data-anchor-id="document-the-exact-catalogue-version-used"><span class="header-section-number">6.1.5</span> 27.5 Document the exact catalogue version used</h3>
+<p>Catalogue versioning is critical for reproducibility because Meteor2 relies on environment-specific references.</p>
+</section>
+<section id="record-all-parameters-used" class="level3" data-number="6.1.6">
+<h3 data-number="6.1.6" class="anchored" data-anchor-id="record-all-parameters-used"><span class="header-section-number">6.1.6</span> 27.6 Record all parameters used</h3>
+<p>At minimum, document:</p>
+<ul>
+<li>KneadData database version</li>
+<li>KneadData thread/process settings</li>
+<li>Meteor catalogue name and version</li>
+<li>Meteor normalization mode</li>
+<li>software versions and execution dates</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="part-v.-end-to-end-workflow-summary" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Part V. End-to-end workflow summary</h1>
+<section id="conceptual-flow" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="conceptual-flow"><span class="header-section-number">7.1</span> 28. Conceptual flow</h2>
+<pre class="text"><code>Raw paired-end shotgun FASTQ
+        ↓
+KneadData
+  - trimming
+  - repetitive sequence filtering
+  - human read removal
+        ↓
+Clean paired FASTQ
+        ↓
+Meteor fastq
+        ↓
+Meteor mapping
+        ↓
+Meteor profile
+        ↓
+Meteor merge
+        ↓
+Multi-sample taxonomic and functional abundance tables</code></pre>
+<hr>
+</section>
+</section>
+<section id="part-vi.-minimal-command-checklist" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Part VI. Minimal command checklist</h1>
+<section id="kneaddata" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="kneaddata"><span class="header-section-number">8.1</span> 29. KneadData</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> kneaddata <span class="at">-c</span> bioconda kneaddata <span class="at">-y</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate kneaddata</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata_database</span> <span class="at">--download</span> human_genome bowtie2 /path/to/database</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kneaddata</span> <span class="dt">\</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input1</span> sample_R1.fastq.gz <span class="dt">\</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input2</span> sample_R2.fastq.gz <span class="dt">\</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">-db</span> /path/to/database <span class="dt">\</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> /path/to/kneaddata_output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="meteor2" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="meteor2"><span class="header-section-number">8.2</span> 30. Meteor2</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">--name</span> meteor <span class="at">-c</span> conda-forge <span class="at">-c</span> bioconda meteor <span class="at">-y</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate meteor</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> download <span class="at">-i</span> hs_10_4_gut <span class="at">-o</span> /path/to/catalogues <span class="at">-c</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> fastq <span class="dt">\</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /path/to/input_fastq_dir <span class="dt">\</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> <span class="dt">\</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /path/to/results/fastq</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> mapping <span class="dt">\</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /path/to/results/fastq/sample_dir <span class="dt">\</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /path/to/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /path/to/results/mapping <span class="dt">\</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">-t</span> 6</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> profile <span class="dt">\</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /path/to/results/mapping/sample_dir <span class="dt">\</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /path/to/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /path/to/results/profile <span class="dt">\</span></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">-n</span> coverage</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="ex">meteor</span> merge <span class="dt">\</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> /path/to/results/profile <span class="dt">\</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> /path/to/catalogues/hs_10_4_gut <span class="dt">\</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> /path/to/results/merge</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="references" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> References</h1>
+<ul>
+<li>KneadData official repository</li>
+<li>KneadData bioBakery wiki/tutorial</li>
+<li>Meteor official repository</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dcosimber\.github\.io\/BiomeXplore\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/02_meteor2.html" class="pagination-link" aria-label="Meteor2 documentation">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Meteor2 documentation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
