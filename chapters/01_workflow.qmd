@@ -1,4 +1,4 @@
-# Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2
+# BiomeXplore bioinformatic workflows
 
 ## Overview
 
