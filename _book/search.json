@@ -52,331 +52,331 @@
   {
     "objectID": "chapters/01_workflow.html",
     "href": "chapters/01_workflow.html",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "",
     "text": "2.1 Overview\nThis document describes a reproducible workflow for processing paired-end shotgun metagenomic reads using KneadData for host-read depletion and quality control, followed by Meteor2 for taxonomic, functional, and optional strain-level profiling. The workflow is designed for host-associated microbiome datasets, particularly human gut shotgun metagenomes, and reflects the command-line interfaces and recommendations documented in the official KneadData and Meteor repositories.\nThe pipeline is structured in two major stages:\nThe expected final outputs are:",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#overview",
     "href": "chapters/01_workflow.html#overview",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "",
     "text": "Preprocessing and host-read removal with KneadData\nMetagenomic profiling with Meteor2\n\n\n\nhost-depleted, high-quality paired FASTQ files from KneadData\nper-sample gene count tables from Meteor2 mapping\nper-sample taxonomic and functional abundance profiles from Meteor2 profiling\nmerged multi-sample abundance tables for downstream analysis",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#purpose",
     "href": "chapters/01_workflow.html#purpose",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.1 1. Purpose",
     "text": "3.1 1. Purpose\nKneadData is a quality-control and decontamination tool designed for metagenomic and metatranscriptomic sequencing data, especially microbiome datasets. In host-associated samples, sequencing libraries often contain a substantial fraction of host-derived reads. KneadData performs in silico separation of microbial reads from contaminant reads, typically using:\n\nTrimmomatic for adapter/quality trimming\nTRF for optional low-complexity/repetitive sequence filtering\nBowtie2 for contaminant/host read removal against a reference database\n\nIn this workflow, KneadData is used to remove human reads before downstream profiling with Meteor2.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#installation",
     "href": "chapters/01_workflow.html#installation",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.2 2. Installation",
     "text": "3.2 2. Installation\n\n3.2.1 2.1 Recommended installation with Conda\nA Conda installation is recommended because it resolves the main dependencies required by KneadData.\nconda create -n kneaddata -c bioconda kneaddata -y\nconda activate kneaddata\nThis installation typically provides the core software required to run the workflow, including:\n\nKneadData\nBowtie2\nTrimmomatic\nJava runtime support\n\nAlternative installation methods exist, including pip and Docker, but Conda is the preferred option for a reproducible local CLI workflow.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#download-the-human-host-reference-database",
     "href": "chapters/01_workflow.html#download-the-human-host-reference-database",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.3 3. Download the human host reference database",
     "text": "3.3 3. Download the human host reference database\nKneadData provides helper commands to download reference databases compatible with Bowtie2.\nkneaddata_database --download human_genome bowtie2 $DIR\nWhere:\n\n$DIR is the directory where the reference database will be stored\n\n\n3.3.1 Notes\n\nFor human host depletion, the recommended database is the human hg39 reference supplied by KneadData\nThe database corresponds to T2T-CHM13v2.0\nApproximate size: 3.6 GB\n\nExample:\nkneaddata_database --download human_genome bowtie2 /home/dani/kneaddata_test/database",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#input-requirements",
     "href": "chapters/01_workflow.html#input-requirements",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.4 4. Input requirements",
     "text": "3.4 4. Input requirements\nThis workflow assumes paired-end FASTQ input files.\nGeneric paired input:\nsample_R1.fastq.gz\nsample_R2.fastq.gz\nExample real inputs:\n/home/dani/kneaddata_test/input/36522947_R1.fastq.gz\n/home/dani/kneaddata_test/input/36522947_R2.fastq.gz",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#run-kneaddata-on-paired-end-reads",
     "href": "chapters/01_workflow.html#run-kneaddata-on-paired-end-reads",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.5 5. Run KneadData on paired-end reads",
     "text": "3.5 5. Run KneadData on paired-end reads\n\n3.5.1 5.1 Basic paired-end command\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output\n\n\n3.5.2 Argument description\n\n\n\nArgument\nDescription\n\n\n\n\n--input1\nForward mate (R1)\n\n\n--input2\nReverse mate (R2)\n\n\n-db\nPath to the KneadData/Bowtie2 contaminant database\n\n\n--output\nDirectory where output files will be written",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#real-execution-examples",
     "href": "chapters/01_workflow.html#real-execution-examples",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.6 6. Real execution examples",
     "text": "3.6 6. Real execution examples\n\n3.6.1 Sample 1\nkneaddata \\\n  --input1 /home/dani/kneaddata_test/input/36522947_R1.fastq.gz \\\n  --input2 /home/dani/kneaddata_test/input/36522947_R2.fastq.gz \\\n  -db /home/dani/kneaddata_test/database \\\n  --output /home/dani/kneaddata_test/output\n\n\n3.6.2 Sample 2\nkneaddata \\\n  --input1 /home/dani/kneaddata_test/input/36525128_R1.fastq.gz \\\n  --input2 /home/dani/kneaddata_test/input/36525128_R2.fastq.gz \\\n  -db /home/dani/kneaddata_test/database \\\n  --output /home/dani/kneaddata_test/output",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#parallelization-and-performance-tuning",
     "href": "chapters/01_workflow.html#parallelization-and-performance-tuning",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.7 7. Parallelization and performance tuning",
     "text": "3.7 7. Parallelization and performance tuning\nKneadData allows control over computational resources.\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output \\\n  -t 16 \\\n  -p 8\n\n3.7.1 Relevant options\n\n\n\n\n\n\n\nOption\nMeaning\n\n\n\n\n-t\nNumber of threads used by underlying tools such as Bowtie2/Trimmomatic\n\n\n-p\nNumber of parallel processes\n\n\n\nThese parameters should be adjusted according to available CPU and memory resources.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#batch-execution-over-all-samples-in-an-input-directory",
     "href": "chapters/01_workflow.html#batch-execution-over-all-samples-in-an-input-directory",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.8 8. Batch execution over all samples in an input directory",
     "text": "3.8 8. Batch execution over all samples in an input directory\nIf all paired-end reads are stored in the same input directory with a consistent naming convention (*_R1.fastq.gz and *_R2.fastq.gz), processing can be automated.\nINPUT_DIR=/home/dani/kneaddata_test/input\nOUTPUT_DIR=/home/dani/kneaddata_test/output\nDB_DIR=/home/dani/kneaddata_test/database\n\nfor r1 in ${INPUT_DIR}/*_R1.fastq.gz; do\n  base=$(basename \"${r1}\" _R1.fastq.gz)\n\n  kneaddata \\\n    --input1 \"${INPUT_DIR}/${base}_R1.fastq.gz\" \\\n    --input2 \"${INPUT_DIR}/${base}_R2.fastq.gz\" \\\n    -db \"${DB_DIR}\" \\\n    --output \"${OUTPUT_DIR}\"\ndone\nThis assumes each sample has exactly one forward file and one reverse file.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#main-output-files-produced-by-kneaddata",
     "href": "chapters/01_workflow.html#main-output-files-produced-by-kneaddata",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.9 9. Main output files produced by KneadData",
     "text": "3.9 9. Main output files produced by KneadData\nKneadData creates several intermediate and final files. The primary outputs of interest for downstream metagenomic profiling are the paired clean files.\n\n3.9.1 9.1 Main paired outputs\nTypical filenames:\n36522947_R1_kneaddata_paired_1.fastq\n36522947_R1_kneaddata_paired_2.fastq\nThese files contain reads that:\n\nremain properly paired after trimming\npassed quality control\ndid not align to the host reference database\n\nThese are the clean paired-end reads that should be used as input for Meteor2.\n\n\n3.9.2 9.2 Unmatched outputs\nTypical filenames:\n36522947_R1_kneaddata_unmatched_1.fastq\n36522947_R1_kneaddata_unmatched_2.fastq\nThese contain reads that survived filtering but lost their mate during trimming or decontamination. They may be useful in some contexts, but for the workflow documented here they are not used downstream in Meteor2.\n\n\n3.9.3 9.3 Intermediate files\nKneadData also generates multiple intermediate files, for example:\n\ndecompressed FASTQ files\nreformatted identifier files\ntrimmed paired and trimmed single files\nBowtie2 clean intermediate files\n\nThese are useful for auditing and troubleshooting, but they are not the final files intended for profiling.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#important-naming-caveat-in-kneaddata-outputs",
     "href": "chapters/01_workflow.html#important-naming-caveat-in-kneaddata-outputs",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.10 10. Important naming caveat in KneadData outputs",
     "text": "3.10 10. Important naming caveat in KneadData outputs\nKneadData uses the basename of --input1 as the prefix for all generated outputs. This means that output filenames may look confusing at first sight.\nExample:\n36522947_R1_kneaddata_paired_2.fastq\nEven though the file ends in _paired_2.fastq and corresponds to the reverse mate, its prefix still contains R1 because KneadData derives the output prefix from the first input file.\nThis does not indicate a technical problem, but the filenames are not ideal for downstream clarity.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#recommended-renaming-strategy",
     "href": "chapters/01_workflow.html#recommended-renaming-strategy",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.11 11. Recommended renaming strategy",
     "text": "3.11 11. Recommended renaming strategy\nTo standardize the naming and make downstream processing easier, it is advisable to rename or symlink the paired clean files.\n\n3.11.1 Example renaming\nmv 36522947_R1_kneaddata_paired_1.fastq 36522947_clean_R1.fastq\nmv 36522947_R1_kneaddata_paired_2.fastq 36522947_clean_R2.fastq\nA consistent naming convention is strongly recommended before importing the files into Meteor2.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#optional-use-of---output-prefix",
     "href": "chapters/01_workflow.html#optional-use-of---output-prefix",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.12 12. Optional use of --output-prefix",
     "text": "3.12 12. Optional use of --output-prefix\nKneadData also supports explicit output naming through an output prefix.\nkneaddata \\\n  --input1 seq1.fastq.gz \\\n  --input2 seq2.fastq.gz \\\n  -db $DATABASE \\\n  --output kneaddata_output \\\n  --output-prefix sample_name\nThis can make the generated filenames more predictable and easier to standardize.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#practical-summary-of-the-kneaddata-stage",
     "href": "chapters/01_workflow.html#practical-summary-of-the-kneaddata-stage",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "3.13 13. Practical summary of the KneadData stage",
     "text": "3.13 13. Practical summary of the KneadData stage\nAt the end of the KneadData stage, the files that should be retained for downstream profiling are the paired clean FASTQ files:\n*_kneaddata_paired_1.fastq\n*_kneaddata_paired_2.fastq\nThese represent:\n\nhigh-quality reads\nhost-depleted reads\npaired-end reads suitable for microbial profiling",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#purpose-1",
     "href": "chapters/01_workflow.html#purpose-1",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.1 14. Purpose",
     "text": "4.1 14. Purpose\nMeteor2 is a platform for quantitative shotgun metagenomic profiling of complex microbial ecosystems. It relies on ecosystem-specific microbial gene catalogues and supports:\n\ntaxonomic profiling\nfunctional profiling\noptional strain-level analysis\n\nFor the present workflow, Meteor2 is used after KneadData to profile human gut microbiome shotgun data.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#installation-1",
     "href": "chapters/01_workflow.html#installation-1",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.2 15. Installation",
     "text": "4.2 15. Installation\nMeteor2 can be installed in a dedicated Conda environment.\nconda create --name meteor -c conda-forge -c bioconda meteor -y\nconda activate meteor\nA separate environment from KneadData is recommended to avoid dependency conflicts.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#catalogue-download",
     "href": "chapters/01_workflow.html#catalogue-download",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.3 16. Catalogue download",
     "text": "4.3 16. Catalogue download\nMeteor2 requires a gene catalogue matching the ecosystem under study.\nFor human gut samples, the corresponding catalogue is:\nhs_10_4_gut\n\n4.3.1 16.1 Recommended catalogue download with Meteor2\nMeteor provides an internal command to download, verify, and prepare catalogues.\n\n4.3.1.1 Full catalogue\nmeteor download -i hs_10_4_gut -o /home/dani/meteor2_test/catalogues -c\n\n\n4.3.1.2 Light / fast catalogue\nmeteor download -i hs_10_4_gut --fast -o /home/dani/meteor2_test/catalogues -c\n\n\n\n4.3.2 Why this is the preferred method\nUsing meteor download is preferable because it:\n\ndownloads the correct catalogue version\nverifies file integrity with checksum validation\nprepares the catalogue automatically",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#alternative-manual-catalogue-download-and-extraction",
     "href": "chapters/01_workflow.html#alternative-manual-catalogue-download-and-extraction",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.4 17. Alternative manual catalogue download and extraction",
     "text": "4.4 17. Alternative manual catalogue download and extraction\nIf the catalogue has already been downloaded manually, the corresponding files may look like this:\nhs_10_4_gut.tar.xz\nhs_10_4_gut_taxo.tar.xz\nIn that case, they must be extracted manually.\ncd /home/dani/meteor2_test/catalogues\n\ntar -xvf hs_10_4_gut.tar.xz\ntar -xvf hs_10_4_gut_taxo.tar.xz\nThis step is only necessary if the catalogue was not obtained through meteor download.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#input-requirements-for-meteor2",
     "href": "chapters/01_workflow.html#input-requirements-for-meteor2",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.5 18. Input requirements for Meteor2",
     "text": "4.5 18. Input requirements for Meteor2\nMeteor2 does not start directly from a single FASTQ pair passed to a generic top-level command. Instead, the workflow is divided into multiple subcommands.\nThe first step is FASTQ import/indexing with meteor fastq.\nMeteor expects a directory containing input FASTQ files. For paired-end data, filenames must follow one of the accepted patterns:\nsample_R1.fastq and sample_R2.fastq\nor\nsample_1.fastq and sample_2.fastq\n\n4.5.1 Important implication for KneadData outputs\nKneadData output names such as:\n36522947_R1_kneaddata_paired_1.fastq\n36522947_R1_kneaddata_paired_2.fastq\ncan still be compatible with Meteor2 because the suffix pattern _1.fastq / _2.fastq is present. However, for clarity, traceability, and standardization, it is strongly recommended to rename or symlink the KneadData outputs into a simpler, explicit paired-end convention before running meteor fastq.\n\n\n4.5.2 Suggested Meteor input naming\n36522947_R1.fastq\n36522947_R2.fastq\n36525128_R1.fastq\n36525128_R2.fastq",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#avoiding-file-duplication-with-symbolic-links",
     "href": "chapters/01_workflow.html#avoiding-file-duplication-with-symbolic-links",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.6 19. Avoiding file duplication with symbolic links",
     "text": "4.6 19. Avoiding file duplication with symbolic links\nSince KneadData outputs may already consume substantial disk space, one practical strategy is to create symbolic links instead of copying files.\n\n4.6.1 Example\nmkdir -p /home/dani/meteor2_test/input\ncd /home/dani/meteor2_test/input\n\nln -s /path/to/36522947_R1_kneaddata_paired_1.fastq 36522947_R1.fastq\nln -s /path/to/36522947_R1_kneaddata_paired_2.fastq 36522947_R2.fastq\n\nln -s /path/to/36525128_R1_kneaddata_paired_1.fastq 36525128_R1.fastq\nln -s /path/to/36525128_R1_kneaddata_paired_2.fastq 36525128_R2.fastq\nThis preserves storage and keeps the Meteor input directory clean and standardized.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#step-1-import-and-index-fastq-files-with-meteor-fastq",
     "href": "chapters/01_workflow.html#step-1-import-and-index-fastq-files-with-meteor-fastq",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.7 20. Step 1: import and index FASTQ files with meteor fastq",
     "text": "4.7 20. Step 1: import and index FASTQ files with meteor fastq\nThis command prepares a Meteor-compatible FASTQ repository from the input directory.\nmeteor fastq \\\n  -i /home/dani/meteor2_test/input \\\n  -p \\\n  -o /home/dani/meteor2_test/results/fastq\n\n4.7.1 Meaning of the arguments\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing FASTQ files\n\n\n-p\nIndicates that the FASTQ files are paired-end\n\n\n-o\nOutput directory for the Meteor FASTQ repository\n\n\n\n\n\n4.7.2 Notes\n\nMeteor2 expects the directory of FASTQ files, not an individual FASTQ file here\nThe output will contain one subdirectory per imported sample/library\nIf multiple sequencing runs belong to the same library, the -m option can be used to group them using a regular expression",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping",
     "href": "chapters/01_workflow.html#step-2-mapping-against-the-gene-catalogue-with-meteor-mapping",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.8 21. Step 2: mapping against the gene catalogue with meteor mapping",
     "text": "4.8 21. Step 2: mapping against the gene catalogue with meteor mapping\nAfter FASTQ import, each sample must be mapped separately against the selected catalogue.\n\n4.8.1 Example for one sample\nmeteor mapping \\\n  -i /home/dani/meteor2_test/results/fastq/36522947_R1_kneaddata_paired \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/mapping \\\n  -t 6\n\n\n4.8.2 Important note\nThe input of meteor mapping is not the original FASTQ file. It is the sample directory generated by meteor fastq for a given sample.\n\n\n4.8.3 Meaning of the arguments\n\n\n\n\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory corresponding to one imported sample in the Meteor FASTQ repository\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for mapping results\n\n\n-t\nNumber of threads",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#automating-the-mapping-step-across-all-samples",
     "href": "chapters/01_workflow.html#automating-the-mapping-step-across-all-samples",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.9 22. Automating the mapping step across all samples",
     "text": "4.9 22. Automating the mapping step across all samples\nBecause meteor mapping is run per sample directory, it should be automated when several samples are present.\nFASTQ_REPO=/home/dani/meteor2_test/results/fastq\nREF_DIR=/home/dani/meteor2_test/catalogues/hs_10_4_gut\nMAP_DIR=/home/dani/meteor2_test/results/mapping\n\nfor sample_dir in ${FASTQ_REPO}/*; do\n  if [ -d \"${sample_dir}\" ]; then\n    meteor mapping \\\n      -i \"${sample_dir}\" \\\n      -r \"${REF_DIR}\" \\\n      -o \"${MAP_DIR}\" \\\n      -t 6\n  fi\ndone\nThis loop processes all imported samples one by one.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#step-3-taxonomic-and-functional-profiling-with-meteor-profile",
     "href": "chapters/01_workflow.html#step-3-taxonomic-and-functional-profiling-with-meteor-profile",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.10 23. Step 3: taxonomic and functional profiling with meteor profile",
     "text": "4.10 23. Step 3: taxonomic and functional profiling with meteor profile\nOnce mapping has been completed for a sample, taxonomic and functional profiling can be performed.\n\n4.10.1 Example\nmeteor profile \\\n  -i /home/dani/meteor2_test/results/mapping \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/profile \\\n  -n coverage\n\n\n4.10.2 Meaning of the arguments\n\n\n\n\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing mapped sample output\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for profiled sample results\n\n\n-n coverage\nLength-normalized abundance calculation using coverage normalization\n\n\n\n\n\n4.10.3 Notes on normalization\nThe -n coverage option performs gene-length normalization and is the recommended mode in the standard Meteor workflow.\nIf omitted, no normalization is applied to the gene table.\n\n\n4.10.4 Typical profile outputs\nDepending on the catalogue type, this step can generate:\n\nspecies abundance tables\nARD abundance tables\ndbCAN abundance tables\ngut metabolic module abundance tables\ngut brain module abundance tables",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#automating-the-profiling-step-across-all-mapped-samples",
     "href": "chapters/01_workflow.html#automating-the-profiling-step-across-all-mapped-samples",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.11 24. Automating the profiling step across all mapped samples",
     "text": "4.11 24. Automating the profiling step across all mapped samples\nAs with mapping, profiling is conceptually sample-based and should be applied to each mapped sample directory when needed.\nMAP_DIR=/home/dani/meteor2_test/results/mapping\nREF_DIR=/home/dani/meteor2_test/catalogues/hs_10_4_gut\nPROFILE_DIR=/home/dani/meteor2_test/results/profile\n\nfor sample_dir in ${MAP_DIR}/*; do\n  if [ -d \"${sample_dir}\" ]; then\n    meteor profile \\\n      -i \"${sample_dir}\" \\\n      -r \"${REF_DIR}\" \\\n      -o \"${PROFILE_DIR}\" \\\n      -n coverage\n  fi\ndone",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#step-4-merge-all-profiled-samples-with-meteor-merge",
     "href": "chapters/01_workflow.html#step-4-merge-all-profiled-samples-with-meteor-merge",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.12 25. Step 4: merge all profiled samples with meteor merge",
     "text": "4.12 25. Step 4: merge all profiled samples with meteor merge\nOnce all samples have been profiled, the outputs can be merged into multi-sample abundance tables.\nmeteor merge \\\n  -i /home/dani/meteor2_test/results/profile \\\n  -r /home/dani/meteor2_test/catalogues/hs_10_4_gut \\\n  -o /home/dani/meteor2_test/results/merge\n\n4.12.1 Meaning of the arguments\n\n\n\nArgument\nDescription\n\n\n\n\n-i\nDirectory containing profiled sample subdirectories\n\n\n-r\nCatalogue/reference directory\n\n\n-o\nOutput directory for merged tables\n\n\n\n\n\n4.12.2 Output purpose\nThis step produces merged matrices suitable for downstream statistical analysis across samples.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#optional-downstream-strain-analysis",
     "href": "chapters/01_workflow.html#optional-downstream-strain-analysis",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "4.13 26. Optional downstream strain analysis",
     "text": "4.13 26. Optional downstream strain analysis\nMeteor2 also supports strain-level analysis, although this is optional and outside the core taxonomic/functional workflow described above.\n\n4.13.1 Strain inference\nmeteor strain \\\n  -i &lt;mapping_sample_dir&gt; \\\n  -o &lt;strain_dir&gt; \\\n  -r &lt;refdir&gt;\n\n\n4.13.2 Strain tree computation\nmeteor tree \\\n  -i &lt;strain_dir&gt; \\\n  -o &lt;tree_dir&gt;\nThese steps are only relevant if strain-resolved comparisons are part of the study design.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#example-layout",
     "href": "chapters/01_workflow.html#example-layout",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "5.1 Example layout",
     "text": "5.1 Example layout\nproject/\n├── kneaddata/\n│   ├── input/\n│   ├── database/\n│   └── output/\n├── meteor2/\n│   ├── catalogues/\n│   ├── input/\n│   ├── output/\n│   └── results/\n│       ├── fastq/\n│       ├── mapping/\n│       ├── profile/\n│       └── merge/",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#general-recommendations",
     "href": "chapters/01_workflow.html#general-recommendations",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "6.1 27. General recommendations",
     "text": "6.1 27. General recommendations\n\n6.1.1 27.1 Keep the paired clean FASTQ files from KneadData\nFor this workflow, the correct files to propagate downstream are:\n*_kneaddata_paired_1.fastq\n*_kneaddata_paired_2.fastq\nDo not use the unmatched files unless there is a specific analytical reason to process single-end survivors separately.\n\n\n6.1.2 27.2 Standardize names before Meteor import\nEven if Meteor can recognize _1 and _2, cleaner names simplify the workflow and reduce ambiguity.\n\n\n6.1.3 27.3 Prefer symbolic links over duplication when possible\nLarge shotgun datasets quickly become storage-intensive. Symlinks allow a clean and reproducible organization without copying files.\n\n\n6.1.4 27.4 Keep environments separate\nUse independent Conda environments for KneadData and Meteor2.\n\n\n6.1.5 27.5 Document the exact catalogue version used\nCatalogue versioning is critical for reproducibility because Meteor2 relies on environment-specific references.\n\n\n6.1.6 27.6 Record all parameters used\nAt minimum, document:\n\nKneadData database version\nKneadData thread/process settings\nMeteor catalogue name and version\nMeteor normalization mode\nsoftware versions and execution dates",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#conceptual-flow",
     "href": "chapters/01_workflow.html#conceptual-flow",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "7.1 28. Conceptual flow",
     "text": "7.1 28. Conceptual flow\nRaw paired-end shotgun FASTQ\n        ↓\nKneadData\n  - trimming\n  - repetitive sequence filtering\n  - human read removal\n        ↓\nClean paired FASTQ\n        ↓\nMeteor fastq\n        ↓\nMeteor mapping\n        ↓\nMeteor profile\n        ↓\nMeteor merge\n        ↓\nMulti-sample taxonomic and functional abundance tables",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#kneaddata",
     "href": "chapters/01_workflow.html#kneaddata",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "8.1 29. KneadData",
     "text": "8.1 29. KneadData\nconda create -n kneaddata -c bioconda kneaddata -y\nconda activate kneaddata\nkneaddata_database --download human_genome bowtie2 /path/to/database\n\nkneaddata \\\n  --input1 sample_R1.fastq.gz \\\n  --input2 sample_R2.fastq.gz \\\n  -db /path/to/database \\\n  --output /path/to/kneaddata_output",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
     "objectID": "chapters/01_workflow.html#meteor2",
     "href": "chapters/01_workflow.html#meteor2",
-    "title": "2  Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2",
+    "title": "2  BiomeXplore bioinformatic workflows",
     "section": "8.2 30. Meteor2",
     "text": "8.2 30. Meteor2\nconda create --name meteor -c conda-forge -c bioconda meteor -y\nconda activate meteor\n\nmeteor download -i hs_10_4_gut -o /path/to/catalogues -c\n\nmeteor fastq \\\n  -i /path/to/input_fastq_dir \\\n  -p \\\n  -o /path/to/results/fastq\n\nmeteor mapping \\\n  -i /path/to/results/fastq/sample_dir \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/mapping \\\n  -t 6\n\nmeteor profile \\\n  -i /path/to/results/mapping/sample_dir \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/profile \\\n  -n coverage\n\nmeteor merge \\\n  -i /path/to/results/profile \\\n  -r /path/to/catalogues/hs_10_4_gut \\\n  -o /path/to/results/merge",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Shotgun metagenomics preprocessing and profiling workflow with KneadData and Meteor2</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>BiomeXplore bioinformatic workflows</span>"
     ]
   },
   {
